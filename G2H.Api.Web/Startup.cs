@@ -1,36 +1,48 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// --------------------------------------------------------------------------------
+// Copyright (c) Christo du Toit. All rights reserved.
+// Licensed under the MIT License.
+// See License.txt in the project root for license information.
+// FREE TO USE TO HELP SHARE THE GOSPEL
+// Mark 16:15 NIV "Go into all the world and preach the gospel to all creation."
+// https://mark.bible/mark-16-15 
+// --------------------------------------------------------------------------------
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace G2H.Api.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
+        public Startup(IConfiguration configuration) =>
             Configuration = configuration;
-        }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddLogging();
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+
+            AddBrokers(services);
+            AddServices(services);
+
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "G2H.Api.Web", Version = "v1" });
+                var openApiInfo = new OpenApiInfo
+                {
+                    Title = "G2H.Api.Web",
+                    Version = "v1"
+                };
+
+                options.SwaggerDoc(
+                    name: "v1",
+                    info: openApiInfo);
             });
         }
 
@@ -41,7 +53,13 @@ namespace G2H.Api.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "G2H.Api.Web v1"));
+
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint(
+                        url: "/swagger/v1/swagger.json",
+                        name: "G2H.Api.Web v1");
+                });
             }
 
             app.UseHttpsRedirection();
@@ -50,10 +68,15 @@ namespace G2H.Api.Web
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
+        }
+
+        private static void AddServices(IServiceCollection services)
+        {
+        }
+
+        private static void AddBrokers(IServiceCollection services)
+        {
         }
     }
 }
