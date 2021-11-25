@@ -9,9 +9,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Posts;
+using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.PostTypes
 {

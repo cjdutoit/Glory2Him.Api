@@ -8,24 +8,25 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Posts;
-using Newtonsoft.Json;
+using G2H.Api.Web.Models.Reactions;
 
-namespace G2H.Api.Web.Models.Statuses
+namespace G2H.Api.Web.Models.PostReactions
 {
-    public class Status : IAudit
+    public class PostReaction : IAudit
     {
-        public StatusId Id { get; set; }
-        public string Name { get; set; }
+        public Guid PostId { get; set; }
+        public virtual Post Post { get; set; }
+
+        public int ReactionId { get; set; }
+        public virtual Reaction Reaction { get; set; }
+
+        public Guid UserId { get; set; }
 
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-
-        [JsonIgnore]
-        public virtual List<Post> Posts { get; set; } = new List<Post>();
     }
 }
