@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "G2H.Api.Infrastructure.Prov
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G2H.Api.Web", "G2H.Api.Web\G2H.Api.Web.csproj", "{4D20C897-B97D-4964-84C6-893F0F1B2D9F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "G2H.Api.Web.Tests.Unit", "G2H.Api.Web.Tests.Unit\G2H.Api.Web.Tests.Unit.csproj", "{37CE57A3-DF59-480D-B361-DD7FACE059B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "G2H.Api.Web.Tests.Acceptance", "G2H.Api.Web.Tests.Acceptance\G2H.Api.Web.Tests.Acceptance.csproj", "{3BA91555-A60B-4E6A-825F-A87CB4F92632}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{4D20C897-B97D-4964-84C6-893F0F1B2D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D20C897-B97D-4964-84C6-893F0F1B2D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D20C897-B97D-4964-84C6-893F0F1B2D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37CE57A3-DF59-480D-B361-DD7FACE059B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37CE57A3-DF59-480D-B361-DD7FACE059B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37CE57A3-DF59-480D-B361-DD7FACE059B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37CE57A3-DF59-480D-B361-DD7FACE059B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BA91555-A60B-4E6A-825F-A87CB4F92632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BA91555-A60B-4E6A-825F-A87CB4F92632}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BA91555-A60B-4E6A-825F-A87CB4F92632}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BA91555-A60B-4E6A-825F-A87CB4F92632}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +62,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{860E254C-D7AB-4185-92BA-CA40ABD2713C} = {0B68ADC0-43F5-4858-B543-89CBD6321926}
 		{C7D961BC-624E-4958-8C71-001BE0C6F492} = {0B68ADC0-43F5-4858-B543-89CBD6321926}
+		{37CE57A3-DF59-480D-B361-DD7FACE059B0} = {92227B86-B555-4595-BD93-0E8A6E98D3CF}
+		{3BA91555-A60B-4E6A-825F-A87CB4F92632} = {92227B86-B555-4595-BD93-0E8A6E98D3CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF21EF38-374C-4E1F-BEB7-1923B8A5247E}
