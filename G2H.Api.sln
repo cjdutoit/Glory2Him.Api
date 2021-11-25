@@ -19,9 +19,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Designs", "Designs", "{E7C1
 		Designs\Glory2Him.Models.drawio = Designs\Glory2Him.Models.drawio
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "G2H.Api.Infrastructure.Build", "G2H.Api.Infrastructure.Build\G2H.Api.Infrastructure.Build.csproj", "{860E254C-D7AB-4185-92BA-CA40ABD2713C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "G2H.Api.Infrastructure.Provision", "G2H.Api.Infrastructure.Provision\G2H.Api.Infrastructure.Provision.csproj", "{C7D961BC-624E-4958-8C71-001BE0C6F492}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{860E254C-D7AB-4185-92BA-CA40ABD2713C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{860E254C-D7AB-4185-92BA-CA40ABD2713C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{860E254C-D7AB-4185-92BA-CA40ABD2713C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{860E254C-D7AB-4185-92BA-CA40ABD2713C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7D961BC-624E-4958-8C71-001BE0C6F492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7D961BC-624E-4958-8C71-001BE0C6F492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7D961BC-624E-4958-8C71-001BE0C6F492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7D961BC-624E-4958-8C71-001BE0C6F492}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{860E254C-D7AB-4185-92BA-CA40ABD2713C} = {0B68ADC0-43F5-4858-B543-89CBD6321926}
+		{C7D961BC-624E-4958-8C71-001BE0C6F492} = {0B68ADC0-43F5-4858-B543-89CBD6321926}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF21EF38-374C-4E1F-BEB7-1923B8A5247E}
