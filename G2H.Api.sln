@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31808.319
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{03555E7A-477F-4733-A890-F6663B73E0ED}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		License.txt = License.txt
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{0B68ADC0-43F5-4858-B543-89CBD6321926}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{92227B86-B555-4595-BD93-0E8A6E98D3CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Designs", "Designs", "{E7C12B34-F0D4-4FF1-8B09-663BE4F529B2}"
+	ProjectSection(SolutionItems) = preProject
+		Designs\Glory2Him.Models.drawio = Designs\Glory2Him.Models.drawio
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF21EF38-374C-4E1F-BEB7-1923B8A5247E}
+	EndGlobalSection
+EndGlobal
