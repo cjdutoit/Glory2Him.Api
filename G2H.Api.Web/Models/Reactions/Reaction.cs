@@ -8,7 +8,10 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using G2H.Api.Web.Models.Base;
+using G2H.Api.Web.Models.PostReactions;
 
 namespace G2H.Api.Web.Models.Reactions
 {
@@ -22,5 +25,8 @@ namespace G2H.Api.Web.Models.Reactions
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        [JsonIgnore]
+        public virtual List<PostReaction> PostReactions { get; set; } = new List<PostReaction>();
     }
 }

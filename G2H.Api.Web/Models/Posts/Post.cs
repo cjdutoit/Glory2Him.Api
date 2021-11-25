@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.PostReactions;
+using G2H.Api.Web.Models.PostTags;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.Statuses;
 using Newtonsoft.Json;
@@ -40,6 +41,9 @@ namespace G2H.Api.Web.Models.Posts
 
         [JsonIgnore]
         public virtual List<PostReaction> PostReactions { get; set; } = new List<PostReaction>();
+        [JsonIgnore]
+        public virtual List<PostTag> PostTags { get; set; } = new List<PostTag>();
+
     }
 }
 
