@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using G2H.Api.Web.Brokers.Storages;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,7 @@ namespace G2H.Api.Web
         {
             services.AddLogging();
             services.AddControllers();
-
+            services.AddDbContext<StorageBroker>();
             AddBrokers(services);
             AddServices(services);
 

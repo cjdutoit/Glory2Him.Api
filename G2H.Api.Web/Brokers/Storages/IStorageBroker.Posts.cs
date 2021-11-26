@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
 
-namespace G2H.Api.Web.Brokers
+namespace G2H.Api.Web.Brokers.Storages
 {
     public partial interface IStorageBroker
     {

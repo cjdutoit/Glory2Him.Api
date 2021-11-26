@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Brokers\StorageBroker.Posts.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="EFxceptions" Version="0.4.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-rc.2.21480.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-rc.2.21480.5">
