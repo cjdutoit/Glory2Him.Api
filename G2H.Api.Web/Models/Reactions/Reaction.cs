@@ -28,5 +28,7 @@ namespace G2H.Api.Web.Models.Reactions
 
         [JsonIgnore]
         public virtual List<PostReaction> PostReactions { get; set; } = new List<PostReaction>();
+        [JsonIgnore]
+        public virtual List<CommentReaction> CommentReactions { get; set; } = new List<CommentReaction>();
     }
 }

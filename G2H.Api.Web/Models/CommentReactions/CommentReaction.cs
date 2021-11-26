@@ -8,29 +8,25 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using G2H.Api.Web.Models.Base;
-using G2H.Api.Web.Models.PostReactions;
-using G2H.Api.Web.Models.PostsComments;
-using Newtonsoft.Json;
+using G2H.Api.Web.Models.Comments;
+using G2H.Api.Web.Models.Reactions;
 
-namespace G2H.Api.Web.Models.Comments
+namespace G2H.Api.Web.Models.PostReactions
 {
-    public class Comment : IKey, IAudit
+    public class CommentReaction : IAudit
     {
-        public Guid Id { get; set; }
-        public string Content { get; set; }
+        public Guid CommentId { get; set; }
+        public virtual Comment Comment { get; set; }
+
+        public int ReactionId { get; set; }
+        public virtual Reaction Reaction { get; set; }
+
+        public Guid UserId { get; set; }
 
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-
-        [JsonIgnore]
-        public virtual List<PostComment> PostComments { get; set; } = new List<PostComment>();
-        [JsonIgnore]
-        public virtual List<CommentReaction> CommentReactions { get; set; } = new List<CommentReaction>();
-        [JsonIgnore]
-        public virtual List<CommentComment> ChildComments { get; set; } = new List<CommentComment>();
     }
 }
