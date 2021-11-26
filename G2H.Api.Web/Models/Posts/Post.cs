@@ -46,6 +46,8 @@ namespace G2H.Api.Web.Models.Posts
         public virtual List<PostTag> PostTags { get; set; } = new List<PostTag>();
         [JsonIgnore]
         public virtual List<PostComment> PostComments { get; set; } = new List<PostComment>();
+        [JsonIgnore]
+        public virtual List<PostAttachment> PostAttachments { get; set; } = new List<PostAttachment>();
     }
 }
 
