@@ -27,5 +27,8 @@ namespace G2H.Api.Web.Models.Comments
 
         [JsonIgnore]
         public virtual List<PostComment> PostComments { get; set; } = new List<PostComment>();
+
+        [JsonIgnore]
+        public virtual List<CommentComment> ChildComments { get; set; } = new List<CommentComment>();
     }
 }
