@@ -7,7 +7,6 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,20 +23,16 @@ namespace G2H.Api.Web.Brokers.Storages
             this.Database.Migrate();
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = this.configuration
-                .GetConnectionString("DefaultConnection");
+                .GetConnectionString(name: "DefaultConnection");
 
-            optionsBuilder.UseSqlServer(
-                connectionString,
-                sqlServerDbContextOptionsBuilder =>
-                    sqlServerDbContextOptionsBuilder.MigrationsAssembly("G2H.Api.Web"));
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+            optionsBuilder.UseSqlServer(connectionString);
         }
 
         public override void Dispose() { }
