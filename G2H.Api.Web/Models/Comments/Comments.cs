@@ -8,7 +8,10 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using G2H.Api.Web.Models.Base;
+using G2H.Api.Web.Models.PostsComments;
+using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.Comments
 {
@@ -21,5 +24,8 @@ namespace G2H.Api.Web.Models.Comments
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        [JsonIgnore]
+        public virtual List<PostComment> PostComments { get; set; } = new List<PostComment>();
     }
 }
