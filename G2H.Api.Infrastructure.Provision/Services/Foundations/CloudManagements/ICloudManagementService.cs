@@ -42,5 +42,9 @@ namespace G2H.Api.Infrastructure.Provision.Services.Foundations
             string databaseConnectionString,
             IResourceGroup resourceGroup,
             IAppServicePlan appServicePlan);
+
+        ValueTask DeprovisionResouceGroupAsync(
+            string projectName,
+            string environment);
     }
 }
