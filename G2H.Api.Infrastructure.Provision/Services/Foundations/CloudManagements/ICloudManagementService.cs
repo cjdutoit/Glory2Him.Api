@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using Microsoft.Azure.Management.AppService.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 
 namespace G2H.Api.Infrastructure.Provision.Services.Foundations
@@ -17,5 +18,10 @@ namespace G2H.Api.Infrastructure.Provision.Services.Foundations
         ValueTask<IResourceGroup> ProvisionResourceGroupAsync(
             string projectName,
             string environment);
+
+        ValueTask<IAppServicePlan> ProvisionPlanAsync(
+            string projectName,
+            string environment,
+            IResourceGroup resourceGroup);
     }
 }

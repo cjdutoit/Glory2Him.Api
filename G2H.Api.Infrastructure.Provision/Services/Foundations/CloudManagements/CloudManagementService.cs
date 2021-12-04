@@ -10,6 +10,7 @@
 using System.Threading.Tasks;
 using G2H.Api.Infrastructure.Provision.Brokers.Clouds;
 using G2H.Api.Infrastructure.Provision.Brokers.Loggings;
+using Microsoft.Azure.Management.AppService.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 
 namespace G2H.Api.Infrastructure.Provision.Services.Foundations
@@ -39,6 +40,22 @@ namespace G2H.Api.Infrastructure.Provision.Services.Foundations
             this.loggingBroker.LogActivity(message: $"{resourceGroupName} Provisioned.");
 
             return resourceGroup;
+        }
+
+        public async ValueTask<IAppServicePlan> ProvisionPlanAsync(
+            string projectName,
+            string environment,
+            IResourceGroup resourceGroup)
+        {
+            string planName = $"{projectName}-PLAN-{environment}".ToUpper();
+            this.loggingBroker.LogActivity(message: $"Provisioning {planName}...");
+
+            IAppServicePlan plan =
+                await this.cloudBroker.CreatePlanAsync(planName, resourceGroup);
+
+            this.loggingBroker.LogActivity(message: $"{plan} Provisioned");
+
+            return plan;
         }
     }
 }
