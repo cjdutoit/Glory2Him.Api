@@ -38,6 +38,10 @@ namespace G2H.Api.Infrastructure.Provision.Services.Processings
             await ProvisionAsync(
                 projectName: cloudManagementConfiguration.ProjectName,
                 cloudAction: cloudManagementConfiguration.Up);
+
+            await DeprovisionAsync(
+                projectName: cloudManagementConfiguration.ProjectName,
+                cloudAction: cloudManagementConfiguration.Down);
         }
 
         private async ValueTask ProvisionAsync(
@@ -78,6 +82,20 @@ namespace G2H.Api.Infrastructure.Provision.Services.Processings
                         sqlDatabase.ConnectionString,
                         resourceGroup,
                         appServicePlan);
+            }
+        }
+
+        private async ValueTask DeprovisionAsync(
+           string projectName,
+           CloudAction cloudAction)
+        {
+            List<string> environments = RetrieveEnvironments(cloudAction);
+
+            foreach (string environmentName in environments)
+            {
+                await this.cloudManagementService.DeprovisionResouceGroupAsync(
+                    projectName,
+                    environmentName);
             }
         }
 
