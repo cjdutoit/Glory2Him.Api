@@ -10,6 +10,7 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.AppService.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
+using Microsoft.Azure.Management.Sql.Fluent;
 
 namespace G2H.Api.Infrastructure.Provision.Services.Foundations
 {
@@ -20,6 +21,11 @@ namespace G2H.Api.Infrastructure.Provision.Services.Foundations
             string environment);
 
         ValueTask<IAppServicePlan> ProvisionPlanAsync(
+            string projectName,
+            string environment,
+            IResourceGroup resourceGroup);
+
+        ValueTask<ISqlServer> ProvisionSqlServerAsync(
             string projectName,
             string environment,
             IResourceGroup resourceGroup);
