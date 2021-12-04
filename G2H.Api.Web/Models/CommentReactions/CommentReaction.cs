@@ -11,6 +11,7 @@ using System;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Comments;
 using G2H.Api.Web.Models.Reactions;
+using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.PostReactions
 {
@@ -28,5 +29,8 @@ namespace G2H.Api.Web.Models.PostReactions
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        public ApplicationUser CreatedByUser { get; set; }
+        public ApplicationUser UpdatedByUser { get; set; }
     }
 }

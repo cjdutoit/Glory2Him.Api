@@ -10,6 +10,7 @@
 using System;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Statuses;
+using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.Attachments
 {
@@ -30,5 +31,8 @@ namespace G2H.Api.Web.Models.Attachments
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        public ApplicationUser CreatedByUser { get; set; }
+        public ApplicationUser UpdatedByUser { get; set; }
     }
 }
