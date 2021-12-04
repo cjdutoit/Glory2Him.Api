@@ -15,6 +15,7 @@ using G2H.Api.Web.Models.PostsComments;
 using G2H.Api.Web.Models.PostTags;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.Statuses;
+using G2H.Api.Web.Models.Users;
 using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.Posts
@@ -40,6 +41,9 @@ namespace G2H.Api.Web.Models.Posts
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
 
+        public ApplicationUser CreatedByUser { get; set; }
+        public ApplicationUser UpdatedByUser { get; set; }
+
         [JsonIgnore]
         public virtual List<PostReaction> PostReactions { get; set; } = new List<PostReaction>();
         [JsonIgnore]
@@ -48,6 +52,7 @@ namespace G2H.Api.Web.Models.Posts
         public virtual List<PostComment> PostComments { get; set; } = new List<PostComment>();
         [JsonIgnore]
         public virtual List<PostAttachment> PostAttachments { get; set; } = new List<PostAttachment>();
+
     }
 }
 

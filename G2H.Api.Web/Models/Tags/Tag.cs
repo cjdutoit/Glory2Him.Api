@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.PostTags;
 using G2H.Api.Web.Models.Statuses;
+using G2H.Api.Web.Models.Users;
 using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.Tags
@@ -29,6 +30,9 @@ namespace G2H.Api.Web.Models.Tags
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        public ApplicationUser CreatedByUser { get; set; }
+        public ApplicationUser UpdatedByUser { get; set; }
 
         [JsonIgnore]
         public virtual List<PostTag> PostTags { get; set; } = new List<PostTag>();

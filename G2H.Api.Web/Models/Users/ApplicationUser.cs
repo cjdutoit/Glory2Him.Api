@@ -8,22 +8,11 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using G2H.Api.Web.Models.Users;
+using Microsoft.AspNetCore.Identity;
 
-namespace G2H.Api.Web.Models.Base
+namespace G2H.Api.Web.Models.Users
 {
-    public interface IAudit
+    public class ApplicationUser : IdentityUser<Guid>
     {
-        Guid CreatedByUserId { get; set; }
-
-        DateTimeOffset CreatedDate { get; set; }
-
-        Guid UpdatedByUserId { get; set; }
-
-        DateTimeOffset UpdatedDate { get; set; }
-
-        ApplicationUser CreatedByUser { get; set; }
-
-        ApplicationUser UpdatedByUser { get; set; }
     }
 }

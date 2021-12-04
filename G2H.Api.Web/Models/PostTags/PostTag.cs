@@ -12,6 +12,7 @@ using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Tags;
+using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.PostTags
 {
@@ -30,5 +31,8 @@ namespace G2H.Api.Web.Models.PostTags
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        public ApplicationUser CreatedByUser { get; set; }
+        public ApplicationUser UpdatedByUser { get; set; }
     }
 }

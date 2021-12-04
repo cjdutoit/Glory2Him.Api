@@ -7,13 +7,15 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using EFxceptions;
+using System;
+using EFxceptions.Identity;
+using G2H.Api.Web.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace G2H.Api.Web.Brokers.Storages
 {
-    public partial class StorageBroker : EFxceptionsContext, IStorageBroker
+    public partial class StorageBroker : EFxceptionsIdentityContext<ApplicationUser, ApplicationRole, Guid>, IStorageBroker
     {
         private readonly IConfiguration configuration;
 
