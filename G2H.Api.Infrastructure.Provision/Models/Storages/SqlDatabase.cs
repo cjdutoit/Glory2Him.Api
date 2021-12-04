@@ -7,6 +7,13 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
+using Microsoft.Azure.Management.Sql.Fluent;
 
-Console.WriteLine("Hello, World!");
+namespace G2H.Api.Infrastructure.Provision.Models.Storages
+{
+    public class SqlDatabase
+    {
+        public string ConnectionString { get; set; }
+        public ISqlDatabase Database { get; set; }
+    }
+}
