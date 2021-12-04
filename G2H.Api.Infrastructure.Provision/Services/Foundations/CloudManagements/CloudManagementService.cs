@@ -153,16 +153,5 @@ namespace G2H.Api.Infrastructure.Provision.Services.Foundations
                 $"User ID={sqlDatabaseAccess.AdminName};" +
                 $"Password={sqlDatabaseAccess.AdminAccess};";
         }
-
-        private string GenerateConnectionString(ISqlDatabase sqlDatabase)
-        {
-            SqlDatabaseAccess sqlDatabaseAccess =
-                this.cloudBroker.GetAdminAccess();
-
-            return $"Server=tcp:{sqlDatabase.SqlServerName}.database.windows.net,1433;" +
-                $"Initial Catalog={sqlDatabase.Name};" +
-                $"User ID={sqlDatabaseAccess.AdminName};" +
-                $"Password={sqlDatabaseAccess.AdminAccess};";
-        }
     }
 }
