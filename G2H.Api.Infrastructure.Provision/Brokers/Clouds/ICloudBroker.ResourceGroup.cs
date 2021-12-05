@@ -8,18 +8,14 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
-using G2H.Api.Infrastructure.Provision.Services.Processings;
+using Microsoft.Azure.Management.ResourceManager.Fluent;
 
-namespace G2H.Api.Infrastructure.Provision
+namespace G2H.Api.Infrastructure.Provision.Brokers.Clouds
 {
-    internal class Program
+    public partial interface ICloudBroker
     {
-        static async Task Main(string[] args)
-        {
-            ICloudManagementProcessingService cloudManagementProcessingService =
-                new CloudManagementProcessingService();
-
-            await cloudManagementProcessingService.ProcessAsync();
-        }
+        ValueTask<IResourceGroup> CreateResourceGroupAsync(string resourceGroupName);
+        ValueTask<bool> CheckResourceGroupExistAsync(string resourceGroupName);
+        ValueTask DeleteResourceGroupAsync(string resourceGroupName);
     }
 }

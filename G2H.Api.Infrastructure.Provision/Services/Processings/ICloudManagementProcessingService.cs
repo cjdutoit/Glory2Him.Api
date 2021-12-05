@@ -8,18 +8,11 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
-using G2H.Api.Infrastructure.Provision.Services.Processings;
 
-namespace G2H.Api.Infrastructure.Provision
+namespace G2H.Api.Infrastructure.Provision.Services.Processings
 {
-    internal class Program
+    public interface ICloudManagementProcessingService
     {
-        static async Task Main(string[] args)
-        {
-            ICloudManagementProcessingService cloudManagementProcessingService =
-                new CloudManagementProcessingService();
-
-            await cloudManagementProcessingService.ProcessAsync();
-        }
+        ValueTask ProcessAsync();
     }
 }

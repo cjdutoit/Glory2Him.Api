@@ -7,19 +7,12 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System.Threading.Tasks;
-using G2H.Api.Infrastructure.Provision.Services.Processings;
-
-namespace G2H.Api.Infrastructure.Provision
+namespace G2H.Api.Infrastructure.Provision.Models.Configurations
 {
-    internal class Program
+    public class CloudManagementConfiguration
     {
-        static async Task Main(string[] args)
-        {
-            ICloudManagementProcessingService cloudManagementProcessingService =
-                new CloudManagementProcessingService();
-
-            await cloudManagementProcessingService.ProcessAsync();
-        }
+        public string ProjectName { get; set; }
+        public CloudAction Up { get; set; }
+        public CloudAction Down { get; set; }
     }
 }
