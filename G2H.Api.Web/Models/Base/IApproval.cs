@@ -8,16 +8,13 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using G2H.Api.Web.Models.Comments;
-using G2H.Api.Web.Models.Posts;
+using G2H.Api.Web.Models.Approvals;
 
-namespace G2H.Api.Web.Models.PostsComments
+namespace G2H.Api.Web.Models.Base
 {
-    public class PostComment
+    public interface IApproval
     {
-        public Guid PostId { get; set; }
-        public virtual Post Post { get; set; }
-        public Guid CommentId { get; set; }
-        public virtual Comment Comment { get; set; }
+        Guid ApprovalId { get; set; }
+        Approval Approval { get; set; }
     }
 }

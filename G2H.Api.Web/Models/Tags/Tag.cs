@@ -9,28 +9,25 @@
 
 using System;
 using System.Collections.Generic;
+using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.PostTags;
-using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Users;
 using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.Tags
 {
-    public class Tag : IKey, IStatus, IAudit
+    public class Tag : IKey, IApproval, IAudit
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public bool Promoted { get; set; }
-
-        public StatusId StatusId { get; set; }
-        public Status Status { get; set; }
-
+        public Guid ApprovalId { get; set; }
+        public Approval Approval { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-
         public ApplicationUser CreatedByUser { get; set; }
         public ApplicationUser UpdatedByUser { get; set; }
 

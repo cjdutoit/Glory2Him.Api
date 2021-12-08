@@ -16,7 +16,6 @@ namespace G2H.Api.Web.Models.PostsComments
     {
         public Guid ParentCommentId { get; set; }
         public Comment ParentComment { get; set; }
-
         public Guid ChildCommentId { get; set; }
         public Comment ChildComment { get; set; }
     }

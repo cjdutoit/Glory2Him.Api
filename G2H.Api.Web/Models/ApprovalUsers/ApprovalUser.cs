@@ -8,27 +8,23 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
-using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Users;
-using Newtonsoft.Json;
 
-namespace G2H.Api.Web.Models.PostTypes
+namespace G2H.Api.Web.Models.ApprovalUsers
 {
-    public class PostType : IAudit
+    public class ApprovalUser : IApproval, IAudit
     {
-        public PostTypeId Id { get; set; }
-        public string Name { get; set; }
-        public bool IsActive { get; set; }
+        public Guid ApprovalId { get; set; }
+        public Approval Approval { get; set; }
+        public bool IsApproved { get; set; }
+        public string Notes { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
         public ApplicationUser CreatedByUser { get; set; }
         public ApplicationUser UpdatedByUser { get; set; }
-
-        [JsonIgnore]
-        public virtual List<Post> Posts { get; set; } = new List<Post>();
     }
 }
