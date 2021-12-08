@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.PostTags;
@@ -17,5 +18,6 @@ namespace G2H.Api.Web.Brokers.Storages
     {
         ValueTask<PostTag> InsertPostTagAsync(PostTag postTag);
         IQueryable<PostTag> SelectAllPostTags();
+        ValueTask<PostTag> SelectPostTagByIdAsync(Guid postTagId);
     }
 }
