@@ -48,5 +48,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return await broker.PostTags.FindAsync(postTagId);
         }
+
+        public async ValueTask<PostTag> UpdatePostTagAsync(PostTag postTag)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<PostTag> postTagEntityEntry =
+                broker.PostTags.Update(postTag);
+
+            await broker.SaveChangesAsync();
+
+            return postTagEntityEntry.Entity;
+        }
     }
 }
