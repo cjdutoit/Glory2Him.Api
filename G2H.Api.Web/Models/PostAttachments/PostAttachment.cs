@@ -17,7 +17,6 @@ namespace G2H.Api.Web.Models.PostsComments
     {
         public Guid PostId { get; set; }
         public virtual Post Post { get; set; }
-
         public Guid AttachmentId { get; set; }
         public virtual Attachment Attachment { get; set; }
     }

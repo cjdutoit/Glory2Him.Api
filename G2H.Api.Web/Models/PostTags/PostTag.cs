@@ -8,30 +8,26 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Posts;
-using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Tags;
 using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.PostTags
 {
-    public class PostTag : IStatus, IAudit
+    public class PostTag : IApproval, IAudit
     {
         public Guid PostId { get; set; }
         public virtual Post Post { get; set; }
-
         public Guid TagId { get; set; }
         public virtual Tag Tag { get; set; }
-
-        public StatusId StatusId { get; set; }
-        public Status Status { get; set; }
-
+        public Guid ApprovalId { get; set; }
+        public Approval Approval { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-
         public ApplicationUser CreatedByUser { get; set; }
         public ApplicationUser UpdatedByUser { get; set; }
     }

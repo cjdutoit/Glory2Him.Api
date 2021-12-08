@@ -8,13 +8,13 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
-using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.Attachments
 {
-    public class Attachment : IKey, IStatus, IAudit
+    public class Attachment : IKey, IApproval, IAudit
     {
         public Guid Id { get; set; }
         public string Label { get; set; }
@@ -23,15 +23,12 @@ namespace G2H.Api.Web.Models.Attachments
         public string ContentType { get; set; }
         public string Extension { get; set; }
         public string ExternalUrl { get; set; }
-
-        public StatusId StatusId { get; set; }
-        public Status Status { get; set; }
-
+        public Guid ApprovalId { get; set; }
+        public Approval Approval { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-
         public ApplicationUser CreatedByUser { get; set; }
         public ApplicationUser UpdatedByUser { get; set; }
     }

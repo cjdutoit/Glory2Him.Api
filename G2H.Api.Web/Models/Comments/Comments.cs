@@ -21,12 +21,10 @@ namespace G2H.Api.Web.Models.Comments
     {
         public Guid Id { get; set; }
         public string Content { get; set; }
-
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-
         public ApplicationUser CreatedByUser { get; set; }
         public ApplicationUser UpdatedByUser { get; set; }
 
