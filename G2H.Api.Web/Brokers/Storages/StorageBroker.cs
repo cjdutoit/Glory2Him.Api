@@ -27,6 +27,8 @@ namespace G2H.Api.Web.Brokers.Storages
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            AddPostReferences(modelBuilder);
+            AddReactionReferences(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
