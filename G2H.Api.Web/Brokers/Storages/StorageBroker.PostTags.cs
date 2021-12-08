@@ -61,5 +61,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return postTagEntityEntry.Entity;
         }
+
+        public async ValueTask<PostTag> DeletePostTagAsync(PostTag postTag)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<PostTag> postTagEntityEntry =
+                broker.PostTags.Remove(postTag);
+
+            await broker.SaveChangesAsync();
+
+            return postTagEntityEntry.Entity;
+        }
     }
 }
