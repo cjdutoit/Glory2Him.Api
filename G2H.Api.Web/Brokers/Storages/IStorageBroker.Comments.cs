@@ -19,5 +19,6 @@ namespace G2H.Api.Web.Brokers.Storages
         ValueTask<Comment> InsertCommentAsync(Comment comment);
         IQueryable<Comment> SelectAllComments();
         ValueTask<Comment> SelectCommentByIdAsync(Guid commentId);
+        ValueTask<Comment> UpdateCommentAsync(Comment comment);
     }
 }
