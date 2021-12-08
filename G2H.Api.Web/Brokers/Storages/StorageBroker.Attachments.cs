@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Attachments;
@@ -38,6 +39,14 @@ namespace G2H.Api.Web.Brokers.Storages
                 new StorageBroker(this.configuration);
 
             return broker.Attachments;
+        }
+
+        public async ValueTask<Attachment> SelectAttachmentByIdAsync(Guid attachmentId)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            return await broker.Attachments.FindAsync(attachmentId);
         }
     }
 }
