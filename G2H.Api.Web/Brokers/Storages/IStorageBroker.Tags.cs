@@ -20,5 +20,6 @@ namespace G2H.Api.Web.Brokers.Storages
         IQueryable<Tag> SelectAllTags();
         ValueTask<Tag> SelectTagByIdAsync(Guid tagId);
         ValueTask<Tag> UpdateTagAsync(Tag tag);
+        ValueTask<Tag> DeleteTagAsync(Tag tag);
     }
 }
