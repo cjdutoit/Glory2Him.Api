@@ -19,5 +19,6 @@ namespace G2H.Api.Web.Brokers.Storages
         ValueTask<Attachment> InsertAttachmentAsync(Attachment attachment);
         IQueryable<Attachment> SelectAllAttachments();
         ValueTask<Attachment> SelectAttachmentByIdAsync(Guid attachmentId);
+        ValueTask<Attachment> UpdateAttachmentAsync(Attachment attachment);
     }
 }
