@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Comments;
@@ -38,6 +39,14 @@ namespace G2H.Api.Web.Brokers.Storages
                 new StorageBroker(this.configuration);
 
             return broker.Comments;
+        }
+
+        public async ValueTask<Comment> SelectCommentByIdAsync(Guid commentId)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            return await broker.Comments.FindAsync(commentId);
         }
     }
 }
