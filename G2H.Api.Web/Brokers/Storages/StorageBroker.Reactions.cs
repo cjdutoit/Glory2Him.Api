@@ -48,5 +48,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return await broker.Reactions.FindAsync(reactionId);
         }
+
+        public async ValueTask<Reaction> UpdateReactionAsync(Reaction reaction)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<Reaction> reactionEntityEntry =
+                broker.Reactions.Update(reaction);
+
+            await broker.SaveChangesAsync();
+
+            return reactionEntityEntry.Entity;
+        }
     }
 }
