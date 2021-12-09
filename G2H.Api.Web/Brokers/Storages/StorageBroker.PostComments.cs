@@ -48,5 +48,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return await broker.PostComments.FindAsync(postCommentId);
         }
+
+        public async ValueTask<PostComment> UpdatePostCommentAsync(PostComment postComment)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<PostComment> postCommentEntityEntry =
+                broker.PostComments.Update(postComment);
+
+            await broker.SaveChangesAsync();
+
+            return postCommentEntityEntry.Entity;
+        }
     }
 }
