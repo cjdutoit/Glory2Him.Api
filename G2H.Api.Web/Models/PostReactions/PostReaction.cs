@@ -19,7 +19,7 @@ namespace G2H.Api.Web.Models.PostReactions
     {
         public Guid PostId { get; set; }
         public virtual Post Post { get; set; }
-        public int ReactionId { get; set; }
+        public ReactionId ReactionId { get; set; }
         public virtual Reaction Reaction { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }

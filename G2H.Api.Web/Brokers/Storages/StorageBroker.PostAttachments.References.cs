@@ -17,6 +17,14 @@ namespace G2H.Api.Web.Brokers.Storages
         private static void AddPostAttachmentReferences(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PostAttachment>()
+                .HasKey(postAttachment =>
+                    new
+                    {
+                        postAttachment.PostId,
+                        postAttachment.AttachmentId
+                    });
+
+            modelBuilder.Entity<PostAttachment>()
                 .HasOne(postAttachment => postAttachment.Post)
                 .WithMany(post => post.PostAttachments)
                 .HasForeignKey(postAttachment => postAttachment.PostId)

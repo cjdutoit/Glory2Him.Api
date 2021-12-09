@@ -17,6 +17,14 @@ namespace G2H.Api.Web.Brokers.Storages
         private static void AddCommentCommentReferences(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CommentComment>()
+                .HasKey(commentComment =>
+                    new
+                    {
+                        commentComment.ParentCommentId,
+                        commentComment.ChildCommentId
+                    });
+
+            modelBuilder.Entity<CommentComment>()
                 .HasOne(commentComment => commentComment.ParentComment)
                 .WithMany(comment => comment.ParentComments)
                 .HasForeignKey(commentComment => commentComment.ParentCommentId)
