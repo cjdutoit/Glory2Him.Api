@@ -61,5 +61,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return commentCommentEntityEntry.Entity;
         }
+
+        public async ValueTask<CommentComment> DeleteCommentCommentAsync(CommentComment commentComment)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<CommentComment> commentCommentEntityEntry =
+                broker.CommentComments.Remove(commentComment);
+
+            await broker.SaveChangesAsync();
+
+            return commentCommentEntityEntry.Entity;
+        }
     }
 }
