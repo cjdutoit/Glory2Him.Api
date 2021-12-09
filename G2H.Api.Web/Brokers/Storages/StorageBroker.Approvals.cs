@@ -61,5 +61,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return approvalEntityEntry.Entity;
         }
+
+        public async ValueTask<Approval> DeleteApprovalAsync(Approval approval)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<Approval> approvalEntityEntry =
+                broker.Approvals.Remove(approval);
+
+            await broker.SaveChangesAsync();
+
+            return approvalEntityEntry.Entity;
+        }
     }
 }
