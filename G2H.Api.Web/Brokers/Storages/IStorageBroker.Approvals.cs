@@ -20,5 +20,6 @@ namespace G2H.Api.Web.Brokers.Storages
         IQueryable<Approval> SelectAllApprovals();
         ValueTask<Approval> SelectApprovalByIdAsync(Guid approvalId);
         ValueTask<Approval> UpdateApprovalAsync(Approval approval);
+        ValueTask<Approval> DeleteApprovalAsync(Approval approval);
     }
 }
