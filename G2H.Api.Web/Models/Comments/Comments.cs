@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using G2H.Api.Web.Models.Base;
+using G2H.Api.Web.Models.CommentComments;
 using G2H.Api.Web.Models.PostReactions;
 using G2H.Api.Web.Models.PostsComments;
 using G2H.Api.Web.Models.Users;
@@ -32,6 +33,8 @@ namespace G2H.Api.Web.Models.Comments
         public virtual List<PostComment> PostComments { get; set; } = new List<PostComment>();
         [JsonIgnore]
         public virtual List<CommentReaction> CommentReactions { get; set; } = new List<CommentReaction>();
+        [JsonIgnore]
+        public virtual List<CommentComment> ParentComments { get; set; } = new List<CommentComment>();
         [JsonIgnore]
         public virtual List<CommentComment> ChildComments { get; set; } = new List<CommentComment>();
     }
