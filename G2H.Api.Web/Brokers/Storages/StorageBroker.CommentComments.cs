@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.PostsComments;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,14 @@ namespace G2H.Api.Web.Brokers.Storages
             await broker.SaveChangesAsync();
 
             return commentCommentEntityEntry.Entity;
+        }
+
+        public IQueryable<CommentComment> SelectAllCommentComments()
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            return broker.CommentComments;
         }
     }
 }
