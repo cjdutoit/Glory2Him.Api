@@ -29,6 +29,7 @@ namespace G2H.Api.Web.Brokers.Storages
         {
             AddAttachmentReferences(modelBuilder);
             AddCommentReferences(modelBuilder);
+            AddPostCommentReferences(modelBuilder);
             AddPostReferences(modelBuilder);
             AddPostTagReferences(modelBuilder);
             AddReactionReferences(modelBuilder);
