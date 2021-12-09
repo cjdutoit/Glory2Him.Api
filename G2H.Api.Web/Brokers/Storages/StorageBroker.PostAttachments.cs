@@ -61,5 +61,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return postAttachmentEntityEntry.Entity;
         }
+
+        public async ValueTask<PostAttachment> DeletePostAttachmentAsync(PostAttachment postAttachment)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<PostAttachment> postAttachmentEntityEntry =
+                broker.PostAttachments.Remove(postAttachment);
+
+            await broker.SaveChangesAsync();
+
+            return postAttachmentEntityEntry.Entity;
+        }
     }
 }
