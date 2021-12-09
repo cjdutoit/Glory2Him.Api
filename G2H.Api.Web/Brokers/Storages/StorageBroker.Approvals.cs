@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Approvals;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,14 @@ namespace G2H.Api.Web.Brokers.Storages
             await broker.SaveChangesAsync();
 
             return approvalEntityEntry.Entity;
+        }
+
+        public IQueryable<Approval> SelectAllApprovals()
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            return broker.Approvals;
         }
     }
 }
