@@ -48,5 +48,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return await broker.PostAttachments.FindAsync(postAttachmentId);
         }
+
+        public async ValueTask<PostAttachment> UpdatePostAttachmentAsync(PostAttachment postAttachment)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<PostAttachment> postAttachmentEntityEntry =
+                broker.PostAttachments.Update(postAttachment);
+
+            await broker.SaveChangesAsync();
+
+            return postAttachmentEntityEntry.Entity;
+        }
     }
 }
