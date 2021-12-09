@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using G2H.Api.Web.Models.PostsComments;
 using Microsoft.EntityFrameworkCore;
 
 namespace G2H.Api.Web.Brokers.Storages
@@ -15,7 +16,17 @@ namespace G2H.Api.Web.Brokers.Storages
     {
         private static void AddPostAttachmentReferences(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<PostAttachment>()
+                .HasOne(postAttachment => postAttachment.Post)
+                .WithMany(post => post.PostAttachments)
+                .HasForeignKey(postAttachment => postAttachment.PostId)
+                .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<PostAttachment>()
+                .HasOne(postAttachment => postAttachment.Attachment)
+                .WithMany(attachment => attachment.PostAttachments)
+                .HasForeignKey(postAttachment => postAttachment.AttachmentId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

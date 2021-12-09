@@ -8,8 +8,10 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
+using G2H.Api.Web.Models.PostsComments;
 using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.Attachments
@@ -31,5 +33,8 @@ namespace G2H.Api.Web.Models.Attachments
         public DateTimeOffset UpdatedDate { get; set; }
         public ApplicationUser CreatedByUser { get; set; }
         public ApplicationUser UpdatedByUser { get; set; }
+
+        [JsonIgnore]
+        public virtual List<PostAttachment> PostAttachments { get; set; } = new List<PostAttachment>();
     }
 }
