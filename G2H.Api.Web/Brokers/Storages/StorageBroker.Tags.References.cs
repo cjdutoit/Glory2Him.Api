@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using G2H.Api.Web.Models.Tags;
 using Microsoft.EntityFrameworkCore;
 
 namespace G2H.Api.Web.Brokers.Storages
@@ -15,6 +16,11 @@ namespace G2H.Api.Web.Brokers.Storages
     {
         private static void AddTagReferences(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Tag>()
+                .HasOne(tag => tag.Approval)
+                .WithMany(approval => approval.Tags)
+                .HasForeignKey(tag => tag.ApprovalId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
