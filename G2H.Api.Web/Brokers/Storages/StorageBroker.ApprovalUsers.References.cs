@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using G2H.Api.Web.Models.ApprovalUsers;
 using Microsoft.EntityFrameworkCore;
 
 namespace G2H.Api.Web.Brokers.Storages
@@ -15,6 +16,11 @@ namespace G2H.Api.Web.Brokers.Storages
     {
         private static void AddApprovalUserReferences(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ApprovalUser>()
+                .HasOne(approvalUser => approvalUser.Approval)
+                .WithMany(approval => approval.ApprovalUsers)
+                .HasForeignKey(approvalUser => approvalUser.ApprovalId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
