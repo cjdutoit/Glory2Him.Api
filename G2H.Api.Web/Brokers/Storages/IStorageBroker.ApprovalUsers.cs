@@ -19,5 +19,6 @@ namespace G2H.Api.Web.Brokers.Storages
         ValueTask<ApprovalUser> InsertApprovalUserAsync(ApprovalUser approvalUser);
         IQueryable<ApprovalUser> SelectAllApprovalUsers();
         ValueTask<ApprovalUser> SelectApprovalUserByIdAsync(Guid approvalUserId);
+        ValueTask<ApprovalUser> UpdateApprovalUserAsync(ApprovalUser approvalUser);
     }
 }

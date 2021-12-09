@@ -48,5 +48,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return await broker.ApprovalUsers.FindAsync(approvalUserId);
         }
+
+        public async ValueTask<ApprovalUser> UpdateApprovalUserAsync(ApprovalUser approvalUser)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<ApprovalUser> approvalUserEntityEntry =
+                broker.ApprovalUsers.Update(approvalUser);
+
+            await broker.SaveChangesAsync();
+
+            return approvalUserEntityEntry.Entity;
+        }
     }
 }
