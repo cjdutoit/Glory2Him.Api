@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using G2H.Api.Web.Models.Comments;
 using Microsoft.EntityFrameworkCore;
 
 namespace G2H.Api.Web.Brokers.Storages
@@ -15,7 +16,11 @@ namespace G2H.Api.Web.Brokers.Storages
     {
         private static void AddCommentReferences(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<Comment>()
+                .HasOne(comment => comment.Approval)
+                .WithMany(approval => approval.Comments)
+                .HasForeignKey(comment => comment.ApprovalId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
