@@ -20,5 +20,6 @@ namespace G2H.Api.Web.Brokers.Storages
         IQueryable<CommentReaction> SelectAllCommentReactions();
         ValueTask<CommentReaction> SelectCommentReactionByIdAsync(Guid commentReactionId);
         ValueTask<CommentReaction> UpdateCommentReactionAsync(CommentReaction commentReaction);
+        ValueTask<CommentReaction> DeleteCommentReactionAsync(CommentReaction commentReaction);
     }
 }
