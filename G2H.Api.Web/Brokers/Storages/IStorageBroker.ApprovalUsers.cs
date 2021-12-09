@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.ApprovalUsers;
@@ -17,5 +18,6 @@ namespace G2H.Api.Web.Brokers.Storages
     {
         ValueTask<ApprovalUser> InsertApprovalUserAsync(ApprovalUser approvalUser);
         IQueryable<ApprovalUser> SelectAllApprovalUsers();
+        ValueTask<ApprovalUser> SelectApprovalUserByIdAsync(Guid approvalUserId);
     }
 }
