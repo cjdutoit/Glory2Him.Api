@@ -10,7 +10,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using G2H.Api.Web.Models.PostsComments;
+using G2H.Api.Web.Models.CommentComments;
 
 namespace G2H.Api.Web.Brokers.Storages
 {

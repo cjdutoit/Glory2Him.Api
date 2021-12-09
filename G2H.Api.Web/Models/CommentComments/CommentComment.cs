@@ -10,7 +10,7 @@
 using System;
 using G2H.Api.Web.Models.Comments;
 
-namespace G2H.Api.Web.Models.PostsComments
+namespace G2H.Api.Web.Models.CommentComments
 {
     public class CommentComment
     {
