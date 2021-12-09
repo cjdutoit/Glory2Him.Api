@@ -17,6 +17,14 @@ namespace G2H.Api.Web.Brokers.Storages
         private static void AddCommentReactionReferences(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CommentReaction>()
+                .HasKey(commentReaction =>
+                    new
+                    {
+                        commentReaction.CommentId,
+                        commentReaction.ReactionId
+                    });
+
+            modelBuilder.Entity<CommentReaction>()
                 .HasOne(commentReaction => commentReaction.Comment)
                 .WithMany(comment => comment.CommentReactions)
                 .HasForeignKey(commentReaction => commentReaction.CommentId)

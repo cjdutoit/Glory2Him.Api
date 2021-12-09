@@ -14,8 +14,9 @@ using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.ApprovalUsers
 {
-    public class ApprovalUser : IApproval, IAudit
+    public class ApprovalUser : IKey, IApproval, IAudit
     {
+        public Guid Id { get; set; }
         public Guid ApprovalId { get; set; }
         public Approval Approval { get; set; }
         public bool IsApproved { get; set; }

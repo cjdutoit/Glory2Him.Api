@@ -27,6 +27,8 @@ namespace G2H.Api.Web.Brokers.Storages
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             AddApprovalReferences(modelBuilder);
             AddApprovalUserReferences(modelBuilder);
             AddAttachmentReferences(modelBuilder);

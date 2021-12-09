@@ -17,6 +17,14 @@ namespace G2H.Api.Web.Brokers.Storages
         private static void AddPostReactionReferences(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PostReaction>()
+                .HasKey(postReaction =>
+                    new
+                    {
+                        postReaction.PostId,
+                        postReaction.ReactionId
+                    });
+
+            modelBuilder.Entity<PostReaction>()
                 .HasOne(postReaction => postReaction.Post)
                 .WithMany(post => post.PostReactions)
                 .HasForeignKey(postReaction => postReaction.PostId)

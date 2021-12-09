@@ -17,6 +17,14 @@ namespace G2H.Api.Web.Brokers.Storages
         private static void AddPostTagReferences(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PostTag>()
+                .HasKey(postTag =>
+                    new
+                    {
+                        postTag.PostId,
+                        postTag.TagId
+                    });
+
+            modelBuilder.Entity<PostTag>()
                 .HasOne(postTag => postTag.Post)
                 .WithMany(post => post.PostTags)
                 .HasForeignKey(postTag => postTag.PostId)
