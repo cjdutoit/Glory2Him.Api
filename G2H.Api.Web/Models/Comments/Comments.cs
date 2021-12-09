@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.CommentComments;
 using G2H.Api.Web.Models.PostReactions;
@@ -18,10 +19,12 @@ using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.Comments
 {
-    public class Comment : IKey, IAudit
+    public class Comment : IKey, IApproval, IAudit
     {
         public Guid Id { get; set; }
         public string Content { get; set; }
+        public Guid ApprovalId { get; set; }
+        public Approval Approval { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }

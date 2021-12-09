@@ -13,6 +13,7 @@ using System.Text.Json.Serialization;
 using G2H.Api.Web.Models.ApprovalUsers;
 using G2H.Api.Web.Models.Attachments;
 using G2H.Api.Web.Models.Base;
+using G2H.Api.Web.Models.Comments;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.PostTags;
 using G2H.Api.Web.Models.Statuses;
@@ -30,6 +31,8 @@ namespace G2H.Api.Web.Models.Approvals
 
         [JsonIgnore]
         public virtual List<Post> Posts { get; set; } = new List<Post>();
+        [JsonIgnore]
+        public virtual List<Comment> Comments { get; set; } = new List<Comment>();
         [JsonIgnore]
         public virtual List<Attachment> Attachments { get; set; } = new List<Attachment>();
         [JsonIgnore]
