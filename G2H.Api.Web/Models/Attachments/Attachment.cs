@@ -13,6 +13,7 @@ using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.PostsComments;
 using G2H.Api.Web.Models.Users;
+using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.Attachments
 {
