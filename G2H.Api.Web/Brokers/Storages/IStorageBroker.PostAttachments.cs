@@ -20,5 +20,6 @@ namespace G2H.Api.Web.Brokers.Storages
         IQueryable<PostAttachment> SelectAllPostAttachments();
         ValueTask<PostAttachment> SelectPostAttachmentByIdAsync(Guid postAttachmentId);
         ValueTask<PostAttachment> UpdatePostAttachmentAsync(PostAttachment postAttachment);
+        ValueTask<PostAttachment> DeletePostAttachmentAsync(PostAttachment postAttachment);
     }
 }
