@@ -27,7 +27,7 @@ namespace G2H.Api.Web.Models.Posts
         public string Author { get; set; }
         public string Content { get; set; }
         public PostTypeId PostTypeId { get; set; }
-        public virtual PostType PostType { get; set; }
+        public PostType PostType { get; set; }
         public bool IsCommentsAllowed { get; set; }
         public bool IsCommentsVisible { get; set; }
         public Guid ApprovalId { get; set; }

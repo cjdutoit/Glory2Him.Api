@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq.Expressions;
 using G2H.Api.Web.Brokers.DateTimes;
 using G2H.Api.Web.Brokers.Loggings;
 using G2H.Api.Web.Brokers.Storages;
@@ -18,6 +19,7 @@ using G2H.Api.Web.Models.Users;
 using G2H.Api.Web.Services.Foundations.Posts;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 {
@@ -40,8 +42,19 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
+        private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
+        {
+            return actualException =>
+                actualException.Message == expectedException.Message
+                && actualException.InnerException.Message == expectedException.InnerException.Message
+                && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
+        }
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static Post CreateRandomPost() =>
+            CreatePostFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
 
         private static Post CreateRandomPost(DateTimeOffset dateTimeOffset) =>
             CreatePostFiller(dateTimeOffset).Create();
