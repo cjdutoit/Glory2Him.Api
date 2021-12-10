@@ -86,12 +86,12 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 values: "Date is required");
 
             invalidPostException.AddData(
-                key: nameof(Post.UpdatedDate),
-                values: "Date is required");
-
-            invalidPostException.AddData(
                 key: nameof(Post.CreatedByUserId),
                 values: "Id is required");
+
+            invalidPostException.AddData(
+                key: nameof(Post.UpdatedDate),
+                values: "Date is required");
 
             invalidPostException.AddData(
                 key: nameof(Post.UpdatedByUserId),
@@ -110,7 +110,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
-                    Times.Once());
+                    Times.Never());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

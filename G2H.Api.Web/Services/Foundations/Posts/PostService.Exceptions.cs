@@ -28,7 +28,10 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             {
                 throw CreateAndLogValidationException(nullPostException);
             }
-
+            catch (InvalidPostException invalidCommentException)
+            {
+                throw CreateAndLogValidationException(invalidCommentException);
+            }
         }
 
         private PostValidationException CreateAndLogValidationException(

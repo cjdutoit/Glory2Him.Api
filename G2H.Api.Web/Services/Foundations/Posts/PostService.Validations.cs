@@ -22,6 +22,7 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 (Rule: IsInvalid(post.Id), Parameter: nameof(Post.Id)),
                 (Rule: IsInvalid(post.Title), Parameter: nameof(Post.Title)),
                 (Rule: IsInvalid(post.Author), Parameter: nameof(Post.Author)),
+                (Rule: IsInvalid(post.Content), Parameter: nameof(Post.Content)),
                 (Rule: IsInvalid(post.CreatedDate), Parameter: nameof(Post.CreatedDate)),
                 (Rule: IsInvalid(post.CreatedByUserId), Parameter: nameof(Post.CreatedByUserId)),
                 (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(Post.UpdatedDate)),
