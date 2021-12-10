@@ -9,6 +9,8 @@
 
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
+using G2H.Api.Web.Models.Posts.Exceptions;
+using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.Posts
 {
@@ -18,7 +20,26 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
         private async ValueTask<Post> TryCatch(ReturningPostFunction returningPostFunction)
         {
-            return await returningPostFunction();
+            try
+            {
+                return await returningPostFunction();
+            }
+            catch (NullPostException nullPostException)
+            {
+                throw CreateAndLogValidationException(nullPostException);
+            }
+
+        }
+
+        private PostValidationException CreateAndLogValidationException(
+            Xeption exception)
+        {
+            var postValidationException =
+                new PostValidationException(exception);
+
+            this.loggingBroker.LogError(postValidationException);
+
+            return postValidationException;
         }
     }
 }
