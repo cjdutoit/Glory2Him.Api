@@ -157,7 +157,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
-                    Times.Once());
+                    Times.Never());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
