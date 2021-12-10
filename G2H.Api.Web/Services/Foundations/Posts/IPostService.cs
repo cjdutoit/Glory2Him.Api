@@ -7,12 +7,13 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
+using System.Threading.Tasks;
+using G2H.Api.Web.Models.Posts;
 
-namespace G2H.Api.Web.Brokers.DateTimes
+namespace G2H.Api.Web.Services.Foundations.Posts
 {
-    public interface IDateTimeBroker
+    public interface IPostService
     {
-        DateTimeOffset GetCurrentDateTimeOffset();
+        ValueTask<Post> AddPostAsync(Post post);
     }
 }

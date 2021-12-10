@@ -1,0 +1,66 @@
+﻿// --------------------------------------------------------------------------------
+// Copyright (c) Christo du Toit. All rights reserved.
+// Licensed under the MIT License.
+// See License.txt in the project root for license information.
+// FREE TO USE TO HELP SHARE THE GOSPEL
+// Mark 16:15 NIV "Go into all the world and preach the gospel to all creation."
+// https://mark.bible/mark-16-15 
+// --------------------------------------------------------------------------------
+
+using System;
+using G2H.Api.Web.Brokers.DateTimes;
+using G2H.Api.Web.Brokers.Loggings;
+using G2H.Api.Web.Brokers.Storages;
+using G2H.Api.Web.Models.Approvals;
+using G2H.Api.Web.Models.Posts;
+using G2H.Api.Web.Models.PostTypes;
+using G2H.Api.Web.Models.Users;
+using G2H.Api.Web.Services.Foundations.Posts;
+using Moq;
+using Tynamix.ObjectFiller;
+
+namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
+{
+    public partial class PostServiceTests
+    {
+        private readonly Mock<IStorageBroker> storageBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
+        private readonly IPostService postService;
+
+        public PostServiceTests()
+        {
+            this.storageBrokerMock = new Mock<IStorageBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
+
+            this.postService = new PostService(
+                storageBroker: this.storageBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object,
+                loggingBroker: this.loggingBrokerMock.Object);
+        }
+
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static Post CreateRandomPost(DateTimeOffset dateTimeOffset) =>
+            CreatePostFiller(dateTimeOffset).Create();
+
+        private static Filler<Post> CreatePostFiller(DateTimeOffset dateTimeOffset)
+        {
+            var filler = new Filler<Post>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(dateTimeOffset)
+                .OnType<PostType>().IgnoreIt()
+                .OnType<Approval>().IgnoreIt()
+                .OnType<ApplicationUser>().IgnoreIt()
+                .OnProperty(post => post.PostReactions).IgnoreIt()
+                .OnProperty(post => post.PostTags).IgnoreIt()
+                .OnProperty(post => post.PostComments).IgnoreIt()
+                .OnProperty(post => post.PostAttachments).IgnoreIt();
+
+            return filler;
+        }
+    }
+}
