@@ -24,8 +24,9 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Brokers\DateTimes\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Services\" />
+    <Folder Include="Services\Foundations\Posts\" />
   </ItemGroup>
 
 </Project>
