@@ -38,7 +38,7 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                     firstId: post.UpdatedByUserId,
                     secondId: post.CreatedByUserId,
                     secondIdName: nameof(Post.CreatedByUserId)),
-                Parameter: nameof(Post.UpdatedDate)));
+                Parameter: nameof(Post.UpdatedByUserId)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
