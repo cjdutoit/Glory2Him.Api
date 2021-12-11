@@ -106,12 +106,12 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 this.postService.AddPostAsync(invalidPost);
 
             // then
-            var actualException = await Assert.ThrowsAsync<PostValidationException>(() =>
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                addPostTask.AsTask());
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
-                    Times.Never());
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -153,12 +153,12 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 this.postService.AddPostAsync(invalidPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() =>
+            var actualException = await Assert.ThrowsAsync<PostValidationException>(() =>
                addPostTask.AsTask());
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
-                    Times.Never());
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -199,12 +199,12 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 this.postService.AddPostAsync(invalidPost);
 
             // then
-            var actualException = await Assert.ThrowsAsync<PostValidationException>(() =>
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                addPostTask.AsTask());
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
-                    Times.Never());
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -254,7 +254,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 this.postService.AddPostAsync(invalidPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() =>
+            var actualException = await Assert.ThrowsAsync<PostValidationException>(() =>
                addPostTask.AsTask());
 
             this.dateTimeBrokerMock.Verify(broker =>

@@ -38,7 +38,9 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                     firstId: post.UpdatedByUserId,
                     secondId: post.CreatedByUserId,
                     secondIdName: nameof(Post.CreatedByUserId)),
-                Parameter: nameof(Post.UpdatedByUserId)));
+                Parameter: nameof(Post.UpdatedByUserId)),
+
+                (Rule: IsNotRecent(post.CreatedDate), Parameter: nameof(post.CreatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -76,6 +78,23 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 Condition = firstId != secondId,
                 Message = $"Id is not the same as {secondIdName}"
             };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTimeOffset();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

@@ -31,6 +31,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             Post storagePost = inputPost;
             Post expectedPost = storagePost.DeepClone();
 
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTime);
+
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertPostAsync(inputPost))
                     .ReturnsAsync(storagePost);
@@ -42,10 +46,15 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
+
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertPostAsync(inputPost),
                     Times.Once);
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
