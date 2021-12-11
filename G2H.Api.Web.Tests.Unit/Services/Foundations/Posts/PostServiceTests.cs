@@ -20,6 +20,7 @@ using G2H.Api.Web.Services.Foundations.Posts;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 {
@@ -52,6 +53,21 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
+
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        public static TheoryData MinutesBeforeOrAfter()
+        {
+            int randomNumber = GetRandomNumber();
+            int randomNegativeNumber = GetRandomNegativeNumber();
+
+            return new TheoryData<int>
+            {
+                randomNumber,
+                randomNegativeNumber
+            };
+        }
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
