@@ -64,6 +64,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 
         private static Filler<Post> CreatePostFiller(DateTimeOffset dateTimeOffset)
         {
+            var userId = Guid.NewGuid();
             var filler = new Filler<Post>();
 
             filler.Setup()
@@ -71,6 +72,8 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 .OnType<PostType>().IgnoreIt()
                 .OnType<Approval>().IgnoreIt()
                 .OnType<ApplicationUser>().IgnoreIt()
+                .OnProperty(post => post.CreatedByUserId).Use(userId)
+                .OnProperty(post => post.UpdatedByUserId).Use(userId)
                 .OnProperty(post => post.PostReactions).IgnoreIt()
                 .OnProperty(post => post.PostTags).IgnoreIt()
                 .OnProperty(post => post.PostComments).IgnoreIt()

@@ -8,7 +8,6 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using G2H.Api.Web.Models.Comments;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
 
@@ -32,8 +31,14 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 (Rule: IsNotSame(
                     firstDate: post.UpdatedDate,
                     secondDate: post.CreatedDate,
-                    secondDateName: nameof(Comment.CreatedDate)),
-                Parameter: nameof(Comment.UpdatedDate)));
+                    secondDateName: nameof(Post.CreatedDate)),
+                Parameter: nameof(Post.UpdatedDate)),
+
+                (Rule: IsNotSame(
+                    firstId: post.UpdatedByUserId,
+                    secondId: post.CreatedByUserId,
+                    secondIdName: nameof(Post.CreatedByUserId)),
+                Parameter: nameof(Post.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -61,6 +66,15 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private static dynamic IsNotSame(
+            Guid firstId,
+            Guid secondId,
+            string secondIdName) => new
+            {
+                Condition = firstId != secondId,
+                Message = $"Id is not the same as {secondIdName}"
             };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
