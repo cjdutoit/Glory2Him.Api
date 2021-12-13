@@ -135,6 +135,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             Post randomPost = CreateRandomPost();
             Post invalidPost = randomPost;
 
+            invalidPost.PostTypeId = Models.PostTypes.PostTypeId.Quote;
             invalidPost.Content = GetRandomMessage(1, 281, 300);
 
             var invalidPostException =

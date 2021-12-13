@@ -10,6 +10,7 @@
 using System;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
+using G2H.Api.Web.Models.PostTypes;
 
 namespace G2H.Api.Web.Services.Foundations.Posts
 {
@@ -27,6 +28,12 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 (Rule: IsInvalid(post.CreatedByUserId), Parameter: nameof(Post.CreatedByUserId)),
                 (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(Post.UpdatedDate)),
                 (Rule: IsInvalid(post.UpdatedByUserId), Parameter: nameof(Post.UpdatedByUserId)),
+
+                (Rule: IsGreaterThan(
+                    text: post.Content,
+                    maxLength: 280,
+                    condition: post.PostTypeId == PostTypeId.Quote),
+                Parameter: nameof(Post.Content)),
 
                 (Rule: IsNotSame(
                     firstDate: post.UpdatedDate,
