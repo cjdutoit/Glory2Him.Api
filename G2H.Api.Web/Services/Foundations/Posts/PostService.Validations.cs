@@ -35,6 +35,12 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                     condition: post.PostTypeId == PostTypeId.Quote),
                 Parameter: nameof(Post.Content)),
 
+                (Rule: IsGreaterThan(
+                    text: post.Content,
+                    maxLength: 2200,
+                    condition: post.PostTypeId == PostTypeId.Story),
+                Parameter: nameof(Post.Content)),
+
                 (Rule: IsNotSame(
                     firstDate: post.UpdatedDate,
                     secondDate: post.CreatedDate,
