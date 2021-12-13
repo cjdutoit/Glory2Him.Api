@@ -61,6 +61,15 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             Message = "Date is required"
         };
 
+        private static dynamic IsGreaterThan(
+            string text,
+            int maxLength,
+            bool condition) => new
+            {
+                Condition = condition && (text ?? "").Length > maxLength,
+                Message = $"Text is exceeding character limit"
+            };
+
         private static dynamic IsNotSame(
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
