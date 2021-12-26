@@ -10,6 +10,7 @@
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.Posts
@@ -32,6 +33,13 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             {
                 throw CreateAndLogValidationException(invalidCommentException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedPostStorageException =
+                    new FailedPostStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedPostStorageException);
+            }
         }
 
         private PostValidationException CreateAndLogValidationException(
@@ -43,6 +51,15 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             this.loggingBroker.LogError(postValidationException);
 
             return postValidationException;
+        }
+
+        private PostDependencyException CreateAndLogCriticalDependencyException(
+            Xeption exception)
+        {
+            var postDependencyException = new PostDependencyException(exception);
+            this.loggingBroker.LogCritical(postDependencyException);
+
+            return postDependencyException;
         }
     }
 }
