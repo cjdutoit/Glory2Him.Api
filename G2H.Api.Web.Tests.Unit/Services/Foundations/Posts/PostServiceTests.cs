@@ -9,6 +9,7 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using G2H.Api.Web.Brokers.DateTimes;
 using G2H.Api.Web.Brokers.Loggings;
 using G2H.Api.Web.Brokers.Storages;
@@ -17,6 +18,7 @@ using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.Users;
 using G2H.Api.Web.Services.Foundations.Posts;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -68,6 +70,9 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 randomNegativeNumber
             };
         }
+
+        private static SqlException GetSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static string GetRandomMessage() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
