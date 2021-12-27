@@ -48,6 +48,13 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsPostException);
             }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidPostReferenceException =
+                    new InvalidPostReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidPostReferenceException);
+            }
         }
 
         private PostValidationException CreateAndLogValidationException(
