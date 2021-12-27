@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Posts;
@@ -21,6 +22,8 @@ namespace G2H.Api.Web.Services.Foundations.Posts
     public partial class PostService
     {
         private delegate ValueTask<Post> ReturningPostFunction();
+
+        private delegate IQueryable<Post> ReturningPostsFunction();
 
         private async ValueTask<Post> TryCatch(ReturningPostFunction returningPostFunction)
         {
@@ -73,6 +76,27 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             }
         }
 
+        private IQueryable<Post> TryCatch(ReturningPostsFunction returningPostsFunction)
+        {
+            try
+            {
+                return returningPostsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedPostStorageException =
+                    new FailedPostStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedPostStorageException);
+            }
+            catch (Exception exception)
+            {
+                var failedPostServiceException =
+                    new FailedPostServiceException(exception);
+
+                throw CreateAndLogServiceException(failedPostServiceException);
+            }
+        }
+
         private PostValidationException CreateAndLogValidationException(
             Xeption exception)
         {
@@ -115,6 +139,15 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
         private PostServiceException CreateAndLogServiceException(
             Xeption exception)
+        {
+            var postServiceException = new PostServiceException(exception);
+            this.loggingBroker.LogError(postServiceException);
+
+            return postServiceException;
+        }
+
+        private PostServiceException CreateAndLogServiceException(
+            Exception exception)
         {
             var postServiceException = new PostServiceException(exception);
             this.loggingBroker.LogError(postServiceException);

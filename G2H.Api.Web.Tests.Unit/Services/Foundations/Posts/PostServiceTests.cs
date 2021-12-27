@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using G2H.Api.Web.Brokers.DateTimes;
@@ -45,7 +46,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
-        private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException)
         {
             return actualException =>
                 actualException.Message == expectedException.Message
@@ -85,6 +86,13 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static IQueryable<Post> CreateRandomPosts()
+        {
+            return CreatePostFiller(dateTimeOffset: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
+        }
 
         private static Post CreateRandomPost() =>
             CreatePostFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
