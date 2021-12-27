@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Posts;
@@ -21,6 +22,8 @@ namespace G2H.Api.Web.Services.Foundations.Posts
     public partial class PostService
     {
         private delegate ValueTask<Post> ReturningPostFunction();
+
+        private delegate IQueryable<Post> ReturningPostsFunction();
 
         private async ValueTask<Post> TryCatch(ReturningPostFunction returningPostFunction)
         {
@@ -71,6 +74,11 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
                 throw CreateAndLogServiceException(failedPostServiceException);
             }
+        }
+
+        private IQueryable<Post> TryCatch(ReturningPostsFunction returningPostsFunction)
+        {
+            return returningPostsFunction();
         }
 
         private PostValidationException CreateAndLogValidationException(

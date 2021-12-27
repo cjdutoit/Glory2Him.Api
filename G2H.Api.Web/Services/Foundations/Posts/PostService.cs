@@ -41,6 +41,6 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         });
 
         public IQueryable<Post> RetrieveAllPosts() =>
-            this.storageBroker.SelectAllPosts();
+        TryCatch(() => this.storageBroker.SelectAllPosts());
     }
 }
