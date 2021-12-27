@@ -8,11 +8,14 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Brokers.DateTimes
+namespace G2H.Api.Web.Models.Posts.Exceptions
 {
-    public interface IDateTimeBroker
+    public class FailedPostStorageException : Xeption
     {
-        DateTimeOffset GetCurrentDateTimeOffset();
+        public FailedPostStorageException(Exception innerException)
+            : base(message: "Failed post storage error occurred, contact support.", innerException)
+        { }
     }
 }

@@ -7,12 +7,14 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Brokers.DateTimes
+namespace G2H.Api.Web.Models.Posts.Exceptions
 {
-    public interface IDateTimeBroker
+    public class InvalidPostException : Xeption
     {
-        DateTimeOffset GetCurrentDateTimeOffset();
+        public InvalidPostException()
+            : base(message: "Invalid post. Please correct the errors and try again.")
+        { }
     }
 }

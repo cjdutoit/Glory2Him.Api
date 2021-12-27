@@ -7,12 +7,15 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Brokers.DateTimes
+namespace G2H.Api.Web.Models.Posts.Exceptions
 {
-    public interface IDateTimeBroker
+    public class PostValidationException : Xeption
     {
-        DateTimeOffset GetCurrentDateTimeOffset();
+        public PostValidationException(Xeption innerException)
+            : base(message: "Post validation errors occurred, please try again.",
+                  innerException)
+        { }
     }
 }

@@ -8,11 +8,13 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Brokers.DateTimes
+namespace G2H.Api.Web.Models.Posts.Exceptions
 {
-    public interface IDateTimeBroker
+    public class InvalidPostReferenceException : Xeption
     {
-        DateTimeOffset GetCurrentDateTimeOffset();
+        public InvalidPostReferenceException(Exception innerException)
+            : base(message: "Invalid post reference error occurred.", innerException) { }
     }
 }

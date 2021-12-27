@@ -8,11 +8,14 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Brokers.DateTimes
+namespace G2H.Api.Web.Models.Posts.Exceptions
 {
-    public interface IDateTimeBroker
+    public class AlreadyExistsPostException : Xeption
     {
-        DateTimeOffset GetCurrentDateTimeOffset();
+        public AlreadyExistsPostException(Exception innerException)
+            : base(message: "Post with the same Id already exists.", innerException)
+        { }
     }
 }

@@ -8,11 +8,14 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Brokers.DateTimes
+namespace G2H.Api.Web.Models.Posts.Exceptions
 {
-    public interface IDateTimeBroker
+    public class PostServiceException : Xeption
     {
-        DateTimeOffset GetCurrentDateTimeOffset();
+        public PostServiceException(Exception innerException)
+            : base(message: "Post service error occurred, contact support.", innerException)
+        { }
     }
 }
