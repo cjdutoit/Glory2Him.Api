@@ -12,6 +12,7 @@ using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.Posts
@@ -55,6 +56,13 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
                 throw CreateAndLogDependencyValidationException(invalidPostReferenceException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedPostStorageException =
+                    new FailedPostStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependecyException(failedPostStorageException);
+            }
         }
 
         private PostValidationException CreateAndLogValidationException(
@@ -86,6 +94,15 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             this.loggingBroker.LogError(postDependencyValidationException);
 
             return postDependencyValidationException;
+        }
+
+        private PostDependencyException CreateAndLogDependecyException(
+            Xeption exception)
+        {
+            var postDependencyException = new PostDependencyException(exception);
+            this.loggingBroker.LogError(postDependencyException);
+
+            return postDependencyException;
         }
     }
 }
