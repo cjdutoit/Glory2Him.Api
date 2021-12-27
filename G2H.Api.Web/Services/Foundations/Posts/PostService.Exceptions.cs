@@ -78,7 +78,16 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
         private IQueryable<Post> TryCatch(ReturningPostsFunction returningPostsFunction)
         {
-            return returningPostsFunction();
+            try
+            {
+                return returningPostsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedPostStorageException =
+                    new FailedPostStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedPostStorageException);
+            }
         }
 
         private PostValidationException CreateAndLogValidationException(
