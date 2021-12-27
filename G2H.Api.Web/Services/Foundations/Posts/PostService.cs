@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Brokers.DateTimes;
 using G2H.Api.Web.Brokers.Loggings;
@@ -38,5 +39,10 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
             return await this.storageBroker.InsertPostAsync(post);
         });
+
+        public IQueryable<Post> RetrieveAllPosts()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
