@@ -88,6 +88,13 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                     new FailedPostStorageException(sqlException);
                 throw CreateAndLogCriticalDependencyException(failedPostStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedPostServiceException =
+                    new FailedPostServiceException(exception);
+
+                throw CreateAndLogServiceException(failedPostServiceException);
+            }
         }
 
         private PostValidationException CreateAndLogValidationException(
@@ -132,6 +139,15 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
         private PostServiceException CreateAndLogServiceException(
             Xeption exception)
+        {
+            var postServiceException = new PostServiceException(exception);
+            this.loggingBroker.LogError(postServiceException);
+
+            return postServiceException;
+        }
+
+        private PostServiceException CreateAndLogServiceException(
+            Exception exception)
         {
             var postServiceException = new PostServiceException(exception);
             this.loggingBroker.LogError(postServiceException);

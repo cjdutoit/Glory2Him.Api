@@ -46,7 +46,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
-        private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException)
         {
             return actualException =>
                 actualException.Message == expectedException.Message

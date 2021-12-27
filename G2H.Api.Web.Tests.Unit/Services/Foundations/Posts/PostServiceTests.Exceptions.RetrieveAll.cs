@@ -62,8 +62,11 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             string exceptionMessage = GetRandomMessage();
             var serviceException = new Exception(exceptionMessage);
 
+            var failedPostServiceException =
+                new FailedPostServiceException(serviceException);
+
             var expectedPostServiceException =
-                new PostServiceException(serviceException);
+                new PostServiceException(failedPostServiceException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllPosts())
@@ -88,7 +91,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
