@@ -40,9 +40,7 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             return await this.storageBroker.InsertPostAsync(post);
         });
 
-        public IQueryable<Post> RetrieveAllPosts()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<Post> RetrieveAllPosts() =>
+            this.storageBroker.SelectAllPosts();
     }
 }
