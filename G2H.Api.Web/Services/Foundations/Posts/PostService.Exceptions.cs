@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -40,6 +41,13 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
                 throw CreateAndLogCriticalDependencyException(failedPostStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsPostException =
+                    new AlreadyExistsPostException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsPostException);
+            }
         }
 
         private PostValidationException CreateAndLogValidationException(
@@ -60,6 +68,17 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             this.loggingBroker.LogCritical(postDependencyException);
 
             return postDependencyException;
+        }
+
+        private PostDependencyValidationException CreateAndLogDependencyValidationException(
+            Xeption exception)
+        {
+            var postDependencyValidationException =
+                new PostDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(postDependencyValidationException);
+
+            return postDependencyValidationException;
         }
     }
 }
