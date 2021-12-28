@@ -66,6 +66,7 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 await this.storageBroker.SelectPostByIdAsync(post.Id);
 
             ValidateStoragePost(maybePost, post.Id);
+            ValidateAgainstStoragePostOnModify(inputPost: post, storagePost: maybePost);
 
             return await this.storageBroker.UpdatePostAsync(post);
         });

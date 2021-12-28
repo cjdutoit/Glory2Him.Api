@@ -174,6 +174,22 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             }
         }
 
+        private static void ValidateAgainstStoragePostOnModify(Post inputPost, Post storagePost)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputPost.CreatedDate,
+                    secondDate: storagePost.CreatedDate,
+                    secondDateName: nameof(Post.CreatedDate)),
+                Parameter: nameof(Post.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputPost.UpdatedDate,
+                    secondDate: storagePost.UpdatedDate,
+                    secondDateName: nameof(Post.UpdatedDate)),
+                Parameter: nameof(Post.UpdatedDate)));
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidCommentException = new InvalidPostException();
