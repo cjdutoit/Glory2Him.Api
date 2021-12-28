@@ -19,6 +19,7 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         private void ValidatePostOnAdd(Post post)
         {
             ValidatePostIsNotNull(post);
+
             Validate(
                 (Rule: IsInvalid(post.Id), Parameter: nameof(Post.Id)),
                 (Rule: IsInvalid(post.Title), Parameter: nameof(Post.Title)),
@@ -54,6 +55,41 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 Parameter: nameof(Post.UpdatedByUserId)),
 
                 (Rule: IsNotRecent(post.CreatedDate), Parameter: nameof(post.CreatedDate)));
+        }
+
+        private void ValidatePostOnModify(Post post)
+        {
+            ValidatePostIsNotNull(post);
+
+            Validate(
+                (Rule: IsInvalid(post.Id), Parameter: nameof(Post.Id)),
+                (Rule: IsInvalid(post.Title), Parameter: nameof(Post.Title)),
+                (Rule: IsInvalid(post.Author), Parameter: nameof(Post.Author)),
+                (Rule: IsInvalid(post.Content), Parameter: nameof(Post.Content)),
+                (Rule: IsInvalid(post.CreatedDate), Parameter: nameof(Post.CreatedDate)),
+                (Rule: IsInvalid(post.CreatedByUserId), Parameter: nameof(Post.CreatedByUserId)),
+                (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(Post.UpdatedDate)),
+                (Rule: IsInvalid(post.UpdatedByUserId), Parameter: nameof(Post.UpdatedByUserId)),
+
+                (Rule: IsGreaterThan(
+                    text: post.Content,
+                    maxLength: 280,
+                    condition: post.PostTypeId == PostTypeId.Quote),
+                Parameter: nameof(Post.Content)),
+
+                (Rule: IsGreaterThan(
+                    text: post.Content,
+                    maxLength: 2200,
+                    condition: post.PostTypeId == PostTypeId.Story),
+                Parameter: nameof(Post.Content)),
+
+                (Rule: IsSame(
+                    firstDate: post.UpdatedDate,
+                    secondDate: post.CreatedDate,
+                    secondDateName: nameof(Post.CreatedDate)),
+                Parameter: nameof(Post.UpdatedDate)),
+
+                (Rule: IsNotRecent(post.UpdatedDate), Parameter: nameof(post.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
@@ -101,6 +137,15 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 Message = $"Id is not the same as {secondIdName}"
             };
 
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
+
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
@@ -127,6 +172,22 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             {
                 throw new NotFoundPostException(postId);
             }
+        }
+
+        private static void ValidateAgainstStoragePostOnModify(Post inputPost, Post storagePost)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputPost.CreatedDate,
+                    secondDate: storagePost.CreatedDate,
+                    secondDateName: nameof(Post.CreatedDate)),
+                Parameter: nameof(Post.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputPost.UpdatedDate,
+                    secondDate: storagePost.UpdatedDate,
+                    secondDateName: nameof(Post.UpdatedDate)),
+                Parameter: nameof(Post.UpdatedDate)));
         }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)

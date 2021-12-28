@@ -56,5 +56,19 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
             return maybePost;
         });
+
+        public ValueTask<Post> ModifyPostAsync(Post post) =>
+        TryCatch(async () =>
+        {
+            ValidatePostOnModify(post);
+
+            Post maybePost =
+                await this.storageBroker.SelectPostByIdAsync(post.Id);
+
+            ValidateStoragePost(maybePost, post.Id);
+            ValidateAgainstStoragePostOnModify(inputPost: post, storagePost: maybePost);
+
+            return await this.storageBroker.UpdatePostAsync(post);
+        });
     }
 }

@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
@@ -84,8 +85,31 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 wordMinLength,
                 wordMaxLength).GetValue();
 
+        public static IEnumerable<object[]> InvalidMinuteCases()
+        {
+            int randomMoreThanMinuteFromNow = GetRandomNumber();
+            int randomMoreThanMinuteBeforeNow = GetRandomNegativeNumber();
+
+            return new List<object[]>
+            {
+                new object[] { randomMoreThanMinuteFromNow },
+                new object[] { randomMoreThanMinuteBeforeNow }
+            };
+        }
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static Post CreateRandomModifyPost(DateTimeOffset dateTimeOffset)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Post randomPost = CreateRandomPost(dateTimeOffset);
+
+            randomPost.CreatedDate =
+                randomPost.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomPost;
+        }
 
         private static IQueryable<Post> CreateRandomPosts()
         {
