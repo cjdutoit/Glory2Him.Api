@@ -121,6 +121,14 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         public void ValidatePostId(Guid postId) =>
             Validate((Rule: IsInvalid(postId), Parameter: nameof(Post.Id)));
 
+        private static void ValidateStoragePost(Post maybePost, Guid postId)
+        {
+            if (maybePost is null)
+            {
+                throw new NotFoundPostException(postId);
+            }
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidCommentException = new InvalidPostException();
