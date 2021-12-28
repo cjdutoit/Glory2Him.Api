@@ -48,5 +48,86 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnModifyIfPostIsInvalidAndLogItAsync(string invalidText)
+        {
+            // given 
+            var invalidPost = new Post
+            {
+                Title = invalidText,
+                Author = invalidText,
+                Content = invalidText
+            };
+
+            var invalidPostException = new InvalidPostException();
+
+            invalidPostException.AddData(
+                key: nameof(Post.Id),
+                values: "Id is required");
+
+            invalidPostException.AddData(
+                key: nameof(Post.Title),
+                values: "Text is required");
+
+            invalidPostException.AddData(
+                key: nameof(Post.Author),
+                values: "Text is required");
+
+            invalidPostException.AddData(
+                key: nameof(Post.Content),
+                values: "Text is required");
+
+            invalidPostException.AddData(
+                key: nameof(Post.CreatedDate),
+                values: "Date is required");
+
+            invalidPostException.AddData(
+                key: nameof(Post.CreatedByUserId),
+                values: "Id is required");
+
+            invalidPostException.AddData(
+                key: nameof(Post.UpdatedDate),
+                values:
+                new[] {
+                    "Date is required",
+                    $"Date is the same as {nameof(Post.CreatedDate)}"
+                });
+
+            invalidPostException.AddData(
+                key: nameof(Post.UpdatedByUserId),
+                values: "Id is required");
+
+            var expectedPostValidationException =
+                new PostValidationException(invalidPostException);
+
+            // when
+            ValueTask<Post> modifyPostTask =
+                this.postService.ModifyPostAsync(invalidPost);
+
+            //then
+            await Assert.ThrowsAsync<PostValidationException>(() =>
+                modifyPostTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostValidationException))),
+                        Times.Once());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdatePostAsync(It.IsAny<Post>()),
+                    Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
