@@ -60,7 +60,7 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         public ValueTask<Post> ModifyPostAsync(Post post) =>
         TryCatch(async () =>
         {
-            throw new NotImplementedException();
+            return await this.storageBroker.UpdatePostAsync(post);
         });
     }
 }
