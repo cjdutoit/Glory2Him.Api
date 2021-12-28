@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
@@ -17,5 +18,6 @@ namespace G2H.Api.Web.Services.Foundations.Posts
     {
         ValueTask<Post> AddPostAsync(Post post);
         IQueryable<Post> RetrieveAllPosts();
+        ValueTask<Post> RetrievePostByIdAsync(Guid postId);
     }
 }
