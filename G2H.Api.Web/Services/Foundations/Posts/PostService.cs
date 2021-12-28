@@ -72,6 +72,13 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         });
 
         public ValueTask<Post> RemovePostByIdAsync(Guid postId) =>
-            throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            Post maybePost = await this.storageBroker
+                    .SelectPostByIdAsync(postId);
+
+            return await this.storageBroker
+                    .DeletePostAsync(maybePost);
+        });
     }
 }
