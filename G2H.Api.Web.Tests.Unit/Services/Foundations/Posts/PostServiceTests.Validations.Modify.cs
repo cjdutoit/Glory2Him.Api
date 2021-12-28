@@ -272,5 +272,54 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidMinuteCases))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // given
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            Post randomPost = CreateRandomPost(dateTime);
+            randomPost.UpdatedDate = dateTime.AddMinutes(minutes);
+
+            var invalidPostException =
+                new InvalidPostException();
+
+            invalidPostException.AddData(
+                key: nameof(Post.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedPostValidatonException =
+                new PostValidationException(invalidPostException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(dateTime);
+
+            // when
+            ValueTask<Post> modifyPostTask =
+                this.postService.ModifyPostAsync(randomPost);
+
+            // then
+            await Assert.ThrowsAsync<PostValidationException>(() =>
+                modifyPostTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostValidatonException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostByIdAsync(It.IsAny<Guid>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
