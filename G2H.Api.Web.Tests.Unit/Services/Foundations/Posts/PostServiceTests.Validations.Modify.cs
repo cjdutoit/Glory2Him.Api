@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
@@ -127,6 +128,54 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnUpdateIfQuoteExceedTextLimitAndLogItAsync()
+        {
+            // given
+            int minuteInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDate = GetRandomDateTimeOffset();
+            Post randomPost = CreateRandomModifyPost(randomDate.AddMinutes(minuteInPast));
+            Post invalidPost = randomPost;
+
+            invalidPost.PostTypeId = Models.PostTypes.PostTypeId.Quote;
+            invalidPost.Content = GetRandomMessage(1, 281, 300);
+
+            var invalidPostException =
+                new InvalidPostException();
+
+            invalidPostException.AddData(
+                key: nameof(Post.Content),
+                values: $"Text is exceeding character limit");
+
+            var expectedPostValidationException =
+                new PostValidationException(invalidPostException);
+
+            // when
+            ValueTask<Post> addPostTask =
+                this.postService.AddPostAsync(invalidPost);
+
+            // then
+            var actualException = await Assert.ThrowsAsync<PostValidationException>(() =>
+               addPostTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertPostAsync(It.IsAny<Post>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
