@@ -429,5 +429,59 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Post randomPost = CreateRandomModifyPost(randomDateTime);
+            Post invalidPost = randomPost;
+
+            Post storagePost = randomPost.DeepClone();
+            invalidPost.UpdatedDate = storagePost.UpdatedDate;
+
+            var invalidPostException = new InvalidPostException();
+
+            invalidPostException.AddData(
+                key: nameof(Post.UpdatedDate),
+                values: $"Date is the same as {nameof(Post.UpdatedDate)}");
+
+            var expectedPostValidationException =
+                new PostValidationException(invalidPostException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectPostByIdAsync(invalidPost.Id))
+                .ReturnsAsync(storagePost);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Post> modifyPostTask =
+                this.postService.ModifyPostAsync(invalidPost);
+
+            // then
+            await Assert.ThrowsAsync<PostValidationException>(() =>
+                modifyPostTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostByIdAsync(invalidPost.Id),
+                    Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
