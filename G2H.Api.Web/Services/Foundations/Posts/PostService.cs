@@ -56,5 +56,11 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
             return maybePost;
         });
+
+        public ValueTask<Post> ModifyPostAsync(Post post) =>
+        TryCatch(async () =>
+        {
+            throw new NotImplementedException();
+        });
     }
 }
