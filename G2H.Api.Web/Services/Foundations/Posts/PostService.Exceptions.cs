@@ -64,6 +64,12 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
                 throw CreateAndLogDependencyValidationException(invalidPostReferenceException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedPostException = new LockedPostException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedPostException);
+            }
             catch (DbUpdateException databaseUpdateException)
             {
                 var failedPostStorageException =
