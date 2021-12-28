@@ -44,9 +44,13 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         public IQueryable<Post> RetrieveAllPosts() =>
         TryCatch(() => this.storageBroker.SelectAllPosts());
 
-        public ValueTask<Post> RetrievePostByIdAsync(Guid postId)
+        public ValueTask<Post> RetrievePostByIdAsync(Guid postId) =>
+        TryCatch(async () =>
         {
-            throw new NotImplementedException();
-        }
+            Post maybePost = await this.storageBroker
+                .SelectPostByIdAsync(postId);
+
+            return maybePost;
+        });
     }
 }
