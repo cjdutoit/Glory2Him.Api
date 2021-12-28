@@ -8,16 +8,14 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Linq;
-using System.Threading.Tasks;
-using G2H.Api.Web.Models.Posts;
+using Xeptions;
 
-namespace G2H.Api.Web.Services.Foundations.Posts
+namespace G2H.Api.Web.Models.Posts.Exceptions
 {
-    public interface IPostService
+    public class NotFoundPostException : Xeption
     {
-        ValueTask<Post> AddPostAsync(Post post);
-        IQueryable<Post> RetrieveAllPosts();
-        ValueTask<Post> RetrievePostByIdAsync(Guid postId);
+        public NotFoundPostException(Guid postId)
+            : base(message: $"Couldn't find post with postId: {postId}.")
+        { }
     }
 }

@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Brokers.DateTimes;
@@ -42,5 +43,18 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
         public IQueryable<Post> RetrieveAllPosts() =>
         TryCatch(() => this.storageBroker.SelectAllPosts());
+
+        public ValueTask<Post> RetrievePostByIdAsync(Guid postId) =>
+        TryCatch(async () =>
+        {
+            ValidatePostId(postId);
+
+            Post maybePost = await this.storageBroker
+                .SelectPostByIdAsync(postId);
+
+            ValidateStoragePost(maybePost, postId);
+
+            return maybePost;
+        });
     }
 }
