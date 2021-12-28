@@ -118,6 +118,9 @@ namespace G2H.Api.Web.Services.Foundations.Posts
             return timeDifference.Duration() > oneMinute;
         }
 
+        public void ValidatePostId(Guid postId) =>
+            Validate((Rule: IsInvalid(postId), Parameter: nameof(Post.Id)));
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidCommentException = new InvalidPostException();
