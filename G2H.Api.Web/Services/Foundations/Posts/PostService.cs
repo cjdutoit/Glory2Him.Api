@@ -60,6 +60,8 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         public ValueTask<Post> ModifyPostAsync(Post post) =>
         TryCatch(async () =>
         {
+            ValidatePostOnModify(post);
+
             return await this.storageBroker.UpdatePostAsync(post);
         });
     }

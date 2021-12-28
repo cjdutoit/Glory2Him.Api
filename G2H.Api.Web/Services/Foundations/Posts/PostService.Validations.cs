@@ -56,6 +56,11 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 (Rule: IsNotRecent(post.CreatedDate), Parameter: nameof(post.CreatedDate)));
         }
 
+        private void ValidatePostOnModify(Post post)
+        {
+            ValidatePostIsNotNull(post);
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == Guid.Empty,
