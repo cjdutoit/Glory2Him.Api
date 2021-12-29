@@ -74,6 +74,8 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         public ValueTask<Post> RemovePostByIdAsync(Guid postId) =>
         TryCatch(async () =>
         {
+            ValidatePostId(postId);
+
             Post maybePost = await this.storageBroker
                     .SelectPostByIdAsync(postId);
 
