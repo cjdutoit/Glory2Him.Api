@@ -24,14 +24,6 @@ namespace G2H.Api.Web
             Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    var environment = hostingContext.HostingEnvironment;
-                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
-                    if (!string.IsNullOrEmpty(environment.EnvironmentName))
-                    {
-                        config.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
-                    };
-
                     if (hostingContext.HostingEnvironment.IsDevelopment())
                     {
                         config.AddUserSecrets<Program>();
