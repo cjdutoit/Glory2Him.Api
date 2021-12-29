@@ -20,5 +20,6 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         IQueryable<Post> RetrieveAllPosts();
         ValueTask<Post> RetrievePostByIdAsync(Guid postId);
         ValueTask<Post> ModifyPostAsync(Post post);
+        ValueTask<Post> RemovePostByIdAsync(Guid postId);
     }
 }

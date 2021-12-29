@@ -70,5 +70,19 @@ namespace G2H.Api.Web.Services.Foundations.Posts
 
             return await this.storageBroker.UpdatePostAsync(post);
         });
+
+        public ValueTask<Post> RemovePostByIdAsync(Guid postId) =>
+        TryCatch(async () =>
+        {
+            ValidatePostId(postId);
+
+            Post maybePost = await this.storageBroker
+                    .SelectPostByIdAsync(postId);
+
+            ValidateStoragePost(maybePost, postId);
+
+            return await this.storageBroker
+                    .DeletePostAsync(maybePost);
+        });
     }
 }
