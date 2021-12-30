@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Brokers.DateTimes;
@@ -42,5 +43,10 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
         public IQueryable<Reaction> RetrieveAllReactions() =>
         TryCatch(() => this.storageBroker.SelectAllReactions());
+
+        public ValueTask<Reaction> RetrieveReactionByIdAsync(ReactionId reactionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

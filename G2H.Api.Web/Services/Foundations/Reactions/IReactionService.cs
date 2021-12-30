@@ -17,5 +17,6 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
     {
         ValueTask<Reaction> AddReactionAsync(Reaction reaction);
         IQueryable<Reaction> RetrieveAllReactions();
+        ValueTask<Reaction> RetrieveReactionByIdAsync(ReactionId reactionId);
     }
 }
