@@ -48,8 +48,12 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
         {
             ValidateReactionId(reactionId);
 
-            return await this.storageBroker
+            Reaction maybeReaction = await this.storageBroker
                 .SelectReactionByIdAsync(reactionId);
+
+            ValidateStorageReaction(maybeReaction, reactionId);
+
+            return maybeReaction;
         });
     }
 }
