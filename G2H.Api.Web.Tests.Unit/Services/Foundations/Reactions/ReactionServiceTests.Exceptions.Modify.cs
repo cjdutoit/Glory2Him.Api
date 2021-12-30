@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Reactions;
 using G2H.Api.Web.Models.Reactions.Exceptions;
@@ -149,6 +150,53 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedReactionDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateReactionAsync(randomReaction),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Reaction randomReaction = CreateRandomReaction();
+            var serviceException = new Exception();
+
+            var failedReactionException =
+                new FailedReactionServiceException(serviceException);
+
+            var expectedReactionServiceException =
+                new ReactionServiceException(failedReactionException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<Reaction> modifyReactionTask =
+                this.reactionService.ModifyReactionAsync(randomReaction);
+
+            // then
+            await Assert.ThrowsAsync<ReactionServiceException>(() =>
+                modifyReactionTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectReactionByIdAsync(randomReaction.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedReactionServiceException))),
                         Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
