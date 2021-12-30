@@ -37,6 +37,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
                     .Returns(randomDateTimeOffset);
 
             this.storageBrokerMock.Setup(broker =>
+                broker.SelectReactionByIdAsync(inputReaction.Id))
+                    .ReturnsAsync(storageReaction);
+
+            this.storageBrokerMock.Setup(broker =>
                 broker.UpdateReactionAsync(inputReaction))
                     .ReturnsAsync(updatedReaction);
 
@@ -49,6 +53,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectReactionByIdAsync(inputReaction.Id),
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>

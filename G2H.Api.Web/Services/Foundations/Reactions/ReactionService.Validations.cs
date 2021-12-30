@@ -83,7 +83,13 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                     firstDate: inputReaction.CreatedDate,
                     secondDate: storageReaction.CreatedDate,
                     secondDateName: nameof(Reaction.CreatedDate)),
-                Parameter: nameof(Reaction.CreatedDate)));
+                Parameter: nameof(Reaction.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputReaction.UpdatedDate,
+                    secondDate: storageReaction.UpdatedDate,
+                    secondDateName: nameof(Reaction.UpdatedDate)),
+                Parameter: nameof(Reaction.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(ReactionId id) => new
