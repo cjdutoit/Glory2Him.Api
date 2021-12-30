@@ -15,7 +15,7 @@ using G2H.Api.Web.Models.Reactions;
 
 namespace G2H.Api.Web.Services.Foundations.Reactions
 {
-    public class ReactionService : IReactionService
+    public partial class ReactionService : IReactionService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -31,9 +31,12 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Reaction> AddReactionAsync(Reaction reaction)
+        public ValueTask<Reaction> AddReactionAsync(Reaction reaction) =>
+        TryCatch(async () =>
         {
+            ValidateReactionOnAdd(reaction);
+
             return await this.storageBroker.InsertReactionAsync(reaction);
-        }
+        });
     }
 }
