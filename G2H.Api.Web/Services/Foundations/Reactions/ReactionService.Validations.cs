@@ -25,7 +25,13 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                 (Rule: IsInvalid(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)),
                 (Rule: IsInvalid(reaction.CreatedByUserId), Parameter: nameof(Reaction.CreatedByUserId)),
                 (Rule: IsInvalid(reaction.UpdatedDate), Parameter: nameof(Reaction.UpdatedDate)),
-                (Rule: IsInvalid(reaction.UpdatedByUserId), Parameter: nameof(Reaction.UpdatedByUserId)));
+                (Rule: IsInvalid(reaction.UpdatedByUserId), Parameter: nameof(Reaction.UpdatedByUserId)),
+
+                (Rule: IsNotSame(
+                    firstDate: reaction.UpdatedDate,
+                    secondDate: reaction.CreatedDate,
+                    secondDateName: nameof(Reaction.CreatedDate)),
+                Parameter: nameof(Reaction.UpdatedDate)));
         }
 
         private static void ValidateReactionIsNotNull(Reaction reaction)
@@ -59,6 +65,15 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             Condition = date == default,
             Message = "Date is required"
         };
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not the same as {secondDateName}"
+            };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

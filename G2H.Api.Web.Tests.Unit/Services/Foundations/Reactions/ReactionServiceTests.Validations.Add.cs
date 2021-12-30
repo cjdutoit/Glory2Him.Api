@@ -141,10 +141,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             await Assert.ThrowsAsync<ReactionValidationException>(() =>
                addReactionTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once());
-
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedReactionValidationException))),
