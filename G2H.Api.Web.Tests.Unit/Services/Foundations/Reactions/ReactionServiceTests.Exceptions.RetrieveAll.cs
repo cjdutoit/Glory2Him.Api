@@ -54,5 +54,43 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string exceptionMessage = GetRandomMessage();
+            var serviceException = new Exception(exceptionMessage);
+
+            var failedReactionServiceException =
+                new FailedReactionServiceException(serviceException);
+
+            var expectedReactionServiceException =
+                new ReactionServiceException(failedReactionServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllReactions())
+                    .Throws(serviceException);
+
+            // when
+            Action retrieveAllReactionsAction = () =>
+                this.reactionService.RetrieveAllReactions();
+
+            // then
+            Assert.Throws<ReactionServiceException>(
+                retrieveAllReactionsAction);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllReactions(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedReactionServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
