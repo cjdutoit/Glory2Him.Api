@@ -44,6 +44,9 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             }
         }
 
+        public void ValidateReactionId(ReactionId reactionId) =>
+            Validate((Rule: IsInvalid(reactionId), Parameter: nameof(Reaction.Id)));
+
         private static dynamic IsInvalid(ReactionId id) => new
         {
             Condition = id == 0,
