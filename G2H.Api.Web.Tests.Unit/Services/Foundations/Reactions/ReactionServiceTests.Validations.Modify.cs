@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Reactions;
 using G2H.Api.Web.Models.Reactions.Exceptions;
@@ -109,6 +110,52 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Reaction randomReaction = CreateRandomReaction(randomDateTimeOffset);
+            Reaction invalidReaction = randomReaction;
+            var invalidReactionException = new InvalidReactionException();
+
+            invalidReactionException.AddData(
+                key: nameof(Reaction.UpdatedDate),
+                values: $"Date is the same as {nameof(Reaction.CreatedDate)}");
+
+            var expectedReactionValidationException =
+                new ReactionValidationException(invalidReactionException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Reaction> modifyReactionTask =
+                this.reactionService.ModifyReactionAsync(invalidReaction);
+
+            // then
+            await Assert.ThrowsAsync<ReactionValidationException>(() =>
+                modifyReactionTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedReactionValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectReactionByIdAsync(invalidReaction.Id),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
