@@ -70,7 +70,16 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
         private IQueryable<Reaction> TryCatch(ReturningReactionsFunction returningReactionsFunction)
         {
-            return returningReactionsFunction();
+            try
+            {
+                return returningReactionsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedReactionStorageException =
+                    new FailedReactionStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedReactionStorageException);
+            }
         }
 
         private ReactionValidationException CreateAndLogValidationException(
