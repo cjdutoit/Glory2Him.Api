@@ -65,6 +65,7 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                 await this.storageBroker.SelectReactionByIdAsync(reaction.Id);
 
             ValidateStorageReaction(maybeReaction, reaction.Id);
+            ValidateAgainstStorageReactionOnModify(inputReaction: reaction, storageReaction: maybeReaction);
 
             return await this.storageBroker.UpdateReactionAsync(reaction);
         });

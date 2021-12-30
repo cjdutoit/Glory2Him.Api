@@ -76,6 +76,16 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             }
         }
 
+        private static void ValidateAgainstStorageReactionOnModify(Reaction inputReaction, Reaction storageReaction)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputReaction.CreatedDate,
+                    secondDate: storageReaction.CreatedDate,
+                    secondDateName: nameof(Reaction.CreatedDate)),
+                Parameter: nameof(Reaction.CreatedDate)));
+        }
+
         private static dynamic IsInvalid(ReactionId id) => new
         {
             Condition = id == 0,
