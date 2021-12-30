@@ -48,8 +48,14 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
                 && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
         }
 
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static Reaction CreateRandomReaction() =>
+            CreateReactionFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
 
         private static Reaction CreateRandomReaction(DateTimeOffset dateTimeOffset) =>
             CreateReactionFiller(dateTimeOffset).Create();
