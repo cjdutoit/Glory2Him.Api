@@ -11,7 +11,7 @@ using System;
 using G2H.Api.Web.Models.Attachments;
 using G2H.Api.Web.Models.Posts;
 
-namespace G2H.Api.Web.Models.PostsComments
+namespace G2H.Api.Web.Models.PostAttachments
 {
     public class PostAttachment
     {

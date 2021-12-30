@@ -7,7 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using G2H.Api.Web.Models.PostsComments;
+using G2H.Api.Web.Models.PostAttachments;
 using Microsoft.EntityFrameworkCore;
 
 namespace G2H.Api.Web.Brokers.Storages
