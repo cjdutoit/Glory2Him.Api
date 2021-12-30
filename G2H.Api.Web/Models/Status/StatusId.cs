@@ -11,11 +11,11 @@ namespace G2H.Api.Web.Models.Statuses
 {
     public enum StatusId
     {
-        Draft,
-        Submitted,
-        AdminReviewRequired,
-        Rejected,
-        Approved,
-        Deleted,
+        Draft = 1,
+        Submitted = 2,
+        AdminReviewRequired = 3,
+        Rejected = 4,
+        Approved = 5,
+        Deleted = 6,
     }
 }

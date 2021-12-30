@@ -28,6 +28,10 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             {
                 throw CreateAndLogValidationException(nullReactionException);
             }
+            catch (InvalidReactionException invalidReactionException)
+            {
+                throw CreateAndLogValidationException(invalidReactionException);
+            }
         }
 
         private ReactionValidationException CreateAndLogValidationException(
