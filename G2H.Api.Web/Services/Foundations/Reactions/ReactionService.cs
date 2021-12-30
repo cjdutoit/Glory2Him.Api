@@ -40,9 +40,7 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             return await this.storageBroker.InsertReactionAsync(reaction);
         });
 
-        public IQueryable<Reaction> RetrieveAllReactions()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<Reaction> RetrieveAllReactions() =>
+        TryCatch(() => this.storageBroker.SelectAllReactions());
     }
 }

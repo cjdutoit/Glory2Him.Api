@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Reactions;
@@ -21,6 +22,7 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
     public partial class ReactionService
     {
         private delegate ValueTask<Reaction> ReturningReactionFunction();
+        private delegate IQueryable<Reaction> ReturningReactionsFunction();
 
         private async ValueTask<Reaction> TryCatch(ReturningReactionFunction returningReactionFunction)
         {
@@ -64,6 +66,11 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
                 throw CreateAndLogServiceException(failedReactionServiceException);
             }
+        }
+
+        private IQueryable<Reaction> TryCatch(ReturningReactionsFunction returningReactionsFunction)
+        {
+            return returningReactionsFunction();
         }
 
         private ReactionValidationException CreateAndLogValidationException(
