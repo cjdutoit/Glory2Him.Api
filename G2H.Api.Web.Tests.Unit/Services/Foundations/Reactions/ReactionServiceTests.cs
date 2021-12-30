@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using G2H.Api.Web.Brokers.DateTimes;
@@ -77,6 +78,13 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static IQueryable<Reaction> CreateRandomReactions()
+        {
+            return CreateReactionFiller(dateTimeOffset: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
+        }
 
         private static Reaction CreateRandomReaction() =>
             CreateReactionFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
