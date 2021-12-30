@@ -31,7 +31,9 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                     firstDate: reaction.UpdatedDate,
                     secondDate: reaction.CreatedDate,
                     secondDateName: nameof(Reaction.CreatedDate)),
-                Parameter: nameof(Reaction.UpdatedDate)));
+                Parameter: nameof(Reaction.UpdatedDate)),
+
+                (Rule: IsNotRecent(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)));
         }
 
         private static void ValidateReactionIsNotNull(Reaction reaction)
@@ -74,6 +76,23 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
             };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTimeOffset();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

@@ -96,8 +96,12 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
                 this.reactionService.AddReactionAsync(invalidReaction);
 
             // then
-            var ex = await Assert.ThrowsAsync<ReactionValidationException>(() =>
+            await Assert.ThrowsAsync<ReactionValidationException>(() =>
                addReactionTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -117,39 +121,26 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
         public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateDatesIsNotSameAndLogItAsync()
         {
             // given
-            int randomNumber = GetRandomNumber();
-            Reaction randomReaction = CreateRandomReaction();
-            Reaction invalidReaction = randomReaction;
+            Reaction nullReaction = null;
 
-            invalidReaction.UpdatedDate =
-                invalidReaction.CreatedDate.AddDays(randomNumber);
-
-            var invalidReactionException =
-                new InvalidReactionException();
-
-            invalidReactionException.AddData(
-                key: nameof(Reaction.UpdatedDate),
-                values: $"Date is not the same as {nameof(Reaction.CreatedDate)}");
+            var nullReactionException =
+                new NullReactionException();
 
             var expectedReactionValidationException =
-                new ReactionValidationException(invalidReactionException);
+                new ReactionValidationException(nullReactionException);
 
             // when
             ValueTask<Reaction> addReactionTask =
-                this.reactionService.AddReactionAsync(invalidReaction);
+                this.reactionService.AddReactionAsync(nullReaction);
 
             // then
             await Assert.ThrowsAsync<ReactionValidationException>(() =>
-               addReactionTask.AsTask());
+                addReactionTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedReactionValidationException))),
                         Times.Once);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertReactionAsync(It.IsAny<Reaction>()),
-                    Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
