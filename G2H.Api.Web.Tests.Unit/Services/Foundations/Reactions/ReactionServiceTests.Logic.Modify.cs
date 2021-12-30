@@ -32,6 +32,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             Reaction updatedReaction = inputReaction;
             Reaction expectedReaction = updatedReaction.DeepClone();
 
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
             this.storageBrokerMock.Setup(broker =>
                 broker.UpdateReactionAsync(inputReaction))
                     .ReturnsAsync(updatedReaction);
@@ -42,6 +46,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
 
             // then
             actualReaction.Should().BeEquivalentTo(expectedReaction);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateReactionAsync(inputReaction),

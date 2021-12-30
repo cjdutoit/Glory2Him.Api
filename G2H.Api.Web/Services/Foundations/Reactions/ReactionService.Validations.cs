@@ -52,7 +52,9 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                     firstDate: reaction.UpdatedDate,
                     secondDate: reaction.CreatedDate,
                     secondDateName: nameof(Reaction.CreatedDate)),
-                Parameter: nameof(Reaction.UpdatedDate)));
+                Parameter: nameof(Reaction.UpdatedDate)),
+
+                (Rule: IsNotRecent(reaction.UpdatedDate), Parameter: nameof(reaction.UpdatedDate)));
         }
 
         private static void ValidateReactionIsNotNull(Reaction reaction)
