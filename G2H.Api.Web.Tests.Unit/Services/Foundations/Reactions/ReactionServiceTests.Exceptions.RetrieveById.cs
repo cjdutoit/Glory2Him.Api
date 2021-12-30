@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Reactions;
 using G2H.Api.Web.Models.Reactions.Exceptions;
@@ -50,6 +51,45 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedReactionDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveByIdIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            ReactionId someId = GetRandomReactionId();
+            var serviceException = new Exception();
+
+            var failedReactionServiceException =
+                new FailedReactionServiceException(serviceException);
+
+            var expectedReactionServiceException =
+                new ReactionServiceException(failedReactionServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectReactionByIdAsync(It.IsAny<ReactionId>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Reaction> retrieveReactionByIdTask =
+                this.reactionService.RetrieveReactionByIdAsync(someId);
+
+            // then
+            await Assert.ThrowsAsync<ReactionServiceException>(() =>
+                retrieveReactionByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectReactionByIdAsync(It.IsAny<ReactionId>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedReactionServiceException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
