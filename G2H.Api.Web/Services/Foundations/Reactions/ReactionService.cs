@@ -56,9 +56,10 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             return maybeReaction;
         });
 
-        public ValueTask<Reaction> ModifyReactionAsync(Reaction reaction)
+        public ValueTask<Reaction> ModifyReactionAsync(Reaction reaction) =>
+        TryCatch(async () =>
         {
-            throw new System.NotImplementedException();
-        }
+            return await this.storageBroker.UpdateReactionAsync(reaction);
+        });
     }
 }
