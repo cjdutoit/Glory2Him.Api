@@ -86,6 +86,17 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
                     .AsQueryable();
         }
 
+        private static Reaction CreateRandomModifyReaction(DateTimeOffset dateTimeOffset)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Reaction randomReaction = CreateRandomReaction(dateTimeOffset);
+
+            randomReaction.CreatedDate =
+                randomReaction.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomReaction;
+        }
+
         private static Reaction CreateRandomReaction() =>
             CreateReactionFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
 

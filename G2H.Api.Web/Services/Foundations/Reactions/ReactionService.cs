@@ -55,5 +55,10 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
             return maybeReaction;
         });
+
+        public ValueTask<Reaction> ModifyReactionAsync(Reaction reaction)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
