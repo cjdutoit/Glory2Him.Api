@@ -150,5 +150,54 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidMinuteCases))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Reaction randomReaction = CreateRandomReaction(randomDateTimeOffset);
+            randomReaction.UpdatedDate = randomDateTimeOffset.AddMinutes(minutes);
+
+            var invalidReactionException =
+                new InvalidReactionException();
+
+            invalidReactionException.AddData(
+                key: nameof(Reaction.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedReactionValidatonException =
+                new ReactionValidationException(invalidReactionException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Reaction> modifyReactionTask =
+                this.reactionService.ModifyReactionAsync(randomReaction);
+
+            // then
+            await Assert.ThrowsAsync<ReactionValidationException>(() =>
+                modifyReactionTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedReactionValidatonException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectReactionByIdAsync(It.IsAny<ReactionId>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
