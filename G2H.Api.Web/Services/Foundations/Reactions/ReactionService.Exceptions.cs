@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Reactions;
@@ -21,6 +22,7 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
     public partial class ReactionService
     {
         private delegate ValueTask<Reaction> ReturningReactionFunction();
+        private delegate IQueryable<Reaction> ReturningReactionsFunction();
 
         private async ValueTask<Reaction> TryCatch(ReturningReactionFunction returningReactionFunction)
         {
@@ -56,6 +58,27 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                     new FailedReactionStorageException(databaseUpdateException);
 
                 throw CreateAndLogDependecyException(failedReactionStorageException);
+            }
+            catch (Exception exception)
+            {
+                var failedReactionServiceException =
+                    new FailedReactionServiceException(exception);
+
+                throw CreateAndLogServiceException(failedReactionServiceException);
+            }
+        }
+
+        private IQueryable<Reaction> TryCatch(ReturningReactionsFunction returningReactionsFunction)
+        {
+            try
+            {
+                return returningReactionsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedReactionStorageException =
+                    new FailedReactionStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedReactionStorageException);
             }
             catch (Exception exception)
             {
