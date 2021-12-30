@@ -12,6 +12,7 @@ using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Reactions;
 using G2H.Api.Web.Models.Reactions.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.Reactions
@@ -48,6 +49,13 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsReactionException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedReactionStorageException =
+                    new FailedReactionStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependecyException(failedReactionStorageException);
+            }
         }
 
         private ReactionValidationException CreateAndLogValidationException(
@@ -79,6 +87,15 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             this.loggingBroker.LogError(reactionDependencyValidationException);
 
             return reactionDependencyValidationException;
+        }
+
+        private ReactionDependencyException CreateAndLogDependecyException(
+            Xeption exception)
+        {
+            var reactionDependencyException = new ReactionDependencyException(exception);
+            this.loggingBroker.LogError(reactionDependencyException);
+
+            return reactionDependencyException;
         }
     }
 }
