@@ -31,9 +31,9 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Reaction> AddReactionAsync(Reaction reaction)
+        public async ValueTask<Reaction> AddReactionAsync(Reaction reaction)
         {
-            throw new System.NotImplementedException();
+            return await this.storageBroker.InsertReactionAsync(reaction);
         }
     }
 }
