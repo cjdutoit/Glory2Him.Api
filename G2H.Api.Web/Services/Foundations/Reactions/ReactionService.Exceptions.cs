@@ -80,6 +80,13 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                     new FailedReactionStorageException(sqlException);
                 throw CreateAndLogCriticalDependencyException(failedReactionStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedReactionServiceException =
+                    new FailedReactionServiceException(exception);
+
+                throw CreateAndLogServiceException(failedReactionServiceException);
+            }
         }
 
         private ReactionValidationException CreateAndLogValidationException(
