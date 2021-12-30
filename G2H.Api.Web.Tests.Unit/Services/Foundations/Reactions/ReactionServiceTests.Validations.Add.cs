@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Reactions;
 using G2H.Api.Web.Models.Reactions.Exceptions;
@@ -140,6 +141,61 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             // then
             await Assert.ThrowsAsync<ReactionValidationException>(() =>
                addReactionTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedReactionValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertReactionAsync(It.IsAny<Reaction>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotRecentAndLogItAsync(
+            int minutesBeforeOrAfter)
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset =
+                GetRandomDateTimeOffset();
+
+            DateTimeOffset invalidDateTime =
+                randomDateTimeOffset.AddMinutes(minutesBeforeOrAfter);
+
+            Reaction randomReaction = CreateRandomReaction(invalidDateTime);
+            Reaction invalidReaction = randomReaction;
+
+            var invalidReactionException =
+                new InvalidReactionException();
+
+            invalidReactionException.AddData(
+                key: nameof(Reaction.CreatedDate),
+                values: "Date is not recent");
+
+            var expectedReactionValidationException =
+                new ReactionValidationException(invalidReactionException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Reaction> addReactionTask =
+                this.reactionService.AddReactionAsync(invalidReaction);
+
+            // then
+            await Assert.ThrowsAsync<ReactionValidationException>(() =>
+               addReactionTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
