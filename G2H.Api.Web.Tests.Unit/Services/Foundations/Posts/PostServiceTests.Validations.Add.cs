@@ -11,7 +11,7 @@ using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
-using G2H.Api.Web.Models.PostType;
+using G2H.Api.Web.Models.PostTypes;
 using Moq;
 using Xunit;
 
