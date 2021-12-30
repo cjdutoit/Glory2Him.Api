@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Reactions;
@@ -56,6 +57,13 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
                 throw CreateAndLogDependecyException(failedReactionStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedReactionServiceException =
+                    new FailedReactionServiceException(exception);
+
+                throw CreateAndLogServiceException(failedReactionServiceException);
+            }
         }
 
         private ReactionValidationException CreateAndLogValidationException(
@@ -96,6 +104,15 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             this.loggingBroker.LogError(reactionDependencyException);
 
             return reactionDependencyException;
+        }
+
+        private ReactionServiceException CreateAndLogServiceException(
+            Xeption exception)
+        {
+            var reactionServiceException = new ReactionServiceException(exception);
+            this.loggingBroker.LogError(reactionServiceException);
+
+            return reactionServiceException;
         }
     }
 }
