@@ -54,5 +54,44 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfReactionIsNotFoundAndLogItAsync()
+        {
+            //given
+            ReactionId someReactionId = GetRandomReactionId();
+            Reaction noReaction = null;
+
+            var notFoundReactionException =
+                new NotFoundReactionException(someReactionId);
+
+            var expectedReactionValidationException =
+                new ReactionValidationException(notFoundReactionException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectReactionByIdAsync(It.IsAny<ReactionId>()))
+                    .ReturnsAsync(noReaction);
+
+            //when
+            ValueTask<Reaction> retrieveReactionByIdTask =
+                this.reactionService.RetrieveReactionByIdAsync(someReactionId);
+
+            //then
+            await Assert.ThrowsAsync<ReactionValidationException>(() =>
+               retrieveReactionByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectReactionByIdAsync(It.IsAny<ReactionId>()),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedReactionValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
