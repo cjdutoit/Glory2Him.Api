@@ -41,12 +41,18 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             ValidateReactionIsNotNull(reaction);
 
             Validate(
-               (Rule: IsInvalid(reaction.Id), Parameter: nameof(Reaction.Id)),
-               (Rule: IsInvalid(reaction.Name), Parameter: nameof(Reaction.Name)),
-               (Rule: IsInvalid(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)),
-               (Rule: IsInvalid(reaction.CreatedByUserId), Parameter: nameof(Reaction.CreatedByUserId)),
-               (Rule: IsInvalid(reaction.UpdatedDate), Parameter: nameof(Reaction.UpdatedDate)),
-               (Rule: IsInvalid(reaction.UpdatedByUserId), Parameter: nameof(Reaction.UpdatedByUserId)));
+                (Rule: IsInvalid(reaction.Id), Parameter: nameof(Reaction.Id)),
+                (Rule: IsInvalid(reaction.Name), Parameter: nameof(Reaction.Name)),
+                (Rule: IsInvalid(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)),
+                (Rule: IsInvalid(reaction.CreatedByUserId), Parameter: nameof(Reaction.CreatedByUserId)),
+                (Rule: IsInvalid(reaction.UpdatedDate), Parameter: nameof(Reaction.UpdatedDate)),
+                (Rule: IsInvalid(reaction.UpdatedByUserId), Parameter: nameof(Reaction.UpdatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: reaction.UpdatedDate,
+                    secondDate: reaction.CreatedDate,
+                    secondDateName: nameof(Reaction.CreatedDate)),
+                Parameter: nameof(Reaction.UpdatedDate)));
         }
 
         private static void ValidateReactionIsNotNull(Reaction reaction)
@@ -99,6 +105,15 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
             };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new

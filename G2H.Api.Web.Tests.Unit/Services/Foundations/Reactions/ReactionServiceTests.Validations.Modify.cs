@@ -129,10 +129,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             var expectedReactionValidationException =
                 new ReactionValidationException(invalidReactionException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
-                    .Returns(randomDateTimeOffset);
-
             // when
             ValueTask<Reaction> modifyReactionTask =
                 this.reactionService.ModifyReactionAsync(invalidReaction);
@@ -140,10 +136,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             // then
             await Assert.ThrowsAsync<ReactionValidationException>(() =>
                 modifyReactionTask.AsTask());
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
