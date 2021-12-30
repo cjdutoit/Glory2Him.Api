@@ -55,5 +55,19 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
             return maybeReaction;
         });
+
+        public ValueTask<Reaction> ModifyReactionAsync(Reaction reaction) =>
+        TryCatch(async () =>
+        {
+            ValidateReactionOnModify(reaction);
+
+            Reaction maybeReaction =
+                await this.storageBroker.SelectReactionByIdAsync(reaction.Id);
+
+            ValidateStorageReaction(maybeReaction, reaction.Id);
+            ValidateAgainstStorageReactionOnModify(inputReaction: reaction, storageReaction: maybeReaction);
+
+            return await this.storageBroker.UpdateReactionAsync(reaction);
+        });
     }
 }

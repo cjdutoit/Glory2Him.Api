@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
@@ -76,6 +77,18 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             };
         }
 
+        public static IEnumerable<object[]> InvalidMinuteCases()
+        {
+            int randomMoreThanMinuteFromNow = GetRandomNumber();
+            int randomMoreThanMinuteBeforeNow = GetRandomNegativeNumber();
+
+            return new List<object[]>
+            {
+                new object[] { randomMoreThanMinuteFromNow },
+                new object[] { randomMoreThanMinuteBeforeNow }
+            };
+        }
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
@@ -84,6 +97,17 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             return CreateReactionFiller(dateTimeOffset: GetRandomDateTimeOffset())
                 .Create(count: GetRandomNumber())
                     .AsQueryable();
+        }
+
+        private static Reaction CreateRandomModifyReaction(DateTimeOffset dateTimeOffset)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Reaction randomReaction = CreateRandomReaction(dateTimeOffset);
+
+            randomReaction.CreatedDate =
+                randomReaction.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomReaction;
         }
 
         private static Reaction CreateRandomReaction() =>

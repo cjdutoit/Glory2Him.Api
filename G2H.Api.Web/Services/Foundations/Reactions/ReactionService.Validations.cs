@@ -36,6 +36,27 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                 (Rule: IsNotRecent(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)));
         }
 
+        private void ValidateReactionOnModify(Reaction reaction)
+        {
+            ValidateReactionIsNotNull(reaction);
+
+            Validate(
+                (Rule: IsInvalid(reaction.Id), Parameter: nameof(Reaction.Id)),
+                (Rule: IsInvalid(reaction.Name), Parameter: nameof(Reaction.Name)),
+                (Rule: IsInvalid(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)),
+                (Rule: IsInvalid(reaction.CreatedByUserId), Parameter: nameof(Reaction.CreatedByUserId)),
+                (Rule: IsInvalid(reaction.UpdatedDate), Parameter: nameof(Reaction.UpdatedDate)),
+                (Rule: IsInvalid(reaction.UpdatedByUserId), Parameter: nameof(Reaction.UpdatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: reaction.UpdatedDate,
+                    secondDate: reaction.CreatedDate,
+                    secondDateName: nameof(Reaction.CreatedDate)),
+                Parameter: nameof(Reaction.UpdatedDate)),
+
+                (Rule: IsNotRecent(reaction.UpdatedDate), Parameter: nameof(reaction.UpdatedDate)));
+        }
+
         private static void ValidateReactionIsNotNull(Reaction reaction)
         {
             if (reaction is null)
@@ -53,6 +74,22 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             {
                 throw new NotFoundReactionException(reactionId);
             }
+        }
+
+        private static void ValidateAgainstStorageReactionOnModify(Reaction inputReaction, Reaction storageReaction)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputReaction.CreatedDate,
+                    secondDate: storageReaction.CreatedDate,
+                    secondDateName: nameof(Reaction.CreatedDate)),
+                Parameter: nameof(Reaction.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputReaction.UpdatedDate,
+                    secondDate: storageReaction.UpdatedDate,
+                    secondDateName: nameof(Reaction.UpdatedDate)),
+                Parameter: nameof(Reaction.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(ReactionId id) => new
@@ -86,6 +123,15 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
             };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new

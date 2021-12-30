@@ -56,6 +56,12 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsReactionException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedReactionException = new LockedReactionException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedReactionException);
+            }
             catch (DbUpdateException databaseUpdateException)
             {
                 var failedReactionStorageException =

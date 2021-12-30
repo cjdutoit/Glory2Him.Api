@@ -7,17 +7,16 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System.Linq;
-using System.Threading.Tasks;
-using G2H.Api.Web.Models.Reactions;
+using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Services.Foundations.Reactions
+namespace G2H.Api.Web.Models.Reactions.Exceptions
 {
-    public interface IReactionService
+    public class LockedReactionException : Xeption
     {
-        ValueTask<Reaction> AddReactionAsync(Reaction reaction);
-        IQueryable<Reaction> RetrieveAllReactions();
-        ValueTask<Reaction> RetrieveReactionByIdAsync(ReactionId reactionId);
-        ValueTask<Reaction> ModifyReactionAsync(Reaction reaction);
+        public LockedReactionException(Exception innerException)
+            : base(message: "Locked reaction record exception, please try again later", innerException)
+        {
+        }
     }
 }
