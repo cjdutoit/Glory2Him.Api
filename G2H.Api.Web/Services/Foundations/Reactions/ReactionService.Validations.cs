@@ -39,6 +39,14 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
         private void ValidateReactionOnModify(Reaction reaction)
         {
             ValidateReactionIsNotNull(reaction);
+
+            Validate(
+               (Rule: IsInvalid(reaction.Id), Parameter: nameof(Reaction.Id)),
+               (Rule: IsInvalid(reaction.Name), Parameter: nameof(Reaction.Name)),
+               (Rule: IsInvalid(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)),
+               (Rule: IsInvalid(reaction.CreatedByUserId), Parameter: nameof(Reaction.CreatedByUserId)),
+               (Rule: IsInvalid(reaction.UpdatedDate), Parameter: nameof(Reaction.UpdatedDate)),
+               (Rule: IsInvalid(reaction.UpdatedByUserId), Parameter: nameof(Reaction.UpdatedByUserId)));
         }
 
         private static void ValidateReactionIsNotNull(Reaction reaction)

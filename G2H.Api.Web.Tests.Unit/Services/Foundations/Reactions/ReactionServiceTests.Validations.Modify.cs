@@ -81,10 +81,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
 
             invalidReactionException.AddData(
                 key: nameof(Reaction.UpdatedDate),
-                values:
-                new[] {
-                    "Date is required",
-                    $"Date is the same as {nameof(Reaction.CreatedDate)}"});
+                values: "Date is required");
 
             invalidReactionException.AddData(
                 key: nameof(Reaction.UpdatedByUserId),
@@ -100,10 +97,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             //then
             await Assert.ThrowsAsync<ReactionValidationException>(() =>
                 modifyReactionTask.AsTask());
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
