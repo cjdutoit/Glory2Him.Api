@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Reactions;
 using G2H.Api.Web.Models.Reactions.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -40,6 +41,13 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
                 throw CreateAndLogCriticalDependencyException(failedReactionStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsReactionException =
+                    new AlreadyExistsReactionException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsReactionException);
+            }
         }
 
         private ReactionValidationException CreateAndLogValidationException(
@@ -60,6 +68,17 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             this.loggingBroker.LogCritical(reactionDependencyException);
 
             return reactionDependencyException;
+        }
+
+        private ReactionDependencyValidationException CreateAndLogDependencyValidationException(
+            Xeption exception)
+        {
+            var reactionDependencyValidationException =
+                new ReactionDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(reactionDependencyValidationException);
+
+            return reactionDependencyValidationException;
         }
     }
 }
