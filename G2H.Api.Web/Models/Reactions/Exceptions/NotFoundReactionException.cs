@@ -7,16 +7,14 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System.Linq;
-using System.Threading.Tasks;
-using G2H.Api.Web.Models.Reactions;
+using Xeptions;
 
-namespace G2H.Api.Web.Services.Foundations.Reactions
+namespace G2H.Api.Web.Models.Reactions.Exceptions
 {
-    public interface IReactionService
+    public class NotFoundReactionException : Xeption
     {
-        ValueTask<Reaction> AddReactionAsync(Reaction reaction);
-        IQueryable<Reaction> RetrieveAllReactions();
-        ValueTask<Reaction> RetrieveReactionByIdAsync(ReactionId reactionId);
+        public NotFoundReactionException(ReactionId reactionId)
+            : base(message: $"Couldn't find reaction with reactionId: {reactionId}.")
+        { }
     }
 }

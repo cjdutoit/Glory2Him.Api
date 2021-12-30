@@ -44,6 +44,17 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             }
         }
 
+        public void ValidateReactionId(ReactionId reactionId) =>
+            Validate((Rule: IsInvalid(reactionId), Parameter: nameof(Reaction.Id)));
+
+        private static void ValidateStorageReaction(Reaction maybeReaction, ReactionId reactionId)
+        {
+            if (maybeReaction is null)
+            {
+                throw new NotFoundReactionException(reactionId);
+            }
+        }
+
         private static dynamic IsInvalid(ReactionId id) => new
         {
             Condition = id == 0,

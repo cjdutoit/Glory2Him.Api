@@ -7,7 +7,6 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Reactions;
@@ -18,7 +17,7 @@ namespace G2H.Api.Web.Brokers.Storages
     {
         ValueTask<Reaction> InsertReactionAsync(Reaction reaction);
         IQueryable<Reaction> SelectAllReactions();
-        ValueTask<Reaction> SelectReactionByIdAsync(Guid reactionId);
+        ValueTask<Reaction> SelectReactionByIdAsync(ReactionId reactionId);
         ValueTask<Reaction> UpdateReactionAsync(Reaction reaction);
         ValueTask<Reaction> DeleteReactionAsync(Reaction reaction);
     }

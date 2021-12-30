@@ -42,5 +42,18 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
         public IQueryable<Reaction> RetrieveAllReactions() =>
         TryCatch(() => this.storageBroker.SelectAllReactions());
+
+        public ValueTask<Reaction> RetrieveReactionByIdAsync(ReactionId reactionId) =>
+        TryCatch(async () =>
+        {
+            ValidateReactionId(reactionId);
+
+            Reaction maybeReaction = await this.storageBroker
+                .SelectReactionByIdAsync(reactionId);
+
+            ValidateStorageReaction(maybeReaction, reactionId);
+
+            return maybeReaction;
+        });
     }
 }

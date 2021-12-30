@@ -45,6 +45,10 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
 
                 throw CreateAndLogCriticalDependencyException(failedReactionStorageException);
             }
+            catch (NotFoundReactionException notFoundReactionException)
+            {
+                throw CreateAndLogValidationException(notFoundReactionException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsReactionException =
