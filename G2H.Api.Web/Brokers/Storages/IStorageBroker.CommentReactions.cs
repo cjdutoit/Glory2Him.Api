@@ -10,7 +10,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using G2H.Api.Web.Models.PostReactions;
+using G2H.Api.Web.Models.CommentReactions;
 
 namespace G2H.Api.Web.Brokers.Storages
 {

@@ -13,7 +13,7 @@ using G2H.Api.Web.Models.Comments;
 using G2H.Api.Web.Models.Reactions;
 using G2H.Api.Web.Models.Users;
 
-namespace G2H.Api.Web.Models.PostReactions
+namespace G2H.Api.Web.Models.CommentReactions
 {
     public class CommentReaction : IAudit
     {

@@ -7,17 +7,13 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
-using G2H.Api.Web.Models.Attachments;
-using G2H.Api.Web.Models.Posts;
+using System.Threading.Tasks;
+using G2H.Api.Web.Models.Reactions;
 
-namespace G2H.Api.Web.Models.PostAttachments
+namespace G2H.Api.Web.Services.Foundations.Reactions
 {
-    public class PostAttachment
+    public interface IReactionService
     {
-        public Guid PostId { get; set; }
-        public virtual Post Post { get; set; }
-        public Guid AttachmentId { get; set; }
-        public virtual Attachment Attachment { get; set; }
+        ValueTask<Reaction> AddReactionAsync(Reaction reaction);
     }
 }

@@ -7,17 +7,14 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
-using G2H.Api.Web.Models.Attachments;
-using G2H.Api.Web.Models.Posts;
+using Xeptions;
 
-namespace G2H.Api.Web.Models.PostAttachments
+namespace G2H.Api.Web.Models.Reactions.Exceptions
 {
-    public class PostAttachment
+    public class ReactionDependencyValidationException : Xeption
     {
-        public Guid PostId { get; set; }
-        public virtual Post Post { get; set; }
-        public Guid AttachmentId { get; set; }
-        public virtual Attachment Attachment { get; set; }
+        public ReactionDependencyValidationException(Xeption innerException)
+            : base(message: "Reaction dependency validation occurred, please try again.", innerException)
+        { }
     }
 }

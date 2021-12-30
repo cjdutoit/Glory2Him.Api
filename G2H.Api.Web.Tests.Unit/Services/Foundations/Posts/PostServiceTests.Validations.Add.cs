@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
+using G2H.Api.Web.Models.PostTypes;
 using Moq;
 using Xunit;
 
@@ -135,7 +136,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             Post randomPost = CreateRandomPost();
             Post invalidPost = randomPost;
 
-            invalidPost.PostTypeId = Models.PostTypes.PostTypeId.Quote;
+            invalidPost.PostTypeId = PostTypeId.Quote;
             invalidPost.Content = GetRandomMessage(1, 281, 300);
 
             var invalidPostException =
@@ -182,7 +183,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             Post randomPost = CreateRandomPost();
             Post invalidPost = randomPost;
 
-            invalidPost.PostTypeId = Models.PostTypes.PostTypeId.Story;
+            invalidPost.PostTypeId = PostTypeId.Story;
             invalidPost.Content = GetRandomMessage(1, 2201, 3000);
 
             var invalidPostException =

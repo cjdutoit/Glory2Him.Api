@@ -10,7 +10,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using G2H.Api.Web.Models.PostsComments;
+using G2H.Api.Web.Models.PostComments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 

@@ -8,16 +8,14 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using G2H.Api.Web.Models.Attachments;
-using G2H.Api.Web.Models.Posts;
+using Xeptions;
 
-namespace G2H.Api.Web.Models.PostAttachments
+namespace G2H.Api.Web.Models.Reactions.Exceptions
 {
-    public class PostAttachment
+    public class FailedReactionStorageException : Xeption
     {
-        public Guid PostId { get; set; }
-        public virtual Post Post { get; set; }
-        public Guid AttachmentId { get; set; }
-        public virtual Attachment Attachment { get; set; }
+        public FailedReactionStorageException(Exception innerException)
+            : base(message: "Failed reaction storage error occurred, contact support.", innerException)
+        { }
     }
 }

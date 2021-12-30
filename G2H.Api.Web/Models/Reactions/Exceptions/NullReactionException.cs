@@ -7,15 +7,14 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-namespace G2H.Api.Web.Models.Statuses
+using Xeptions;
+
+namespace G2H.Api.Web.Models.Reactions.Exceptions
 {
-    public enum StatusId
+    public class NullReactionException : Xeption
     {
-        Draft,
-        Submitted,
-        AdminReviewRequired,
-        Rejected,
-        Approved,
-        Deleted,
+        public NullReactionException()
+            : base(message: "Reaction is null.")
+        { }
     }
 }

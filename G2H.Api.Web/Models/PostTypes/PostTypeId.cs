@@ -11,7 +11,7 @@ namespace G2H.Api.Web.Models.PostTypes
 {
     public enum PostTypeId
     {
-        Quote,
-        Story,
+        Quote = 1,
+        Story = 2,
     }
 }

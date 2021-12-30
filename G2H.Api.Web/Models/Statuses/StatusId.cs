@@ -7,17 +7,15 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
-using G2H.Api.Web.Models.Attachments;
-using G2H.Api.Web.Models.Posts;
-
-namespace G2H.Api.Web.Models.PostAttachments
+namespace G2H.Api.Web.Models.Statuses
 {
-    public class PostAttachment
+    public enum StatusId
     {
-        public Guid PostId { get; set; }
-        public virtual Post Post { get; set; }
-        public Guid AttachmentId { get; set; }
-        public virtual Attachment Attachment { get; set; }
+        Draft = 1,
+        Submitted = 2,
+        AdminReviewRequired = 3,
+        Rejected = 4,
+        Approved = 5,
+        Deleted = 6,
     }
 }

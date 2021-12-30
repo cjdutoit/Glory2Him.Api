@@ -12,8 +12,8 @@ using System.Collections.Generic;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.CommentComments;
-using G2H.Api.Web.Models.PostReactions;
-using G2H.Api.Web.Models.PostsComments;
+using G2H.Api.Web.Models.CommentReactions;
+using G2H.Api.Web.Models.PostComments;
 using G2H.Api.Web.Models.Users;
 using Newtonsoft.Json;
 

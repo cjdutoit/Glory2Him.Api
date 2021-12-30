@@ -11,11 +11,11 @@ namespace G2H.Api.Web.Models.Reactions
 {
     public enum ReactionId
     {
-        Like,
-        Love,
-        Amen,
-        Agree,
-        PraiseTheLord,
-        StandFirm
+        Like = 1,
+        Love = 2,
+        Amen = 3,
+        Agree = 4,
+        PraiseTheLord = 5,
+        StandFirm = 6
     }
 }
