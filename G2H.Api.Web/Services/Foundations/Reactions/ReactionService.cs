@@ -59,6 +59,8 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
         public ValueTask<Reaction> ModifyReactionAsync(Reaction reaction) =>
         TryCatch(async () =>
         {
+            ValidateReactionOnModify(reaction);
+
             return await this.storageBroker.UpdateReactionAsync(reaction);
         });
     }

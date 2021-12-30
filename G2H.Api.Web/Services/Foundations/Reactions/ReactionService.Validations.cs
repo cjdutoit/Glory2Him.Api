@@ -36,6 +36,11 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                 (Rule: IsNotRecent(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)));
         }
 
+        private void ValidateReactionOnModify(Reaction reaction)
+        {
+            ValidateReactionIsNotNull(reaction);
+        }
+
         private static void ValidateReactionIsNotNull(Reaction reaction)
         {
             if (reaction is null)
