@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Statuses;
 
@@ -15,5 +16,6 @@ namespace G2H.Api.Web.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Status> InsertStatusAsync(Status status);
+        IQueryable<Status> SelectAllStatuses();
     }
 }
