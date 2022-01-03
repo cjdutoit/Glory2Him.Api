@@ -19,5 +19,6 @@ namespace G2H.Api.Web.Brokers.Storages
         ValueTask<Status> InsertStatusAsync(Status status);
         IQueryable<Status> SelectAllStatuses();
         ValueTask<Status> SelectStatusByIdAsync(Guid statusId);
+        ValueTask<Status> UpdateStatusAsync(Status status);
     }
 }
