@@ -48,5 +48,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return await broker.Statuses.FindAsync(statusId);
         }
+
+        public async ValueTask<Status> UpdateStatusAsync(Status status)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<Status> statusEntityEntry =
+                broker.Statuses.Update(status);
+
+            await broker.SaveChangesAsync();
+
+            return statusEntityEntry.Entity;
+        }
     }
 }
