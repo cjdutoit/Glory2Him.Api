@@ -61,5 +61,18 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return statusEntityEntry.Entity;
         }
+
+        public async ValueTask<Status> DeleteStatusAsync(Status status)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            EntityEntry<Status> statusEntityEntry =
+                broker.Statuses.Remove(status);
+
+            await broker.SaveChangesAsync();
+
+            return statusEntityEntry.Entity;
+        }
     }
 }
