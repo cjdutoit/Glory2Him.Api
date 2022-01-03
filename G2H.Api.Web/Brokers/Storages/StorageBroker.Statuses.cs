@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Statuses;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace G2H.Api.Web.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        public DbSet<Status> Statuss { get; set; }
+        public DbSet<Status> Statuses { get; set; }
 
         public async ValueTask<Status> InsertStatusAsync(Status status)
         {
@@ -24,11 +25,19 @@ namespace G2H.Api.Web.Brokers.Storages
                 new StorageBroker(this.configuration);
 
             EntityEntry<Status> statusEntityEntry =
-                await broker.Statuss.AddAsync(status);
+                await broker.Statuses.AddAsync(status);
 
             await broker.SaveChangesAsync();
 
             return statusEntityEntry.Entity;
+        }
+
+        public IQueryable<Status> SelectAllStatuses()
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            return broker.Statuses;
         }
     }
 }
