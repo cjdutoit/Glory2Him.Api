@@ -31,10 +31,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             Status storageStatus = inputStatus;
             Status expectedStatus = storageStatus.DeepClone();
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
-                    .Returns(randomDateTimeOffset);
-
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertStatusAsync(inputStatus))
                     .ReturnsAsync(storageStatus);
@@ -45,10 +41,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
 
             // then
             actualStatus.Should().BeEquivalentTo(expectedStatus);
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertStatusAsync(inputStatus),

@@ -31,9 +31,9 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Status> AddStatusAsync(Status status)
+        public async ValueTask<Status> AddStatusAsync(Status status)
         {
-            throw new System.NotImplementedException();
+            return await this.storageBroker.InsertStatusAsync(status);
         }
     }
 }
