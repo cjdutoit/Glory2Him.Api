@@ -12,6 +12,7 @@ using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Statuses.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.Statuses
@@ -48,6 +49,13 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsStatusException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedStatusStorageException =
+                    new FailedStatusStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependecyException(failedStatusStorageException);
+            }
         }
 
         private StatusValidationException CreateAndLogValidationException(
@@ -79,6 +87,15 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             this.loggingBroker.LogError(statusDependencyValidationException);
 
             return statusDependencyValidationException;
+        }
+
+        private StatusDependencyException CreateAndLogDependecyException(
+            Xeption exception)
+        {
+            var statusDependencyException = new StatusDependencyException(exception);
+            this.loggingBroker.LogError(statusDependencyException);
+
+            return statusDependencyException;
         }
     }
 }
