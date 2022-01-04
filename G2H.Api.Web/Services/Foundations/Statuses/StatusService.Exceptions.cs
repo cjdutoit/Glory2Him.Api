@@ -28,6 +28,10 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             {
                 throw CreateAndLogValidationException(nullStatusException);
             }
+            catch (InvalidStatusException invalidStatusException)
+            {
+                throw CreateAndLogValidationException(invalidStatusException);
+            }
         }
 
         private StatusValidationException CreateAndLogValidationException(
