@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq.Expressions;
 using G2H.Api.Web.Brokers.DateTimes;
 using G2H.Api.Web.Brokers.Loggings;
 using G2H.Api.Web.Brokers.Storages;
@@ -16,6 +17,7 @@ using G2H.Api.Web.Models.Users;
 using G2H.Api.Web.Services.Foundations.Statuses;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
 {
@@ -36,6 +38,14 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
                 storageBroker: this.storageBrokerMock.Object,
                 dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
+        }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException)
+        {
+            return actualException =>
+                actualException.Message == expectedException.Message
+                && actualException.InnerException.Message == expectedException.InnerException.Message
+                && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
         }
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
