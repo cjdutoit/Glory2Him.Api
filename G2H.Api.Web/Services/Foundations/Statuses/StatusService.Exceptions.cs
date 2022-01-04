@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Statuses;
@@ -56,6 +57,13 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
 
                 throw CreateAndLogDependecyException(failedStatusStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedStatusServiceException =
+                    new FailedStatusServiceException(exception);
+
+                throw CreateAndLogServiceException(failedStatusServiceException);
+            }
         }
 
         private StatusValidationException CreateAndLogValidationException(
@@ -96,6 +104,15 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             this.loggingBroker.LogError(statusDependencyException);
 
             return statusDependencyException;
+        }
+
+        private StatusServiceException CreateAndLogServiceException(
+            Xeption exception)
+        {
+            var statusServiceException = new StatusServiceException(exception);
+            this.loggingBroker.LogError(statusServiceException);
+
+            return statusServiceException;
         }
     }
 }
