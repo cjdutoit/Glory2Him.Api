@@ -141,10 +141,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             await Assert.ThrowsAsync<StatusValidationException>(() =>
                addStatusTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once());
-
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedStatusValidationException))),

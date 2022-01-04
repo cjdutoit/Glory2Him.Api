@@ -24,7 +24,13 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                 (Rule: IsInvalid(status.CreatedDate), Parameter: nameof(Status.CreatedDate)),
                 (Rule: IsInvalid(status.CreatedByUserId), Parameter: nameof(Status.CreatedByUserId)),
                 (Rule: IsInvalid(status.UpdatedDate), Parameter: nameof(Status.UpdatedDate)),
-                (Rule: IsInvalid(status.UpdatedByUserId), Parameter: nameof(Status.UpdatedByUserId)));
+                (Rule: IsInvalid(status.UpdatedByUserId), Parameter: nameof(Status.UpdatedByUserId)),
+
+                (Rule: IsNotSame(
+                    firstDate: status.UpdatedDate,
+                    secondDate: status.CreatedDate,
+                    secondDateName: nameof(Status.CreatedDate)),
+                Parameter: nameof(Status.UpdatedDate)));
         }
 
         private static void ValidateStatusIsNotNull(Status status)
@@ -58,6 +64,15 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             Condition = date == default,
             Message = "Date is required"
         };
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not the same as {secondDateName}"
+            };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
