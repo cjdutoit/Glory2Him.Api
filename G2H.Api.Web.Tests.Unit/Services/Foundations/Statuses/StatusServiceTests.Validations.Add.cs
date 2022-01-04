@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Statuses.Exceptions;
@@ -140,6 +141,61 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             // then
             await Assert.ThrowsAsync<StatusValidationException>(() =>
                addStatusTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertStatusAsync(It.IsAny<Status>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotRecentAndLogItAsync(
+            int minutesBeforeOrAfter)
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset =
+                GetRandomDateTimeOffset();
+
+            DateTimeOffset invalidDateTime =
+                randomDateTimeOffset.AddMinutes(minutesBeforeOrAfter);
+
+            Status randomStatus = CreateRandomStatus(invalidDateTime);
+            Status invalidStatus = randomStatus;
+
+            var invalidStatusException =
+                new InvalidStatusException();
+
+            invalidStatusException.AddData(
+                key: nameof(Status.CreatedDate),
+                values: "Date is not recent");
+
+            var expectedStatusValidationException =
+                new StatusValidationException(invalidStatusException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Status> addStatusTask =
+                this.statusService.AddStatusAsync(invalidStatus);
+
+            // then
+            await Assert.ThrowsAsync<StatusValidationException>(() =>
+               addStatusTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
