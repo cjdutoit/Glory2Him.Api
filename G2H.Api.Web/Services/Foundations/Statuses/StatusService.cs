@@ -31,9 +31,11 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Status> AddStatusAsync(Status status)
+        public ValueTask<Status> AddStatusAsync(Status status) =>
+        TryCatch(async () =>
         {
+            ValidateStatusOnAdd(status);
             return await this.storageBroker.InsertStatusAsync(status);
-        }
+        });
     }
 }
