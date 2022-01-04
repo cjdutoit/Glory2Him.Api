@@ -48,8 +48,14 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
                 && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
         }
 
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static Status CreateRandomStatus() =>
+            CreateStatusFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
 
         private static Status CreateRandomStatus(DateTimeOffset dateTimeOffset) =>
             CreateStatusFiller(dateTimeOffset).Create();

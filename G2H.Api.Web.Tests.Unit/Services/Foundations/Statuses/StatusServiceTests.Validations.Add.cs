@@ -111,5 +111,52 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateDatesIsNotSameAndLogItAsync()
+        {
+            // given
+            int randomNumber = GetRandomNumber();
+            Status randomStatus = CreateRandomStatus();
+            Status invalidStatus = randomStatus;
+
+            invalidStatus.UpdatedDate =
+                invalidStatus.CreatedDate.AddDays(randomNumber);
+
+            var invalidStatusException =
+                new InvalidStatusException();
+
+            invalidStatusException.AddData(
+                key: nameof(Status.UpdatedDate),
+                values: $"Date is not the same as {nameof(Status.CreatedDate)}");
+
+            var expectedStatusValidationException =
+                new StatusValidationException(invalidStatusException);
+
+            // when
+            ValueTask<Status> addStatusTask =
+                this.statusService.AddStatusAsync(invalidStatus);
+
+            // then
+            await Assert.ThrowsAsync<StatusValidationException>(() =>
+               addStatusTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertStatusAsync(It.IsAny<Status>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
