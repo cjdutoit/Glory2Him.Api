@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Statuses.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -40,6 +41,13 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
 
                 throw CreateAndLogCriticalDependencyException(failedStatusStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsStatusException =
+                    new AlreadyExistsStatusException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsStatusException);
+            }
         }
 
         private StatusValidationException CreateAndLogValidationException(
@@ -60,6 +68,17 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             this.loggingBroker.LogCritical(statusDependencyException);
 
             return statusDependencyException;
+        }
+
+        private StatusDependencyValidationException CreateAndLogDependencyValidationException(
+            Xeption exception)
+        {
+            var statusDependencyValidationException =
+                new StatusDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(statusDependencyValidationException);
+
+            return statusDependencyValidationException;
         }
     }
 }
