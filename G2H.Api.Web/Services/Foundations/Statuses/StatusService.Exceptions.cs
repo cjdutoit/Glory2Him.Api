@@ -45,6 +45,10 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
 
                 throw CreateAndLogCriticalDependencyException(failedStatusStorageException);
             }
+            catch (NotFoundStatusException notFoundStatusException)
+            {
+                throw CreateAndLogValidationException(notFoundStatusException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsStatusException =
