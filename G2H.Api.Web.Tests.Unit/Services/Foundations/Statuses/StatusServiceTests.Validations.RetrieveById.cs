@@ -54,5 +54,44 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfStatusIsNotFoundAndLogItAsync()
+        {
+            //given
+            StatusId someStatusId = GetRandomStatusId();
+            Status noStatus = null;
+
+            var notFoundStatusException =
+                new NotFoundStatusException(someStatusId);
+
+            var expectedStatusValidationException =
+                new StatusValidationException(notFoundStatusException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStatusByIdAsync(It.IsAny<StatusId>()))
+                    .ReturnsAsync(noStatus);
+
+            //when
+            ValueTask<Status> retrieveStatusByIdTask =
+                this.statusService.RetrieveStatusByIdAsync(someStatusId);
+
+            //then
+            await Assert.ThrowsAsync<StatusValidationException>(() =>
+               retrieveStatusByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStatusByIdAsync(It.IsAny<StatusId>()),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
