@@ -215,5 +215,56 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStatusDoesNotExistAndLogItAsync()
+        {
+            // given
+            int randomNegativeMinutes = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Status randomStatus = CreateRandomStatus(randomDateTimeOffset);
+            Status nonExistStatus = randomStatus;
+            nonExistStatus.CreatedDate = randomDateTimeOffset.AddMinutes(randomNegativeMinutes);
+            Status nullStatus = null;
+
+            var notFoundStatusException =
+                new NotFoundStatusException(nonExistStatus.Id);
+
+            var expectedStatusValidationException =
+                new StatusValidationException(notFoundStatusException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStatusByIdAsync(nonExistStatus.Id))
+                .ReturnsAsync(nullStatus);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTimeOffset);
+
+            // when 
+            ValueTask<Status> modifyStatusTask =
+                this.statusService.ModifyStatusAsync(nonExistStatus);
+
+            // then
+            await Assert.ThrowsAsync<StatusValidationException>(() =>
+                modifyStatusTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStatusByIdAsync(nonExistStatus.Id),
+                    Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
