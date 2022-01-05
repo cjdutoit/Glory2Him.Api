@@ -48,5 +48,72 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStatusIsInvalidAndLogItAsync(string invalidText)
+        {
+            // given 
+            var invalidStatus = new Status
+            {
+                Name = invalidText,
+            };
+
+            var invalidStatusException = new InvalidStatusException();
+
+            invalidStatusException.AddData(
+                key: nameof(Status.Id),
+                values: "Id is required");
+
+            invalidStatusException.AddData(
+                key: nameof(Status.Name),
+                values: "Text is required");
+
+            invalidStatusException.AddData(
+                key: nameof(Status.CreatedDate),
+                values: "Date is required");
+
+            invalidStatusException.AddData(
+                key: nameof(Status.CreatedByUserId),
+                values: "Id is required");
+
+            invalidStatusException.AddData(
+                key: nameof(Status.UpdatedDate),
+                values:
+                new[] {
+                    "Date is required",
+                    $"Date is the same as {nameof(Status.CreatedDate)}"
+                });
+
+            invalidStatusException.AddData(
+                key: nameof(Status.UpdatedByUserId),
+                values: "Id is required");
+
+            var expectedStatusValidationException =
+                new StatusValidationException(invalidStatusException);
+
+            // when
+            ValueTask<Status> modifyStatusTask =
+                this.statusService.ModifyStatusAsync(invalidStatus);
+
+            //then
+            await Assert.ThrowsAsync<StatusValidationException>(() =>
+                modifyStatusTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusValidationException))),
+                        Times.Once());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateStatusAsync(It.IsAny<Status>()),
+                    Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
