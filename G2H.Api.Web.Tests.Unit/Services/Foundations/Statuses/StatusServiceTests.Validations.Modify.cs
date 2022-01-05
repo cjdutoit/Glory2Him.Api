@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Statuses.Exceptions;
@@ -112,6 +113,52 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsSameAsCreatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Status randomStatus = CreateRandomStatus(randomDateTimeOffset);
+            Status invalidStatus = randomStatus;
+            var invalidStatusException = new InvalidStatusException();
+
+            invalidStatusException.AddData(
+                key: nameof(Status.UpdatedDate),
+                values: $"Date is the same as {nameof(Status.CreatedDate)}");
+
+            var expectedStatusValidationException =
+                new StatusValidationException(invalidStatusException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Status> modifyStatusTask =
+                this.statusService.ModifyStatusAsync(invalidStatus);
+
+            // then
+            await Assert.ThrowsAsync<StatusValidationException>(() =>
+                modifyStatusTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStatusByIdAsync(invalidStatus.Id),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
