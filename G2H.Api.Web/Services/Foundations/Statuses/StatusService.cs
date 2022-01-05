@@ -40,6 +40,6 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
         });
 
         public IQueryable<Status> RetrieveAllStatuses() =>
-            this.storageBroker.SelectAllStatuses();
+        TryCatch(() => this.storageBroker.SelectAllStatuses());
     }
 }

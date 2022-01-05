@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Statuses;
@@ -21,6 +22,7 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
     public partial class StatusService
     {
         private delegate ValueTask<Status> ReturningStatusFunction();
+        private delegate IQueryable<Status> ReturningStatusesFunction();
 
         private async ValueTask<Status> TryCatch(ReturningStatusFunction returningStatusFunction)
         {
@@ -63,6 +65,20 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                     new FailedStatusServiceException(exception);
 
                 throw CreateAndLogServiceException(failedStatusServiceException);
+            }
+        }
+
+        private IQueryable<Status> TryCatch(ReturningStatusesFunction returningStatusesFunction)
+        {
+            try
+            {
+                return returningStatusesFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedStatusStorageException =
+                    new FailedStatusStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedStatusStorageException);
             }
         }
 
