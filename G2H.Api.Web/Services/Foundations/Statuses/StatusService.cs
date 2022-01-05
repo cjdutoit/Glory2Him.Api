@@ -39,9 +39,7 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             return await this.storageBroker.InsertStatusAsync(status);
         });
 
-        public IQueryable<Status> RetrieveAllStatuses()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IQueryable<Status> RetrieveAllStatuses() =>
+            this.storageBroker.SelectAllStatuses();
     }
 }
