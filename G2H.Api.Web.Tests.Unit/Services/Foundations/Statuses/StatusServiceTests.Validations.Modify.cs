@@ -84,7 +84,8 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
                 key: nameof(Status.UpdatedDate),
                 values:
                 new[] {
-                    "Date is required"
+                    "Date is required",
+                    $"Date is the same as {nameof(Status.CreatedDate)}"
                 });
 
             invalidStatusException.AddData(
@@ -132,10 +133,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             var expectedStatusValidationException =
                 new StatusValidationException(invalidStatusException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
-                    .Returns(randomDateTimeOffset);
-
             // when
             ValueTask<Status> modifyStatusTask =
                 this.statusService.ModifyStatusAsync(invalidStatus);
@@ -143,10 +140,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             // then
             await Assert.ThrowsAsync<StatusValidationException>(() =>
                 modifyStatusTask.AsTask());
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
