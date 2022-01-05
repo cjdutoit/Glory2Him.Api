@@ -112,5 +112,52 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            Status randomStatus = CreateRandomStatus();
+            var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedStatusException =
+                new LockedStatusException(databaseUpdateConcurrencyException);
+
+            var expectedStatusDependencyValidationException =
+                new StatusDependencyValidationException(lockedStatusException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(databaseUpdateConcurrencyException);
+
+            // when
+            ValueTask<Status> modifyStatusTask =
+                this.statusService.ModifyStatusAsync(randomStatus);
+
+            // then
+            await Assert.ThrowsAsync<StatusDependencyValidationException>(() =>
+                modifyStatusTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStatusByIdAsync(randomStatus.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateStatusAsync(randomStatus),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
