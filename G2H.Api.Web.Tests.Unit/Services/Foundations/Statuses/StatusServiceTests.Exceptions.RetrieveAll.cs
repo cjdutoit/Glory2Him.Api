@@ -54,5 +54,43 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string exceptionMessage = GetRandomMessage();
+            var serviceException = new Exception(exceptionMessage);
+
+            var failedStatusServiceException =
+                new FailedStatusServiceException(serviceException);
+
+            var expectedStatusServiceException =
+                new StatusServiceException(failedStatusServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllStatuses())
+                    .Throws(serviceException);
+
+            // when
+            Action retrieveAllStatusesAction = () =>
+                this.statusService.RetrieveAllStatuses();
+
+            // then
+            Assert.Throws<StatusServiceException>(
+                retrieveAllStatusesAction);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllStatuses(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

@@ -80,6 +80,13 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                     new FailedStatusStorageException(sqlException);
                 throw CreateAndLogCriticalDependencyException(failedStatusStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedStatusServiceException =
+                    new FailedStatusServiceException(exception);
+
+                throw CreateAndLogServiceException(failedStatusServiceException);
+            }
         }
 
         private StatusValidationException CreateAndLogValidationException(
