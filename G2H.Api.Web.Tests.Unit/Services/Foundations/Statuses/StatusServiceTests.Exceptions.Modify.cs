@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Statuses.Exceptions;
@@ -149,6 +150,53 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedStatusDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateStatusAsync(randomStatus),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Status randomStatus = CreateRandomStatus();
+            var serviceException = new Exception();
+
+            var failedStatusException =
+                new FailedStatusServiceException(serviceException);
+
+            var expectedStatusServiceException =
+                new StatusServiceException(failedStatusException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<Status> modifyStatusTask =
+                this.statusService.ModifyStatusAsync(randomStatus);
+
+            // then
+            await Assert.ThrowsAsync<StatusServiceException>(() =>
+                modifyStatusTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStatusByIdAsync(randomStatus.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedStatusServiceException))),
                         Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
