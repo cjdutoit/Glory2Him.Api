@@ -67,6 +67,16 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             }
         }
 
+        private static void ValidateAgainstStorageStatusOnModify(Status inputStatus, Status storageStatus)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputStatus.CreatedDate,
+                    secondDate: storageStatus.CreatedDate,
+                    secondDateName: nameof(Status.CreatedDate)),
+                Parameter: nameof(Status.CreatedDate)));
+        }
+
         private static void ValidateStatusIsNotNull(Status status)
         {
             if (status is null)

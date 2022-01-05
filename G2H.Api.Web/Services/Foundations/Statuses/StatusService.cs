@@ -64,6 +64,7 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                 await this.storageBroker.SelectStatusByIdAsync(status.Id);
 
             ValidateStorageStatus(maybeStatus, status.Id);
+            ValidateAgainstStorageStatusOnModify(inputStatus: status, storageStatus: maybeStatus);
 
             return await this.storageBroker.UpdateStatusAsync(status);
         });
