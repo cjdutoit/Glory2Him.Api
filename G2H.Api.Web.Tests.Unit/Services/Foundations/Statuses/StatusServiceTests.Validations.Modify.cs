@@ -83,8 +83,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
                 key: nameof(Status.UpdatedDate),
                 values:
                 new[] {
-                    "Date is required",
-                    $"Date is the same as {nameof(Status.CreatedDate)}"
+                    "Date is required"
                 });
 
             invalidStatusException.AddData(

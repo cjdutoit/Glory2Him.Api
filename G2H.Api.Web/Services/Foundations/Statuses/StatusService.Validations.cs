@@ -38,6 +38,14 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
         private void ValidateStatusOnModify(Status status)
         {
             ValidateStatusIsNotNull(status);
+
+            Validate(
+               (Rule: IsInvalid(status.Id), Parameter: nameof(Status.Id)),
+               (Rule: IsInvalid(status.Name), Parameter: nameof(Status.Name)),
+               (Rule: IsInvalid(status.CreatedDate), Parameter: nameof(Status.CreatedDate)),
+               (Rule: IsInvalid(status.CreatedByUserId), Parameter: nameof(Status.CreatedByUserId)),
+               (Rule: IsInvalid(status.UpdatedDate), Parameter: nameof(Status.UpdatedDate)),
+               (Rule: IsInvalid(status.UpdatedByUserId), Parameter: nameof(Status.UpdatedByUserId)));
         }
 
         public void ValidateStatusId(StatusId statusId) =>
