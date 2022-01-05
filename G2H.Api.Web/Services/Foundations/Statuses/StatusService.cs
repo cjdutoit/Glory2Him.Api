@@ -41,5 +41,18 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
 
         public IQueryable<Status> RetrieveAllStatuses() =>
         TryCatch(() => this.storageBroker.SelectAllStatuses());
+
+        public ValueTask<Status> RetrieveStatusByIdAsync(StatusId statusId) =>
+        TryCatch(async () =>
+        {
+            ValidateStatusId(statusId);
+
+            Status maybeStatus = await this.storageBroker
+                .SelectStatusByIdAsync(statusId);
+
+            ValidateStorageStatus(maybeStatus, statusId);
+
+            return maybeStatus;
+        });
     }
 }
