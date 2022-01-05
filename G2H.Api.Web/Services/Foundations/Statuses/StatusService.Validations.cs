@@ -74,7 +74,13 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                     firstDate: inputStatus.CreatedDate,
                     secondDate: storageStatus.CreatedDate,
                     secondDateName: nameof(Status.CreatedDate)),
-                Parameter: nameof(Status.CreatedDate)));
+                Parameter: nameof(Status.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputStatus.UpdatedDate,
+                    secondDate: storageStatus.UpdatedDate,
+                    secondDateName: nameof(Status.UpdatedDate)),
+                Parameter: nameof(Status.UpdatedDate)));
         }
 
         private static void ValidateStatusIsNotNull(Status status)
