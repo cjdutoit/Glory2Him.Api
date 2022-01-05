@@ -59,6 +59,17 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
                     .AsQueryable();
         }
 
+        private static Status CreateRandomModifyStatus(DateTimeOffset dateTimeOffset)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Status randomStatus = CreateRandomStatus(dateTimeOffset);
+
+            randomStatus.CreatedDate =
+                randomStatus.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomStatus;
+        }
+
         private static SqlException GetSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
