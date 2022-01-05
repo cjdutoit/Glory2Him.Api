@@ -60,6 +60,11 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
         {
             ValidateStatusOnModify(status);
 
+            Status maybeStatus =
+                await this.storageBroker.SelectStatusByIdAsync(status.Id);
+
+            ValidateStorageStatus(maybeStatus, status.Id);
+
             return await this.storageBroker.UpdateStatusAsync(status);
         });
     }

@@ -56,6 +56,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
+                broker.SelectStatusByIdAsync(inputStatus.Id),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdateStatusAsync(inputStatus),
                     Times.Once);
 
