@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
@@ -59,6 +60,17 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
                     .AsQueryable();
         }
 
+        private static Status CreateRandomModifyStatus(DateTimeOffset dateTimeOffset)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Status randomStatus = CreateRandomStatus(dateTimeOffset);
+
+            randomStatus.CreatedDate =
+                randomStatus.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomStatus;
+        }
+
         private static SqlException GetSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
@@ -80,6 +92,18 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             {
                 randomNumber,
                 randomNegativeNumber
+            };
+        }
+
+        public static IEnumerable<object[]> InvalidMinuteCases()
+        {
+            int randomMoreThanMinuteFromNow = GetRandomNumber();
+            int randomMoreThanMinuteBeforeNow = GetRandomNegativeNumber();
+
+            return new List<object[]>
+            {
+                new object[] { randomMoreThanMinuteFromNow },
+                new object[] { randomMoreThanMinuteBeforeNow }
             };
         }
 

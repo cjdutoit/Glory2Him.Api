@@ -56,6 +56,12 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsStatusException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedStatusException = new LockedStatusException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedStatusException);
+            }
             catch (DbUpdateException databaseUpdateException)
             {
                 var failedStatusStorageException =

@@ -7,17 +7,16 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System.Linq;
-using System.Threading.Tasks;
-using G2H.Api.Web.Models.Statuses;
+using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Services.Foundations.Statuses
+namespace G2H.Api.Web.Models.Statuses.Exceptions
 {
-    public interface IStatusService
+    public class LockedStatusException : Xeption
     {
-        ValueTask<Status> AddStatusAsync(Status status);
-        IQueryable<Status> RetrieveAllStatuses();
-        ValueTask<Status> RetrieveStatusByIdAsync(StatusId statusId);
-        ValueTask<Status> ModifyStatusAsync(Status status);
+        public LockedStatusException(Exception innerException)
+            : base(message: "Locked status record exception, please try again later", innerException)
+        {
+        }
     }
 }

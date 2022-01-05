@@ -35,6 +35,27 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                 (Rule: IsNotRecent(status.CreatedDate), Parameter: nameof(Status.CreatedDate)));
         }
 
+        private void ValidateStatusOnModify(Status status)
+        {
+            ValidateStatusIsNotNull(status);
+
+            Validate(
+                (Rule: IsInvalid(status.Id), Parameter: nameof(Status.Id)),
+                (Rule: IsInvalid(status.Name), Parameter: nameof(Status.Name)),
+                (Rule: IsInvalid(status.CreatedDate), Parameter: nameof(Status.CreatedDate)),
+                (Rule: IsInvalid(status.CreatedByUserId), Parameter: nameof(Status.CreatedByUserId)),
+                (Rule: IsInvalid(status.UpdatedDate), Parameter: nameof(Status.UpdatedDate)),
+                (Rule: IsInvalid(status.UpdatedByUserId), Parameter: nameof(Status.UpdatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: status.UpdatedDate,
+                    secondDate: status.CreatedDate,
+                    secondDateName: nameof(Status.CreatedDate)),
+                Parameter: nameof(Status.UpdatedDate)),
+
+                (Rule: IsNotRecent(status.UpdatedDate), Parameter: nameof(status.UpdatedDate)));
+        }
+
         public void ValidateStatusId(StatusId statusId) =>
             Validate((Rule: IsInvalid(statusId), Parameter: nameof(Status.Id)));
 
@@ -44,6 +65,22 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             {
                 throw new NotFoundStatusException(statusId);
             }
+        }
+
+        private static void ValidateAgainstStorageStatusOnModify(Status inputStatus, Status storageStatus)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputStatus.CreatedDate,
+                    secondDate: storageStatus.CreatedDate,
+                    secondDateName: nameof(Status.CreatedDate)),
+                Parameter: nameof(Status.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputStatus.UpdatedDate,
+                    secondDate: storageStatus.UpdatedDate,
+                    secondDateName: nameof(Status.UpdatedDate)),
+                Parameter: nameof(Status.UpdatedDate)));
         }
 
         private static void ValidateStatusIsNotNull(Status status)
@@ -86,6 +123,16 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
             };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
+
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
