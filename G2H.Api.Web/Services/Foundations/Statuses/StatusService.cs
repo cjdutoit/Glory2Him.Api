@@ -55,7 +55,12 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             return maybeStatus;
         });
 
-        public async ValueTask<Status> ModifyStatusAsync(Status status) =>
-            await this.storageBroker.UpdateStatusAsync(status);
+        public ValueTask<Status> ModifyStatusAsync(Status status) =>
+        TryCatch(async () =>
+        {
+            ValidateStatusOnModify(status);
+
+            return await this.storageBroker.UpdateStatusAsync(status);
+        });
     }
 }
