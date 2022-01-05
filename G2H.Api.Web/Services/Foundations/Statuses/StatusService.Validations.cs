@@ -40,19 +40,20 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             ValidateStatusIsNotNull(status);
 
             Validate(
-               (Rule: IsInvalid(status.Id), Parameter: nameof(Status.Id)),
-               (Rule: IsInvalid(status.Name), Parameter: nameof(Status.Name)),
-               (Rule: IsInvalid(status.CreatedDate), Parameter: nameof(Status.CreatedDate)),
-               (Rule: IsInvalid(status.CreatedByUserId), Parameter: nameof(Status.CreatedByUserId)),
-               (Rule: IsInvalid(status.UpdatedDate), Parameter: nameof(Status.UpdatedDate)),
-               (Rule: IsInvalid(status.UpdatedByUserId), Parameter: nameof(Status.UpdatedByUserId)),
+                (Rule: IsInvalid(status.Id), Parameter: nameof(Status.Id)),
+                (Rule: IsInvalid(status.Name), Parameter: nameof(Status.Name)),
+                (Rule: IsInvalid(status.CreatedDate), Parameter: nameof(Status.CreatedDate)),
+                (Rule: IsInvalid(status.CreatedByUserId), Parameter: nameof(Status.CreatedByUserId)),
+                (Rule: IsInvalid(status.UpdatedDate), Parameter: nameof(Status.UpdatedDate)),
+                (Rule: IsInvalid(status.UpdatedByUserId), Parameter: nameof(Status.UpdatedByUserId)),
 
-
-               (Rule: IsSame(
+                (Rule: IsSame(
                     firstDate: status.UpdatedDate,
                     secondDate: status.CreatedDate,
                     secondDateName: nameof(Status.CreatedDate)),
-                Parameter: nameof(Status.UpdatedDate)));
+                Parameter: nameof(Status.UpdatedDate)),
+
+                (Rule: IsNotRecent(status.UpdatedDate), Parameter: nameof(status.UpdatedDate)));
         }
 
         public void ValidateStatusId(StatusId statusId) =>
