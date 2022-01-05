@@ -35,6 +35,9 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                 (Rule: IsNotRecent(status.CreatedDate), Parameter: nameof(Status.CreatedDate)));
         }
 
+        public void ValidateStatusId(StatusId statusId) =>
+            Validate((Rule: IsInvalid(statusId), Parameter: nameof(Status.Id)));
+
         private static void ValidateStatusIsNotNull(Status status)
         {
             if (status is null)
