@@ -17,5 +17,6 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
     {
         ValueTask<Status> AddStatusAsync(Status status);
         IQueryable<Status> RetrieveAllStatuses();
+        ValueTask<Status> RetrieveStatusByIdAsync(StatusId statusId);
     }
 }
