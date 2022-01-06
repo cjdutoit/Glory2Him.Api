@@ -77,6 +77,8 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             Status maybeStatus = await this.storageBroker
                     .SelectStatusByIdAsync(statusId);
 
+            ValidateStorageStatus(maybeStatus, statusId);
+
             return await this.storageBroker
                     .DeleteStatusAsync(maybeStatus);
         });
