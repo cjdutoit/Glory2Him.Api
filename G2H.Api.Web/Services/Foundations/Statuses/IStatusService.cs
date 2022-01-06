@@ -19,5 +19,6 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
         IQueryable<Status> RetrieveAllStatuses();
         ValueTask<Status> RetrieveStatusByIdAsync(StatusId statusId);
         ValueTask<Status> ModifyStatusAsync(Status status);
+        ValueTask<Status> RemoveStatusByIdAsync(StatusId statusId);
     }
 }

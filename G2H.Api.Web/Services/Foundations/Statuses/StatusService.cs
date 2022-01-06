@@ -68,5 +68,8 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
 
             return await this.storageBroker.UpdateStatusAsync(status);
         });
+
+        public ValueTask<Status> RemoveStatusByIdAsync(StatusId statusId) =>
+            throw new System.NotImplementedException();
     }
 }
