@@ -8,15 +8,17 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using G2H.Api.Web.Models.Approvals;
-using Microsoft.AspNetCore.Identity;
+using G2H.Api.Web.Tests.Acceptance.Models.Bases;
 
-namespace G2H.Api.Web.Models.Users
+namespace G2H.Api.Web.Tests.Acceptance.Models.Statuses
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class Status : IAudit
     {
-
-        public virtual List<Approval> Approvals { get; set; } = new List<Approval>();
+        public StatusId Id { get; set; }
+        public string Name { get; set; }
+        public Guid CreatedByUserId { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public Guid UpdatedByUserId { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
     }
 }

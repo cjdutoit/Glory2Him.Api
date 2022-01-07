@@ -7,16 +7,17 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using G2H.Api.Web.Models.Approvals;
-using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using G2H.Api.Web.Tests.Acceptance.Models.Statuses;
 
-namespace G2H.Api.Web.Models.Users
+namespace G2H.Api.Web.Tests.Acceptance.Brokers
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public partial class ApiBroker
     {
+        private const string StatusesRelativeUrl = "api/statuses";
 
-        public virtual List<Approval> Approvals { get; set; } = new List<Approval>();
+        public async ValueTask<List<Status>> GetAllStatusesAsync() =>
+          await this.apiFactoryClient.GetContentAsync<List<Status>>($"{StatusesRelativeUrl}/");
     }
 }

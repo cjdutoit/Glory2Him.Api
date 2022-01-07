@@ -7,16 +7,15 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using G2H.Api.Web.Models.Approvals;
-using Microsoft.AspNetCore.Identity;
-
-namespace G2H.Api.Web.Models.Users
+namespace G2H.Api.Web.Tests.Acceptance.Models.Statuses
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public enum StatusId
     {
-
-        public virtual List<Approval> Approvals { get; set; } = new List<Approval>();
+        Draft = 1,
+        Submitted = 2,
+        AdminReviewRequired = 3,
+        Rejected = 4,
+        Approved = 5,
+        Deleted = 6,
     }
 }

@@ -4,11 +4,10 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<UserSecretsId>5a68376a-9b22-4375-b6c6-84bc35bcab29</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Brokers\StorageBroker.Posts.cs" />
+		<Compile Remove="Brokers\StorageBroker.Posts.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -24,8 +23,9 @@
 		<PackageReference Include="Xeption" Version="1.6.0" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Brokers\DateTimes\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Brokers\DateTimes\" />
+		<Folder Include="Migrations\" />
+	</ItemGroup>
 
 </Project>

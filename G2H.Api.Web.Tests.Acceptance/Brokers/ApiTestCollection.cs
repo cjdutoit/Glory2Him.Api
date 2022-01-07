@@ -7,16 +7,12 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using G2H.Api.Web.Models.Approvals;
-using Microsoft.AspNetCore.Identity;
+using Xunit;
 
-namespace G2H.Api.Web.Models.Users
+namespace G2H.Api.Web.Tests.Acceptance.Brokers
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    [CollectionDefinition(nameof(ApiTestCollection))]
+    public class ApiTestCollection : ICollectionFixture<ApiBroker>
     {
-
-        public virtual List<Approval> Approvals { get; set; } = new List<Approval>();
     }
 }

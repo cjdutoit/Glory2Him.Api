@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.PostAttachments;
-using G2H.Api.Web.Models.Users;
 using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.Attachments
@@ -32,8 +31,8 @@ namespace G2H.Api.Web.Models.Attachments
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public ApplicationUser CreatedByUser { get; set; }
-        public ApplicationUser UpdatedByUser { get; set; }
+        // public ApplicationUser CreatedByUser { get; set; }
+        // public ApplicationUser UpdatedByUser { get; set; }
 
         [JsonIgnore]
         public virtual List<PostAttachment> PostAttachments { get; set; } = new List<PostAttachment>();
