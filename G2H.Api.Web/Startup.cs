@@ -7,7 +7,12 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using G2H.Api.Web.Brokers.DateTimes;
+using G2H.Api.Web.Brokers.Loggings;
 using G2H.Api.Web.Brokers.Storages;
+using G2H.Api.Web.Services.Foundations.Posts;
+using G2H.Api.Web.Services.Foundations.Reactions;
+using G2H.Api.Web.Services.Foundations.Statuses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -74,10 +79,16 @@ namespace G2H.Api.Web
 
         private static void AddServices(IServiceCollection services)
         {
+            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IReactionService, ReactionService>();
+            services.AddTransient<IStatusService, StatusService>();
         }
 
         private static void AddBrokers(IServiceCollection services)
         {
+            services.AddTransient<IStorageBroker, StorageBroker>();
+            services.AddTransient<ILoggingBroker, LoggingBroker>();
+            services.AddTransient<IDateTimeBroker, DateTimeBroker>();
         }
     }
 }
