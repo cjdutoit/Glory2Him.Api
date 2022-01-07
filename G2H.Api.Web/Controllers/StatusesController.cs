@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Linq;
+using System.Threading.Tasks;
 using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Statuses.Exceptions;
 using G2H.Api.Web.Services.Foundations.Statuses;
@@ -42,6 +43,34 @@ namespace G2H.Api.Web.Controllers
             catch (StatusServiceException statusServiceException)
             {
                 return InternalServerError(statusServiceException);
+            }
+        }
+
+        [HttpGet("{statusId}")]
+        public async ValueTask<ActionResult<Status>> GetStatusByIdAsync(StatusId statusId)
+        {
+            try
+            {
+                Status status = await this.statusService.RetrieveStatusByIdAsync(statusId);
+
+                return Ok(status);
+            }
+            catch (StatusValidationException statusValidationException)
+                when (statusValidationException.InnerException is NotFoundStatusException)
+            {
+                return NotFound(statusValidationException.InnerException);
+            }
+            catch (StatusValidationException statusValidationException)
+            {
+                return BadRequest(statusValidationException.InnerException);
+            }
+            catch (StatusDependencyException statusDependencyException)
+            {
+                return InternalServerError(statusDependencyException);
+            }
+            catch (StatusServiceException statuseserviceException)
+            {
+                return InternalServerError(statuseserviceException);
             }
         }
     }
