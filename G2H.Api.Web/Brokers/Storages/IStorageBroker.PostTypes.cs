@@ -17,5 +17,6 @@ namespace G2H.Api.Web.Brokers.Storages
     {
         ValueTask<PostType> InsertPostTypeAsync(PostType postType);
         IQueryable<PostType> SelectAllPostTypes();
+        ValueTask<PostType> SelectPostTypeByIdAsync(PostTypeId postTypeId);
     }
 }
