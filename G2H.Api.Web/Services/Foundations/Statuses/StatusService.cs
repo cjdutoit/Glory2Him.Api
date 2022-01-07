@@ -68,5 +68,19 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
 
             return await this.storageBroker.UpdateStatusAsync(status);
         });
+
+        public ValueTask<Status> RemoveStatusByIdAsync(StatusId statusId) =>
+        TryCatch(async () =>
+        {
+            ValidateStatusId(statusId);
+
+            Status maybeStatus = await this.storageBroker
+                    .SelectStatusByIdAsync(statusId);
+
+            ValidateStorageStatus(maybeStatus, statusId);
+
+            return await this.storageBroker
+                    .DeleteStatusAsync(maybeStatus);
+        });
     }
 }
