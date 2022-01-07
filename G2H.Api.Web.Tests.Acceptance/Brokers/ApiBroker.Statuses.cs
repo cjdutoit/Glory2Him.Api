@@ -18,6 +18,9 @@ namespace G2H.Api.Web.Tests.Acceptance.Brokers
         private const string StatusesRelativeUrl = "api/statuses";
 
         public async ValueTask<List<Status>> GetAllStatusesAsync() =>
-          await this.apiFactoryClient.GetContentAsync<List<Status>>($"{StatusesRelativeUrl}/");
+            await this.apiFactoryClient.GetContentAsync<List<Status>>($"{StatusesRelativeUrl}/");
+
+        public async ValueTask<Status> GetStatusByIdAsync(StatusId statusId) =>
+            await this.apiFactoryClient.GetContentAsync<Status>($"{StatusesRelativeUrl}/{statusId}");
     }
 }

@@ -35,5 +35,20 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
                 actualStatus.Name.Should().Be(expectedStatus.Name);
             }
         }
+
+        [Fact]
+        public async Task ShouldGetStatusAsync()
+        {
+            // given
+            await CreateStatusesAsync();
+            Status randomStatus = GetRandomStatus();
+            Status expectedStatus = randomStatus;
+
+            // when
+            Status actualStatus = await this.apiBroker.GetStatusByIdAsync(expectedStatus.Id);
+
+            // then
+            actualStatus.Name.Should().Be(expectedStatus.Name);
+        }
     }
 }
