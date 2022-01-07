@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using G2H.Api.Web.Models.Statuses;
+using G2H.Api.Web.Tests.Acceptance.Models.Statuses;
 using Xunit;
 
 namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
@@ -23,7 +23,6 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
         {
             // given
             List<Status> statuses = await CreateStatusesAsync();
-
             List<Status> expectedStatuses = statuses;
 
             // when
