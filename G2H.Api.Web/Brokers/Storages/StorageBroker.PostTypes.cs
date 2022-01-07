@@ -39,5 +39,13 @@ namespace G2H.Api.Web.Brokers.Storages
 
             return broker.PostTypes;
         }
+
+        public async ValueTask<PostType> SelectPostTypeByIdAsync(PostTypeId postTypeId)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            return await broker.PostTypes.FindAsync(postTypeId);
+        }
     }
 }
