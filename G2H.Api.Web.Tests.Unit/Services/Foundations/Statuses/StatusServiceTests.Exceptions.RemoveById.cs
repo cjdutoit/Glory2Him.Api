@@ -10,6 +10,7 @@
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Statuses;
 using G2H.Api.Web.Models.Statuses.Exceptions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
@@ -57,6 +58,45 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteStatusAsync(It.IsAny<Status>()),
                     Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnDeleteWhenSqlExceptionOccursAndLogItAsync()
+        {
+            // given
+            StatusId someStatusId = GetRandomStatusId();
+            SqlException sqlException = GetSqlException();
+
+            var failedStatusStorageException =
+                new FailedStatusStorageException(sqlException);
+
+            var expectedStatusDependencyException =
+                new StatusDependencyException(failedStatusStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStatusByIdAsync(It.IsAny<StatusId>()))
+                    .ThrowsAsync(sqlException);
+
+            // when
+            ValueTask<Status> deleteStatusTask =
+                this.statusService.RemoveStatusByIdAsync(someStatusId);
+
+            // then
+            await Assert.ThrowsAsync<StatusDependencyException>(() =>
+                deleteStatusTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStatusByIdAsync(It.IsAny<StatusId>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedStatusDependencyException))),
+                        Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
