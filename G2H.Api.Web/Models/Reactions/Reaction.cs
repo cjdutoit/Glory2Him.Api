@@ -13,7 +13,6 @@ using System.Text.Json.Serialization;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.CommentReactions;
 using G2H.Api.Web.Models.PostReactions;
-using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.Reactions
 {

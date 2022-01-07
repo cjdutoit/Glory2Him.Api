@@ -28,7 +28,6 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
             this.apiBroker = apiBroker;
         }
 
-
         private async ValueTask<List<Models.Statuses.Status>> CreateStatusesAsync()
         {
             var userId = Guid.NewGuid();
@@ -90,6 +89,26 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
             }
 
             return statuses;
+        }
+
+        private static Models.Statuses.Status GetRandomStatus()
+        {
+            var userId = Guid.NewGuid();
+            var dateTimeOffset = DateTimeOffset.UtcNow;
+            Array values = Enum.GetValues(typeof(Models.Statuses.StatusId));
+            Random random = new Random();
+            Models.Statuses.StatusId randomStatusId = (Models.Statuses.StatusId)values.GetValue(random.Next(values.Length));
+
+            var filler = new Filler<Models.Statuses.Status>();
+
+            filler.Setup()
+                .OnProperty(status => status.Id).Use(randomStatusId)
+                .OnProperty(status => status.Name).Use(randomStatusId.GetDisplayName())
+                .OnType<DateTimeOffset>().Use(dateTimeOffset)
+                .OnProperty(status => status.CreatedByUserId).Use(userId)
+                .OnProperty(status => status.UpdatedByUserId).Use(userId);
+
+            return filler.Create();
         }
     }
 }
