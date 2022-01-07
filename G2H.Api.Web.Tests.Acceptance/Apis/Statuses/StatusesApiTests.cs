@@ -31,7 +31,10 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
 
         private async ValueTask<List<Models.Statuses.Status>> CreateStatusesAsync()
         {
-            foreach (var item in GetStorageStatuses())
+            var userId = Guid.NewGuid();
+            List<Web.Models.Statuses.Status> statuses = GetStorageStatuses(userId);
+
+            foreach (var item in statuses)
             {
                 if (!apiBroker.StatusService.RetrieveAllStatuses().Any(status => status.Id == item.Id))
                 {
@@ -39,22 +42,18 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
                 }
             }
 
-            return GetClientStatuses();
+            return GetClientStatuses(userId);
         }
 
-        private static DateTimeOffset GetRandomDateTimeOffset() =>
-            new DateTimeRange(earliestDate: new DateTime()).GetValue();
-
-        private static List<Web.Models.Statuses.Status> GetStorageStatuses()
+        private static List<Web.Models.Statuses.Status> GetStorageStatuses(Guid userId)
         {
-            List<Web.Models.Statuses.Status> statuses = new List<Web.Models.Statuses.Status>();
+            List<Web.Models.Statuses.Status> statuses =
+                new List<Web.Models.Statuses.Status>();
 
-
-            foreach (Web.Models.Statuses.StatusId statusId in Enum.GetValues(typeof(Web.Models.Statuses.StatusId)))
+            foreach (Web.Models.Statuses.StatusId statusId
+                in Enum.GetValues(typeof(Web.Models.Statuses.StatusId)))
             {
-                var dateTimeOffset = GetRandomDateTimeOffset();
-                var userId = Guid.NewGuid();
-
+                var dateTimeOffset = DateTimeOffset.UtcNow;
                 var filler = new Filler<Web.Models.Statuses.Status>();
 
                 filler.Setup()
@@ -62,9 +61,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
                     .OnProperty(status => status.Name).Use(statusId.GetDisplayName())
                     .OnType<DateTimeOffset>().Use(dateTimeOffset)
                     .OnProperty(status => status.CreatedByUserId).Use(userId)
-                    .OnProperty(status => status.CreatedByUser).IgnoreIt()
                     .OnProperty(status => status.UpdatedByUserId).Use(userId)
-                    .OnProperty(status => status.UpdatedByUser).IgnoreIt()
                     .OnProperty(status => status.Approvals).IgnoreIt();
 
                 statuses.Add(filler.Create());
@@ -73,16 +70,13 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
             return statuses;
         }
 
-        private static List<Models.Statuses.Status> GetClientStatuses()
+        private static List<Models.Statuses.Status> GetClientStatuses(Guid userId)
         {
             List<Models.Statuses.Status> statuses = new List<Models.Statuses.Status>();
 
-
             foreach (Models.Statuses.StatusId statusId in Enum.GetValues(typeof(Models.Statuses.StatusId)))
             {
-                var dateTimeOffset = GetRandomDateTimeOffset();
-                var userId = Guid.NewGuid();
-
+                var dateTimeOffset = DateTimeOffset.UtcNow;
                 var filler = new Filler<Models.Statuses.Status>();
 
                 filler.Setup()
@@ -90,16 +84,12 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
                     .OnProperty(status => status.Name).Use(statusId.GetDisplayName())
                     .OnType<DateTimeOffset>().Use(dateTimeOffset)
                     .OnProperty(status => status.CreatedByUserId).Use(userId)
-                    .OnProperty(status => status.CreatedByUser).IgnoreIt()
-                    .OnProperty(status => status.UpdatedByUserId).Use(userId)
-                    .OnProperty(status => status.UpdatedByUser).IgnoreIt();
+                    .OnProperty(status => status.UpdatedByUserId).Use(userId);
 
                 statuses.Add(filler.Create());
             }
 
             return statuses;
         }
-
-
     }
 }

@@ -9,7 +9,6 @@
 
 using System;
 using G2H.Api.Web.Tests.Acceptance.Models.Bases;
-using G2H.Api.Web.Tests.Acceptance.Models.Users;
 
 namespace G2H.Api.Web.Tests.Acceptance.Models.Statuses
 {
@@ -21,7 +20,5 @@ namespace G2H.Api.Web.Tests.Acceptance.Models.Statuses
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public ApplicationUser CreatedByUser { get; set; }
-        public ApplicationUser UpdatedByUser { get; set; }
     }
 }

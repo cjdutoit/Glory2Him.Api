@@ -28,8 +28,8 @@ namespace G2H.Api.Web.Models.Tags
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public ApplicationUser CreatedByUser { get; set; }
-        public ApplicationUser UpdatedByUser { get; set; }
+        // public ApplicationUser CreatedByUser { get; set; }
+        // public ApplicationUser UpdatedByUser { get; set; }
 
         [JsonIgnore]
         public virtual List<PostTag> PostTags { get; set; } = new List<PostTag>();

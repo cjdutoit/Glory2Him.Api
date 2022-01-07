@@ -8,7 +8,6 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.Base
 {
@@ -22,8 +21,8 @@ namespace G2H.Api.Web.Models.Base
 
         DateTimeOffset UpdatedDate { get; set; }
 
-        ApplicationUser CreatedByUser { get; set; }
+        //ApplicationUser CreatedByUser { get; set; }
 
-        ApplicationUser UpdatedByUser { get; set; }
+        //ApplicationUser UpdatedByUser { get; set; }
     }
 }

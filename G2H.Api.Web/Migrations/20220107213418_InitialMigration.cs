@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace G2H.Api.Web.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,56 @@ namespace G2H.Api.Web.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reactions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Statuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Statuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,105 +225,25 @@ namespace G2H.Api.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostType",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    UpdatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PostType", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PostType_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PostType_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reactions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    UpdatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reactions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Reactions_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reactions_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Status",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    UpdatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Status", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Status_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Status_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Approvals",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Approvals", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Approvals_Status_StatusId",
+                        name: "FK_Approvals_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Approvals_Statuses_StatusId",
                         column: x => x.StatusId,
-                        principalTable: "Status",
+                        principalTable: "Statuses",
                         principalColumn: "Id");
                 });
 
@@ -298,18 +268,6 @@ namespace G2H.Api.Web.Migrations
                         column: x => x.ApprovalId,
                         principalTable: "Approvals",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ApprovalUsers_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApprovalUsers_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -337,18 +295,6 @@ namespace G2H.Api.Web.Migrations
                         column: x => x.ApprovalId,
                         principalTable: "Approvals",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Attachments_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Attachments_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -371,18 +317,6 @@ namespace G2H.Api.Web.Migrations
                         column: x => x.ApprovalId,
                         principalTable: "Approvals",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -411,21 +345,9 @@ namespace G2H.Api.Web.Migrations
                         principalTable: "Approvals",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Posts_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Posts_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Posts_PostType_PostTypeId",
+                        name: "FK_Posts_PostTypes_PostTypeId",
                         column: x => x.PostTypeId,
-                        principalTable: "PostType",
+                        principalTable: "PostTypes",
                         principalColumn: "Id");
                 });
 
@@ -450,18 +372,6 @@ namespace G2H.Api.Web.Migrations
                         column: x => x.ApprovalId,
                         principalTable: "Approvals",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Tags_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Tags_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -500,18 +410,6 @@ namespace G2H.Api.Web.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CommentReactions", x => new { x.CommentId, x.ReactionId });
-                    table.ForeignKey(
-                        name: "FK_CommentReactions_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CommentReactions_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CommentReactions_Comments_CommentId",
                         column: x => x.CommentId,
@@ -583,18 +481,6 @@ namespace G2H.Api.Web.Migrations
                 {
                     table.PrimaryKey("PK_PostReactions", x => new { x.PostId, x.ReactionId });
                     table.ForeignKey(
-                        name: "FK_PostReactions_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PostReactions_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_PostReactions_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
@@ -627,18 +513,6 @@ namespace G2H.Api.Web.Migrations
                         principalTable: "Approvals",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_PostTags_AspNetUsers_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PostTags_AspNetUsers_UpdatedByUserId",
-                        column: x => x.UpdatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_PostTags_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
@@ -651,6 +525,11 @@ namespace G2H.Api.Web.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Approvals_ApplicationUserId",
+                table: "Approvals",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Approvals_StatusId",
                 table: "Approvals",
                 column: "StatusId");
@@ -659,16 +538,6 @@ namespace G2H.Api.Web.Migrations
                 name: "IX_ApprovalUsers_ApprovalId",
                 table: "ApprovalUsers",
                 column: "ApprovalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApprovalUsers_CreatedByUserId",
-                table: "ApprovalUsers",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApprovalUsers_UpdatedByUserId",
-                table: "ApprovalUsers",
-                column: "UpdatedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -730,24 +599,9 @@ namespace G2H.Api.Web.Migrations
                 column: "ApprovalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_CreatedByUserId",
-                table: "Attachments",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Attachments_UpdatedByUserId",
-                table: "Attachments",
-                column: "UpdatedByUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CommentComments_ChildCommentId",
                 table: "CommentComments",
                 column: "ChildCommentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CommentReactions_CreatedByUserId",
-                table: "CommentReactions",
-                column: "CreatedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CommentReactions_ReactionId",
@@ -755,24 +609,9 @@ namespace G2H.Api.Web.Migrations
                 column: "ReactionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommentReactions_UpdatedByUserId",
-                table: "CommentReactions",
-                column: "UpdatedByUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Comments_ApprovalId",
                 table: "Comments",
                 column: "ApprovalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_CreatedByUserId",
-                table: "Comments",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_UpdatedByUserId",
-                table: "Comments",
-                column: "UpdatedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostAttachments_AttachmentId",
@@ -785,19 +624,9 @@ namespace G2H.Api.Web.Migrations
                 column: "CommentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostReactions_CreatedByUserId",
-                table: "PostReactions",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PostReactions_ReactionId",
                 table: "PostReactions",
                 column: "ReactionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostReactions_UpdatedByUserId",
-                table: "PostReactions",
-                column: "UpdatedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_ApprovalId",
@@ -805,19 +634,9 @@ namespace G2H.Api.Web.Migrations
                 column: "ApprovalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_CreatedByUserId",
-                table: "Posts",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Posts_PostTypeId",
                 table: "Posts",
                 column: "PostTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Posts_UpdatedByUserId",
-                table: "Posts",
-                column: "UpdatedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostTags_ApprovalId",
@@ -825,64 +644,14 @@ namespace G2H.Api.Web.Migrations
                 column: "ApprovalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostTags_CreatedByUserId",
-                table: "PostTags",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PostTags_TagId",
                 table: "PostTags",
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostTags_UpdatedByUserId",
-                table: "PostTags",
-                column: "UpdatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostType_CreatedByUserId",
-                table: "PostType",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostType_UpdatedByUserId",
-                table: "PostType",
-                column: "UpdatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reactions_CreatedByUserId",
-                table: "Reactions",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reactions_UpdatedByUserId",
-                table: "Reactions",
-                column: "UpdatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Status_CreatedByUserId",
-                table: "Status",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Status_UpdatedByUserId",
-                table: "Status",
-                column: "UpdatedByUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tags_ApprovalId",
                 table: "Tags",
                 column: "ApprovalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tags_CreatedByUserId",
-                table: "Tags",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tags_UpdatedByUserId",
-                table: "Tags",
-                column: "UpdatedByUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -942,16 +711,16 @@ namespace G2H.Api.Web.Migrations
                 name: "Tags");
 
             migrationBuilder.DropTable(
-                name: "PostType");
+                name: "PostTypes");
 
             migrationBuilder.DropTable(
                 name: "Approvals");
 
             migrationBuilder.DropTable(
-                name: "Status");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Statuses");
         }
     }
 }

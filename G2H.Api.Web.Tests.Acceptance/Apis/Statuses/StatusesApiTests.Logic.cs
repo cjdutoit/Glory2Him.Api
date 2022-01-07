@@ -32,7 +32,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Statuses
             foreach (Status expectedStatus in expectedStatuses)
             {
                 Status actualStatus = actualStatuses.Single(status => status.Id == expectedStatus.Id);
-                actualStatus.Should().BeEquivalentTo(expectedStatus);
+                actualStatus.Name.Should().Be(expectedStatus.Name);
             }
         }
     }

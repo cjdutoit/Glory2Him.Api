@@ -26,6 +26,7 @@
 
 		<ItemGroup>
 				<Folder Include="Brokers\DateTimes\" />
+				<Folder Include="Migrations\" />
 		</ItemGroup>
 
 </Project>

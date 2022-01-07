@@ -20,13 +20,13 @@ namespace G2H.Api.Web.Tests.Acceptance.Brokers
         private readonly WebApplicationFactory<Startup> webApplicationFactory;
         private readonly HttpClient httpClient;
         private readonly IRESTFulApiFactoryClient apiFactoryClient;
-        internal StatusService StatusService;
+        internal IStatusService StatusService;
 
         public ApiBroker()
         {
             this.webApplicationFactory = new WebApplicationFactory<Startup>();
 
-            this.StatusService = (StatusService)webApplicationFactory.Services.GetService<StatusService>();
+            this.StatusService = (StatusService)webApplicationFactory.Services.GetService<IStatusService>();
 
             this.httpClient = this.webApplicationFactory.CreateClient();
             this.apiFactoryClient = new RESTFulApiFactoryClient(this.httpClient);

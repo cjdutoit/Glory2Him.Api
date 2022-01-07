@@ -25,7 +25,7 @@ namespace G2H.Api.Web.Models.CommentReactions
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public ApplicationUser CreatedByUser { get; set; }
-        public ApplicationUser UpdatedByUser { get; set; }
+        // public ApplicationUser CreatedByUser { get; set; }
+        // public ApplicationUser UpdatedByUser { get; set; }
     }
 }
