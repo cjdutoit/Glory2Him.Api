@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Linq;
+using System.Threading.Tasks;
 using G2H.Api.Web.Models.Reactions;
 using G2H.Api.Web.Models.Reactions.Exceptions;
 using G2H.Api.Web.Services.Foundations.Reactions;
@@ -34,6 +35,34 @@ namespace G2H.Api.Web.Controllers
                     this.reactionService.RetrieveAllReactions();
 
                 return Ok(retrievedReactions);
+            }
+            catch (ReactionDependencyException reactionDependencyException)
+            {
+                return InternalServerError(reactionDependencyException);
+            }
+            catch (ReactionServiceException reactionServiceException)
+            {
+                return InternalServerError(reactionServiceException);
+            }
+        }
+
+        [HttpGet("{reactionId}")]
+        public async ValueTask<ActionResult<Reaction>> GetReactionByIdAsync(ReactionId reactionId)
+        {
+            try
+            {
+                Reaction reaction = await this.reactionService.RetrieveReactionByIdAsync(reactionId);
+
+                return Ok(reaction);
+            }
+            catch (ReactionValidationException reactionValidationException)
+                when (reactionValidationException.InnerException is NotFoundReactionException)
+            {
+                return NotFound(reactionValidationException.InnerException);
+            }
+            catch (ReactionValidationException reactionValidationException)
+            {
+                return BadRequest(reactionValidationException.InnerException);
             }
             catch (ReactionDependencyException reactionDependencyException)
             {
