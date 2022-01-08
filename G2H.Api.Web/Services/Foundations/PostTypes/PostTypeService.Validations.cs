@@ -20,12 +20,19 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             ValidatePostTypeIsNotNull(postType);
 
             Validate(
-               (Rule: IsInvalid(postType.Id), Parameter: nameof(PostType.Id)),
-               (Rule: IsInvalid(postType.Name), Parameter: nameof(PostType.Name)),
-               (Rule: IsInvalid(postType.CreatedDate), Parameter: nameof(PostType.CreatedDate)),
-               (Rule: IsInvalid(postType.CreatedByUserId), Parameter: nameof(PostType.CreatedByUserId)),
-               (Rule: IsInvalid(postType.UpdatedDate), Parameter: nameof(PostType.UpdatedDate)),
-               (Rule: IsInvalid(postType.UpdatedByUserId), Parameter: nameof(PostType.UpdatedByUserId)));
+                (Rule: IsInvalid(postType.Id), Parameter: nameof(PostType.Id)),
+                (Rule: IsInvalid(postType.Name), Parameter: nameof(PostType.Name)),
+                (Rule: IsInvalid(postType.CreatedDate), Parameter: nameof(PostType.CreatedDate)),
+                (Rule: IsInvalid(postType.CreatedByUserId), Parameter: nameof(PostType.CreatedByUserId)),
+                (Rule: IsInvalid(postType.UpdatedDate), Parameter: nameof(PostType.UpdatedDate)),
+                (Rule: IsInvalid(postType.UpdatedByUserId), Parameter: nameof(PostType.UpdatedByUserId)),
+
+                (Rule: IsNotSame(
+                    firstDate: postType.UpdatedDate,
+                    secondDate: postType.CreatedDate,
+                    secondDateName: nameof(PostType.CreatedDate)),
+                Parameter: nameof(PostType.UpdatedDate)));
+
         }
 
         private static void ValidatePostTypeIsNotNull(PostType postType)
@@ -59,6 +66,15 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             Condition = date == default,
             Message = "Date is required"
         };
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not the same as {secondDateName}"
+            };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

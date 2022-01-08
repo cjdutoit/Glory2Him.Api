@@ -138,12 +138,8 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
                 this.postTypeService.AddPostTypeAsync(invalidPostType);
 
             // then
-            await Assert.ThrowsAsync<PostTypeValidationException>(() =>
+            var ex = await Assert.ThrowsAsync<PostTypeValidationException>(() =>
                addPostTypeTask.AsTask());
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
