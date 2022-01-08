@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.PostTypes;
@@ -56,6 +57,13 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
 
                 throw CreateAndLogDependecyException(failedPostTypeStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedPostTypeServiceException =
+                    new FailedPostTypeServiceException(exception);
+
+                throw CreateAndLogServiceException(failedPostTypeServiceException);
+            }
         }
 
         private PostTypeValidationException CreateAndLogValidationException(
@@ -96,6 +104,15 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             this.loggingBroker.LogError(postTypeDependencyException);
 
             return postTypeDependencyException;
+        }
+
+        private PostTypeServiceException CreateAndLogServiceException(
+            Xeption exception)
+        {
+            var postTypeServiceException = new PostTypeServiceException(exception);
+            this.loggingBroker.LogError(postTypeServiceException);
+
+            return postTypeServiceException;
         }
     }
 }
