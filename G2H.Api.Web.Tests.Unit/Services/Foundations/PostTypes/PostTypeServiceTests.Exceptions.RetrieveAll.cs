@@ -54,5 +54,43 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string exceptionMessage = GetRandomMessage();
+            var serviceException = new Exception(exceptionMessage);
+
+            var failedPostTypeServiceException =
+                new FailedPostTypeServiceException(serviceException);
+
+            var expectedPostTypeServiceException =
+                new PostTypeServiceException(failedPostTypeServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllPostTypes())
+                    .Throws(serviceException);
+
+            // when
+            Action retrieveAllPostTypesAction = () =>
+                this.postTypeService.RetrieveAllPostTypes();
+
+            // then
+            Assert.Throws<PostTypeServiceException>(
+                retrieveAllPostTypesAction);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllPostTypes(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostTypeServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
