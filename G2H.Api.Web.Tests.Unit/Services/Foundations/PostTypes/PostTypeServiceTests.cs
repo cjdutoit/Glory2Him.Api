@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using G2H.Api.Web.Brokers.DateTimes;
@@ -49,6 +50,13 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
                 actualException.Message == expectedException.Message
                 && actualException.InnerException.Message == expectedException.InnerException.Message
                 && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
+        }
+
+        private static IQueryable<PostType> CreateRandomPostTypes()
+        {
+            return CreatePostTypeFiller(dateTimeOffset: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
         }
 
         private static string GetRandomMessage() =>
