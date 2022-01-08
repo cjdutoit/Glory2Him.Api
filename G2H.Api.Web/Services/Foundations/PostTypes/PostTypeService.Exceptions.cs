@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.PostTypes;
@@ -21,6 +22,7 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
     public partial class PostTypeService
     {
         private delegate ValueTask<PostType> ReturningPostTypeFunction();
+        private delegate IQueryable<PostType> ReturningPostTypesFunction();
 
         private async ValueTask<PostType> TryCatch(ReturningPostTypeFunction returningPostTypeFunction)
         {
@@ -63,6 +65,20 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
                     new FailedPostTypeServiceException(exception);
 
                 throw CreateAndLogServiceException(failedPostTypeServiceException);
+            }
+        }
+
+        private IQueryable<PostType> TryCatch(ReturningPostTypesFunction returningPostTypesFunction)
+        {
+            try
+            {
+                return returningPostTypesFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedPostTypeStorageException =
+                    new FailedPostTypeStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedPostTypeStorageException);
             }
         }
 
