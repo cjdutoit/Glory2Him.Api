@@ -40,7 +40,9 @@ namespace G2H.Api.Web.Brokers.Storages
             AddPostReactionReferences(modelBuilder);
             AddPostReferences(modelBuilder);
             AddPostTagReferences(modelBuilder);
+            AddPostTypeReferences(modelBuilder);
             AddReactionReferences(modelBuilder);
+            AddStatusReferences(modelBuilder);
             AddTagReferences(modelBuilder);
         }
 
