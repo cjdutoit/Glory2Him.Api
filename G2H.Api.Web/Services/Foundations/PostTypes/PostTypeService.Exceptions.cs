@@ -28,6 +28,10 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             {
                 throw CreateAndLogValidationException(nullPostTypeException);
             }
+            catch (InvalidPostTypeException invalidPostTypeException)
+            {
+                throw CreateAndLogValidationException(invalidPostTypeException);
+            }
         }
 
         private PostTypeValidationException CreateAndLogValidationException(
