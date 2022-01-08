@@ -12,6 +12,7 @@ using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.PostTypes.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.PostTypes
@@ -48,6 +49,13 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsPostTypeException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedPostTypeStorageException =
+                    new FailedPostTypeStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependecyException(failedPostTypeStorageException);
+            }
         }
 
         private PostTypeValidationException CreateAndLogValidationException(
@@ -79,6 +87,15 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             this.loggingBroker.LogError(postTypeDependencyValidationException);
 
             return postTypeDependencyValidationException;
+        }
+
+        private PostTypeDependencyException CreateAndLogDependecyException(
+            Xeption exception)
+        {
+            var postTypeDependencyException = new PostTypeDependencyException(exception);
+            this.loggingBroker.LogError(postTypeDependencyException);
+
+            return postTypeDependencyException;
         }
     }
 }
