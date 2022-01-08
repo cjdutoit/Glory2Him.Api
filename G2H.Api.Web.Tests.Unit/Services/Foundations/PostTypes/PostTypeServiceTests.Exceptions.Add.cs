@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.PostTypes.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -54,6 +55,53 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedPostTypeDependencyException))),
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfPostTypeAlreadyExsitsAndLogItAsync()
+        {
+            // given
+            PostType randomPostType = CreateRandomPostType();
+            PostType alreadyExistsPostType = randomPostType;
+            string randomMessage = GetRandomMessage();
+
+            var duplicateKeyException =
+                new DuplicateKeyException(randomMessage);
+
+            var alreadyExistsPostTypeException =
+                new AlreadyExistsPostTypeException(duplicateKeyException);
+
+            var expectedPostTypeDependencyValidationException =
+                new PostTypeDependencyValidationException(alreadyExistsPostTypeException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(duplicateKeyException);
+
+            // when
+            ValueTask<PostType> addPostTypeTask =
+                this.postTypeService.AddPostTypeAsync(alreadyExistsPostType);
+
+            // then
+            await Assert.ThrowsAsync<PostTypeDependencyValidationException>(() =>
+                addPostTypeTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertPostTypeAsync(It.IsAny<PostType>()),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostTypeDependencyValidationException))),
                         Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
