@@ -53,7 +53,8 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
                 .OnType<DateTimeOffset>().Use(dateTimeOffset)
                 .OnProperty(postType => postType.CreatedByUserId).Use(userId)
                 .OnProperty(postType => postType.UpdatedByUserId).Use(userId)
-                .OnType<ApplicationUser>().IgnoreIt();
+                .OnType<ApplicationUser>().IgnoreIt()
+                .OnProperty(status => status.Posts).IgnoreIt();
 
             return filler;
         }
