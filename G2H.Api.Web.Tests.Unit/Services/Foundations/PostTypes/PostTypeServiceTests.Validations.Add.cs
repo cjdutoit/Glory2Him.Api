@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.PostTypes.Exceptions;
@@ -129,6 +130,48 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             invalidPostTypeException.AddData(
                 key: nameof(PostType.UpdatedDate),
                 values: $"Date is not the same as {nameof(PostType.CreatedDate)}");
+
+            var expectedPostTypeValidationException =
+                new PostTypeValidationException(invalidPostTypeException);
+
+            // when
+            ValueTask<PostType> addPostTypeTask =
+                this.postTypeService.AddPostTypeAsync(invalidPostType);
+
+            // then
+            var ex = await Assert.ThrowsAsync<PostTypeValidationException>(() =>
+               addPostTypeTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostTypeValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertPostTypeAsync(It.IsAny<PostType>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateUserIdsIsNotSameAndLogItAsync()
+        {
+            // given
+            int randomNumber = GetRandomNumber();
+            PostType randomPostType = CreateRandomPostType();
+            PostType invalidPostType = randomPostType;
+
+            invalidPostType.UpdatedByUserId = Guid.NewGuid();
+
+            var invalidPostTypeException =
+                new InvalidPostTypeException();
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.UpdatedByUserId),
+                values: $"Id is not the same as {nameof(PostType.CreatedByUserId)}");
 
             var expectedPostTypeValidationException =
                 new PostTypeValidationException(invalidPostTypeException);

@@ -32,7 +32,6 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
                     secondDate: postType.CreatedDate,
                     secondDateName: nameof(PostType.CreatedDate)),
                 Parameter: nameof(PostType.UpdatedDate)));
-
         }
 
         private static void ValidatePostTypeIsNotNull(PostType postType)
@@ -74,6 +73,15 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private static dynamic IsNotSame(
+            Guid firstId,
+            Guid secondId,
+            string secondIdName) => new
+            {
+                Condition = firstId != secondId,
+                Message = $"Id is not the same as {secondIdName}"
             };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
