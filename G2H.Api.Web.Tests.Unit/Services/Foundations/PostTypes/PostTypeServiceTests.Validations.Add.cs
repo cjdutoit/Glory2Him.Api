@@ -46,5 +46,70 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnAddIfPostTypeIsInvalidAndLogItAsync(
+            string invalidText)
+        {
+            // given
+            var invalidPostType = new PostType
+            {
+                Name = invalidText
+            };
+
+            var invalidPostTypeException =
+                new InvalidPostTypeException();
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.Id),
+                values: "Id is required");
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.Name),
+                values: "Text is required");
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.CreatedDate),
+                values: "Date is required");
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.CreatedByUserId),
+                values: "Id is required");
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.UpdatedDate),
+                values: "Date is required");
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.UpdatedByUserId),
+                values: "Id is required");
+
+            var expectedPostTypeValidationException =
+                new PostTypeValidationException(invalidPostTypeException);
+
+            // when
+            ValueTask<PostType> addPostTypeTask =
+                this.postTypeService.AddPostTypeAsync(invalidPostType);
+
+            // then
+            await Assert.ThrowsAsync<PostTypeValidationException>(() =>
+               addPostTypeTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostTypeValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertPostTypeAsync(It.IsAny<PostType>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
