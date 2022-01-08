@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace G2H.Api.Web.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20220108004219_PostType")]
-    partial class PostType
+    [Migration("20220108132636_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
