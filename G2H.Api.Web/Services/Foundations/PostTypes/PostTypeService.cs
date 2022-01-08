@@ -41,6 +41,6 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
         });
 
         public IQueryable<PostType> RetrieveAllPostTypes() =>
-            throw new System.NotImplementedException();
+            this.storageBroker.SelectAllPostTypes();
     }
 }
