@@ -10,6 +10,7 @@
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.PostTypes.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.PostTypes
@@ -32,6 +33,13 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             {
                 throw CreateAndLogValidationException(invalidPostTypeException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedPostTypeStorageException =
+                    new FailedPostTypeStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedPostTypeStorageException);
+            }
         }
 
         private PostTypeValidationException CreateAndLogValidationException(
@@ -43,6 +51,15 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             this.loggingBroker.LogError(postTypeValidationException);
 
             return postTypeValidationException;
+        }
+
+        private PostTypeDependencyException CreateAndLogCriticalDependencyException(
+           Xeption exception)
+        {
+            var postTypeDependencyException = new PostTypeDependencyException(exception);
+            this.loggingBroker.LogCritical(postTypeDependencyException);
+
+            return postTypeDependencyException;
         }
     }
 }
