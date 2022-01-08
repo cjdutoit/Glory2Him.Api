@@ -48,6 +48,12 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
                 && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
         }
 
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
+
+        private static PostType CreateRandomPostType() =>
+            CreatePostTypeFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
