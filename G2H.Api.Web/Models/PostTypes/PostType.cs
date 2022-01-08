@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Posts;
-using G2H.Api.Web.Models.Users;
 using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.PostTypes
@@ -20,7 +19,7 @@ namespace G2H.Api.Web.Models.PostTypes
     {
         public PostTypeId Id { get; set; }
         public string Name { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsEnabled { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
