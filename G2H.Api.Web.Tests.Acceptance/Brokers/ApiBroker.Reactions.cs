@@ -19,5 +19,8 @@ namespace G2H.Api.Web.Tests.Acceptance.Brokers
 
         public async ValueTask<List<Reaction>> GetAllReactionsAsync() =>
             await this.apiFactoryClient.GetContentAsync<List<Reaction>>($"{ReactionsRelativeUrl}/");
+
+        public async ValueTask<Reaction> GetReactionByIdAsync(ReactionId reactionId) =>
+            await this.apiFactoryClient.GetContentAsync<Reaction>($"{ReactionsRelativeUrl}/{reactionId}");
     }
 }
