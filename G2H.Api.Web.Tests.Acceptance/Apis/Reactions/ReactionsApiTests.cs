@@ -89,5 +89,25 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
 
             return reactions;
         }
+
+        private static Models.Reactions.Reaction GetRandomReaction()
+        {
+            var userId = Guid.NewGuid();
+            var dateTimeOffset = DateTimeOffset.UtcNow;
+            Array values = Enum.GetValues(typeof(Models.Reactions.ReactionId));
+            Random random = new Random();
+            Models.Reactions.ReactionId randomReactionId = (Models.Reactions.ReactionId)values.GetValue(random.Next(values.Length));
+
+            var filler = new Filler<Models.Reactions.Reaction>();
+
+            filler.Setup()
+                .OnProperty(reaction => reaction.Id).Use(randomReactionId)
+                .OnProperty(reaction => reaction.Name).Use(randomReactionId.GetDisplayName())
+                .OnType<DateTimeOffset>().Use(dateTimeOffset)
+                .OnProperty(reaction => reaction.CreatedByUserId).Use(userId)
+                .OnProperty(reaction => reaction.UpdatedByUserId).Use(userId);
+
+            return filler.Create();
+        }
     }
 }

@@ -35,5 +35,20 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
                 actualReaction.Name.Should().Be(expectedReaction.Name);
             }
         }
+
+        [Fact]
+        public async Task ShouldGetReactionAsync()
+        {
+            // given
+            await CreateReactionsAsync();
+            Reaction randomReaction = GetRandomReaction();
+            Reaction expectedReaction = randomReaction;
+
+            // when
+            Reaction actualReaction = await this.apiBroker.GetReactionByIdAsync(expectedReaction.Id);
+
+            // then
+            actualReaction.Name.Should().Be(expectedReaction.Name);
+        }
     }
 }
