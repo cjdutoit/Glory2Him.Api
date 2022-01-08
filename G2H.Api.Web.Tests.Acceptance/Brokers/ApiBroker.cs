@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Net.Http;
+using G2H.Api.Web.Services.Foundations.Reactions;
 using G2H.Api.Web.Services.Foundations.Statuses;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +22,14 @@ namespace G2H.Api.Web.Tests.Acceptance.Brokers
         private readonly HttpClient httpClient;
         private readonly IRESTFulApiFactoryClient apiFactoryClient;
         internal IStatusService StatusService;
+        internal IReactionService ReactionService;
 
         public ApiBroker()
         {
             this.webApplicationFactory = new WebApplicationFactory<Startup>();
 
             this.StatusService = (StatusService)webApplicationFactory.Services.GetService<IStatusService>();
+            this.ReactionService = (ReactionService)webApplicationFactory.Services.GetService<IReactionService>();
 
             this.httpClient = this.webApplicationFactory.CreateClient();
             this.apiFactoryClient = new RESTFulApiFactoryClient(this.httpClient);
