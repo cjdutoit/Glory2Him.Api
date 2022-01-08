@@ -80,6 +80,13 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
                     new FailedPostTypeStorageException(sqlException);
                 throw CreateAndLogCriticalDependencyException(failedPostTypeStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedPostTypeServiceException =
+                    new FailedPostTypeServiceException(exception);
+
+                throw CreateAndLogServiceException(failedPostTypeServiceException);
+            }
         }
 
         private PostTypeValidationException CreateAndLogValidationException(
