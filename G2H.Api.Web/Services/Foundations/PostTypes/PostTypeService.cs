@@ -31,7 +31,12 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<PostType> AddPostTypeAsync(PostType postType) =>
-            await this.storageBroker.InsertPostTypeAsync(postType);
+        public ValueTask<PostType> AddPostTypeAsync(PostType postType) =>
+        TryCatch(async () =>
+        {
+            ValidatePostTypeOnAdd(postType);
+
+            return await this.storageBroker.InsertPostTypeAsync(postType);
+        });
     }
 }
