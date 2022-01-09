@@ -147,6 +147,52 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateUserIdsIsNotSameAndLogItAsync()
+        {
+            // given
+            int randomNumber = GetRandomNumber();
+            Reaction randomReaction = CreateRandomReaction();
+            Reaction invalidReaction = randomReaction;
+
+            invalidReaction.UpdatedByUserId = Guid.NewGuid();
+
+            var invalidReactionException =
+                new InvalidReactionException();
+
+            invalidReactionException.AddData(
+                key: nameof(Reaction.UpdatedByUserId),
+                values: $"Id is not the same as {nameof(Reaction.CreatedByUserId)}");
+
+            var expectedReactionValidationException =
+                new ReactionValidationException(invalidReactionException);
+
+            // when
+            ValueTask<Reaction> addReactionTask =
+                this.reactionService.AddReactionAsync(invalidReaction);
+
+            // then
+            await Assert.ThrowsAsync<ReactionValidationException>(() =>
+               addReactionTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedReactionValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertReactionAsync(It.IsAny<Reaction>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
         [Theory]
         [MemberData(nameof(MinutesBeforeOrAfter))]
         public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotRecentAndLogItAsync(
