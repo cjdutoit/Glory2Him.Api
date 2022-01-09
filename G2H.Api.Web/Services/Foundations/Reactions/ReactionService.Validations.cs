@@ -33,6 +33,12 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                     secondDateName: nameof(Reaction.CreatedDate)),
                 Parameter: nameof(Reaction.UpdatedDate)),
 
+                (Rule: IsNotSame(
+                    firstId: reaction.UpdatedByUserId,
+                    secondId: reaction.CreatedByUserId,
+                    secondIdName: nameof(Reaction.CreatedByUserId)),
+                Parameter: nameof(Reaction.UpdatedByUserId)),
+
                 (Rule: IsNotRecent(reaction.CreatedDate), Parameter: nameof(Reaction.CreatedDate)));
         }
 
@@ -132,6 +138,15 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
             {
                 Condition = firstDate == secondDate,
                 Message = $"Date is the same as {secondDateName}"
+            };
+
+        private static dynamic IsNotSame(
+            Guid firstId,
+            Guid secondId,
+            string secondIdName) => new
+            {
+                Condition = firstId != secondId,
+                Message = $"Id is not the same as {secondIdName}"
             };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
