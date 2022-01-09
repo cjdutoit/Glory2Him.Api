@@ -169,7 +169,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
         }
 
         [Theory]
-        [MemberData(nameof(InvalidMinuteCases))]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
         {
             // given
@@ -275,11 +275,9 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             int randomNumber = GetRandomNumber();
             int randomMinutes = randomNumber;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-            Reaction randomReaction = CreateRandomReaction(randomDateTimeOffset);
+            Reaction randomReaction = CreateRandomModifyReaction(randomDateTimeOffset);
             Reaction invalidReaction = randomReaction;
-            invalidReaction.UpdatedDate = randomDateTimeOffset;
             Reaction storageReaction = randomReaction.DeepClone();
-            ReactionId reactionId = invalidReaction.Id;
             invalidReaction.CreatedDate = storageReaction.CreatedDate.AddMinutes(randomMinutes);
             var invalidReactionException = new InvalidReactionException();
 
@@ -291,7 +289,59 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
                 new ReactionValidationException(invalidReactionException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectReactionByIdAsync(reactionId))
+                broker.SelectReactionByIdAsync(invalidReaction.Id))
+                .ReturnsAsync(storageReaction);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Reaction> modifyReactionTask =
+                this.reactionService.ModifyReactionAsync(invalidReaction);
+
+            // then
+            await Assert.ThrowsAsync<ReactionValidationException>(() =>
+                modifyReactionTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectReactionByIdAsync(invalidReaction.Id),
+                    Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedReactionValidationException))),
+                       Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedUserIdNotSameAsCreateduserIdAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Reaction randomReaction = CreateRandomModifyReaction(randomDateTimeOffset);
+            Reaction invalidReaction = randomReaction;
+            Reaction storageReaction = randomReaction.DeepClone();
+            invalidReaction.CreatedByUserId = Guid.NewGuid();
+            var invalidReactionException = new InvalidReactionException();
+
+            invalidReactionException.AddData(
+                key: nameof(Reaction.CreatedByUserId),
+                values: $"Id is not the same as {nameof(Reaction.CreatedByUserId)}");
+
+            var expectedReactionValidationException =
+                new ReactionValidationException(invalidReactionException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectReactionByIdAsync(invalidReaction.Id))
                 .ReturnsAsync(storageReaction);
 
             this.dateTimeBrokerMock.Setup(broker =>
