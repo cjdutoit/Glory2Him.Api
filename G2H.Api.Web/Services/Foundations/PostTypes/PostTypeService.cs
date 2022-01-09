@@ -56,7 +56,7 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             return maybePostType;
         });
 
-        public ValueTask<PostType> ModifyPostTypeAsync(PostType postType) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<PostType> ModifyPostTypeAsync(PostType postType) =>
+            await this.storageBroker.UpdatePostTypeAsync(postType);
     }
 }
