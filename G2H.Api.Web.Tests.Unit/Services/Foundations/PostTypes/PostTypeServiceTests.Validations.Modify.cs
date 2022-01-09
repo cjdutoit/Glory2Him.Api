@@ -103,6 +103,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             await Assert.ThrowsAsync<PostTypeValidationException>(() =>
                 modifyPostTypeTask.AsTask());
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostTypeValidationException))),
@@ -133,6 +137,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             var expectedPostTypeValidationException =
                 new PostTypeValidationException(invalidPostTypeException);
 
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
             // when
             ValueTask<PostType> modifyPostTypeTask =
                 this.postTypeService.ModifyPostTypeAsync(invalidPostType);
@@ -141,6 +149,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             await Assert.ThrowsAsync<PostTypeValidationException>(() =>
                 modifyPostTypeTask.AsTask());
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostTypeValidationException))),
@@ -148,6 +160,55 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectPostTypeByIdAsync(invalidPostType.Id),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            PostType randomPostType = CreateRandomPostType(randomDateTimeOffset);
+            randomPostType.UpdatedDate = randomDateTimeOffset.AddMinutes(minutes);
+
+            var invalidPostTypeException =
+                new InvalidPostTypeException();
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedPostTypeValidatonException =
+                new PostTypeValidationException(invalidPostTypeException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<PostType> modifyPostTypeTask =
+                this.postTypeService.ModifyPostTypeAsync(randomPostType);
+
+            // then
+            await Assert.ThrowsAsync<PostTypeValidationException>(() =>
+                modifyPostTypeTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostTypeValidatonException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostTypeByIdAsync(It.IsAny<PostTypeId>()),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

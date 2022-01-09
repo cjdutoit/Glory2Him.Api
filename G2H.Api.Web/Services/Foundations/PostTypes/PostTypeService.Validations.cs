@@ -58,7 +58,9 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
                     firstDate: postType.UpdatedDate,
                     secondDate: postType.CreatedDate,
                     secondDateName: nameof(PostType.CreatedDate)),
-                Parameter: nameof(PostType.UpdatedDate)));
+                Parameter: nameof(PostType.UpdatedDate)),
+
+                (Rule: IsNotRecent(postType.UpdatedDate), Parameter: nameof(postType.UpdatedDate)));
         }
 
         private static void ValidatePostTypeIsNotNull(PostType postType)

@@ -32,6 +32,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             PostType updatedPostType = inputPostType;
             PostType expectedPostType = updatedPostType.DeepClone();
 
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
             this.storageBrokerMock.Setup(broker =>
                 broker.UpdatePostTypeAsync(inputPostType))
                     .ReturnsAsync(updatedPostType);
@@ -42,6 +46,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
 
             // then
             actualPostType.Should().BeEquivalentTo(expectedPostType);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdatePostTypeAsync(inputPostType),
