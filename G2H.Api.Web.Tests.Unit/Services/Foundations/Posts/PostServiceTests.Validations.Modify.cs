@@ -276,7 +276,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
         }
 
         [Theory]
-        [MemberData(nameof(InvalidMinuteCases))]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
         {
             // given
@@ -381,12 +381,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             // given
             int randomNumber = GetRandomNumber();
             int randomMinutes = randomNumber;
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            Post randomPost = CreateRandomPost(randomDate);
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Post randomPost = CreateRandomModifyPost(randomDateTimeOffset);
             Post invalidPost = randomPost;
-            invalidPost.UpdatedDate = randomDate;
             Post storagePost = randomPost.DeepClone();
-            Guid postId = invalidPost.Id;
             invalidPost.CreatedDate = storagePost.CreatedDate.AddMinutes(randomMinutes);
             var invalidPostException = new InvalidPostException();
 
@@ -398,12 +396,64 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 new PostValidationException(invalidPostException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectPostByIdAsync(postId))
+                broker.SelectPostByIdAsync(invalidPost.Id))
                 .ReturnsAsync(storagePost);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
-                .Returns(randomDate);
+                .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Post> modifyPostTask =
+                this.postService.ModifyPostAsync(invalidPost);
+
+            // then
+            await Assert.ThrowsAsync<PostValidationException>(() =>
+                modifyPostTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostByIdAsync(invalidPost.Id),
+                    Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedPostValidationException))),
+                       Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedUserIdNotSameAsCreatedUserIdAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Post randomPost = CreateRandomModifyPost(randomDateTimeOffset);
+            Post invalidPost = randomPost;
+            Post storagePost = randomPost.DeepClone();
+            invalidPost.CreatedByUserId = Guid.NewGuid();
+            var invalidPostException = new InvalidPostException();
+
+            invalidPostException.AddData(
+                key: nameof(Post.CreatedByUserId),
+                values: $"Id is not the same as {nameof(Post.CreatedByUserId)}");
+
+            var expectedPostValidationException =
+                new PostValidationException(invalidPostException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectPostByIdAsync(invalidPost.Id))
+                .ReturnsAsync(storagePost);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTimeOffset);
 
             // when
             ValueTask<Post> modifyPostTask =

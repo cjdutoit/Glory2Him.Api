@@ -183,6 +183,12 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                     secondDateName: nameof(Post.CreatedDate)),
                 Parameter: nameof(Post.CreatedDate)),
 
+                (Rule: IsNotSame(
+                    firstId: inputPost.CreatedByUserId,
+                    secondId: storagePost.CreatedByUserId,
+                    secondIdName: nameof(Post.CreatedByUserId)),
+                Parameter: nameof(Post.CreatedByUserId)),
+
                 (Rule: IsSame(
                     firstDate: inputPost.UpdatedDate,
                     secondDate: storagePost.UpdatedDate,
