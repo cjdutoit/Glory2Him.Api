@@ -88,5 +88,25 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
 
             return postTypes;
         }
+
+        private static Models.PostTypes.PostType GetRandomPostType()
+        {
+            var userId = Guid.NewGuid();
+            var dateTimeOffset = DateTimeOffset.UtcNow;
+            Array values = Enum.GetValues(typeof(Models.PostTypes.PostTypeId));
+            Random random = new Random();
+            Models.PostTypes.PostTypeId randomPostTypeId = (Models.PostTypes.PostTypeId)values.GetValue(random.Next(values.Length));
+
+            var filler = new Filler<Models.PostTypes.PostType>();
+
+            filler.Setup()
+                .OnProperty(postType => postType.Id).Use(randomPostTypeId)
+                .OnProperty(postType => postType.Name).Use(randomPostTypeId.GetDisplayName())
+                .OnType<DateTimeOffset>().Use(dateTimeOffset)
+                .OnProperty(postType => postType.CreatedByUserId).Use(userId)
+                .OnProperty(postType => postType.UpdatedByUserId).Use(userId);
+
+            return filler.Create();
+        }
     }
 }
