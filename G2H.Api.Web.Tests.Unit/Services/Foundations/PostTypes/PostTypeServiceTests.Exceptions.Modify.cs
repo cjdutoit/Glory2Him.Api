@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.PostTypes.Exceptions;
@@ -149,6 +150,53 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostTypeDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdatePostTypeAsync(randomPostType),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            PostType randomPostType = CreateRandomPostType();
+            var serviceException = new Exception();
+
+            var failedPostTypeException =
+                new FailedPostTypeServiceException(serviceException);
+
+            var expectedPostTypeServiceException =
+                new PostTypeServiceException(failedPostTypeException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<PostType> modifyPostTypeTask =
+                this.postTypeService.ModifyPostTypeAsync(randomPostType);
+
+            // then
+            await Assert.ThrowsAsync<PostTypeServiceException>(() =>
+                modifyPostTypeTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostTypeByIdAsync(randomPostType.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostTypeServiceException))),
                         Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
