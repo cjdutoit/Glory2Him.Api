@@ -55,5 +55,8 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
 
             return maybePostType;
         });
+
+        public ValueTask<PostType> ModifyPostTypeAsync(PostType postType) =>
+            throw new System.NotImplementedException();
     }
 }

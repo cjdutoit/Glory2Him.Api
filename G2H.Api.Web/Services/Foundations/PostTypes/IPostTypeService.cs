@@ -18,5 +18,6 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
         ValueTask<PostType> AddPostTypeAsync(PostType postType);
         IQueryable<PostType> RetrieveAllPostTypes();
         ValueTask<PostType> RetrievePostTypeByIdAsync(PostTypeId postTypeId);
+        ValueTask<PostType> ModifyPostTypeAsync(PostType postType);
     }
 }

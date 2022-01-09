@@ -59,6 +59,17 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
                     .AsQueryable();
         }
 
+        private static PostType CreateRandomModifyPostType(DateTimeOffset dateTimeOffset)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            PostType randomPostType = CreateRandomPostType(dateTimeOffset);
+
+            randomPostType.CreatedDate =
+                randomPostType.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomPostType;
+        }
+
         private static string GetRandomMessage() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
