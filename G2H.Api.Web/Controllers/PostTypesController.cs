@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Linq;
+using System.Threading.Tasks;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.PostTypes.Exceptions;
 using G2H.Api.Web.Services.Foundations.PostTypes;
@@ -34,6 +35,35 @@ namespace G2H.Api.Web.Controllers
                     this.postTypeService.RetrieveAllPostTypes();
 
                 return Ok(retrievedPostTypes);
+            }
+            catch (PostTypeDependencyException postTypeDependencyException)
+            {
+                return InternalServerError(postTypeDependencyException);
+            }
+            catch (PostTypeServiceException postTypeServiceException)
+            {
+                return InternalServerError(postTypeServiceException);
+            }
+        }
+
+        [HttpGet("{postTypeId}")]
+        public async ValueTask<ActionResult<PostType>> GetPostTypeByIdAsync(PostTypeId postTypeId)
+        {
+            try
+            {
+                PostType postType =
+                    await this.postTypeService.RetrievePostTypeByIdAsync(postTypeId);
+
+                return Ok(postType);
+            }
+            catch (PostTypeValidationException postTypeValidationException)
+                when (postTypeValidationException.InnerException is NotFoundPostTypeException)
+            {
+                return NotFound(postTypeValidationException.InnerException);
+            }
+            catch (PostTypeValidationException postTypeValidationException)
+            {
+                return BadRequest(postTypeValidationException.InnerException);
             }
             catch (PostTypeDependencyException postTypeDependencyException)
             {
