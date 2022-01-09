@@ -82,7 +82,11 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
 
             invalidPostTypeException.AddData(
                 key: nameof(PostType.UpdatedDate),
-                values: "Date is required");
+                values:
+                new[] {
+                    "Date is required",
+                    $"Date is the same as {nameof(PostType.CreatedDate)}"
+                });
 
             invalidPostTypeException.AddData(
                 key: nameof(PostType.UpdatedByUserId),
@@ -129,10 +133,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             var expectedPostTypeValidationException =
                 new PostTypeValidationException(invalidPostTypeException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffset())
-                    .Returns(randomDateTimeOffset);
-
             // when
             ValueTask<PostType> modifyPostTypeTask =
                 this.postTypeService.ModifyPostTypeAsync(invalidPostType);
@@ -140,10 +140,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             // then
             await Assert.ThrowsAsync<PostTypeValidationException>(() =>
                 modifyPostTypeTask.AsTask());
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
