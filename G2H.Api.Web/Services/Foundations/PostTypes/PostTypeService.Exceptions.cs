@@ -56,6 +56,12 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsPostTypeException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedPostTypeException = new LockedPostTypeException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedPostTypeException);
+            }
             catch (DbUpdateException databaseUpdateException)
             {
                 var failedPostTypeStorageException =

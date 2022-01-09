@@ -42,6 +42,27 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
                 (Rule: IsNotRecent(postType.CreatedDate), Parameter: nameof(PostType.CreatedDate)));
         }
 
+        private void ValidatePostTypeOnModify(PostType postType)
+        {
+            ValidatePostTypeIsNotNull(postType);
+
+            Validate(
+                (Rule: IsInvalid(postType.Id), Parameter: nameof(PostType.Id)),
+                (Rule: IsInvalid(postType.Name), Parameter: nameof(PostType.Name)),
+                (Rule: IsInvalid(postType.CreatedDate), Parameter: nameof(PostType.CreatedDate)),
+                (Rule: IsInvalid(postType.CreatedByUserId), Parameter: nameof(PostType.CreatedByUserId)),
+                (Rule: IsInvalid(postType.UpdatedDate), Parameter: nameof(PostType.UpdatedDate)),
+                (Rule: IsInvalid(postType.UpdatedByUserId), Parameter: nameof(PostType.UpdatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: postType.UpdatedDate,
+                    secondDate: postType.CreatedDate,
+                    secondDateName: nameof(PostType.CreatedDate)),
+                Parameter: nameof(PostType.UpdatedDate)),
+
+                (Rule: IsNotRecent(postType.UpdatedDate), Parameter: nameof(postType.UpdatedDate)));
+        }
+
         private static void ValidatePostTypeIsNotNull(PostType postType)
         {
             if (postType is null)
@@ -59,6 +80,28 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             {
                 throw new NotFoundPostTypeException(postTypeId);
             }
+        }
+
+        private static void ValidateAgainstStoragePostTypeOnModify(PostType inputPostType, PostType storagePostType)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputPostType.CreatedDate,
+                    secondDate: storagePostType.CreatedDate,
+                    secondDateName: nameof(PostType.CreatedDate)),
+                Parameter: nameof(PostType.CreatedDate)),
+
+                (Rule: IsNotSame(
+                    firstId: inputPostType.CreatedByUserId,
+                    secondId: storagePostType.CreatedByUserId,
+                    secondIdName: nameof(PostType.CreatedByUserId)),
+                Parameter: nameof(PostType.CreatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: inputPostType.UpdatedDate,
+                    secondDate: storagePostType.UpdatedDate,
+                    secondDateName: nameof(PostType.UpdatedDate)),
+                Parameter: nameof(PostType.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(PostTypeId id) => new
@@ -101,6 +144,15 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             {
                 Condition = firstId != secondId,
                 Message = $"Id is not the same as {secondIdName}"
+            };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
             };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new

@@ -7,17 +7,16 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System.Linq;
-using System.Threading.Tasks;
-using G2H.Api.Web.Models.PostTypes;
+using System;
+using Xeptions;
 
-namespace G2H.Api.Web.Services.Foundations.PostTypes
+namespace G2H.Api.Web.Models.PostTypes.Exceptions
 {
-    public interface IPostTypeService
+    public class LockedPostTypeException : Xeption
     {
-        ValueTask<PostType> AddPostTypeAsync(PostType postType);
-        IQueryable<PostType> RetrieveAllPostTypes();
-        ValueTask<PostType> RetrievePostTypeByIdAsync(PostTypeId postTypeId);
-        ValueTask<PostType> ModifyPostTypeAsync(PostType postType);
+        public LockedPostTypeException(Exception innerException)
+            : base(message: "Locked post type record exception, please try again later", innerException)
+        {
+        }
     }
 }
