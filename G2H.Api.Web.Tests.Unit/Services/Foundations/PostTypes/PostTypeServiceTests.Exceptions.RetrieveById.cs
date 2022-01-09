@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.PostTypes;
 using G2H.Api.Web.Models.PostTypes.Exceptions;
@@ -50,6 +51,45 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedPostTypeDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveByIdIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            PostTypeId someId = GetRandomPostTypeId();
+            var serviceException = new Exception();
+
+            var failedPostTypeServiceException =
+                new FailedPostTypeServiceException(serviceException);
+
+            var expectedPostTypeServiceException =
+                new PostTypeServiceException(failedPostTypeServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectPostTypeByIdAsync(It.IsAny<PostTypeId>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<PostType> retrievePostTypeByIdTask =
+                this.postTypeService.RetrievePostTypeByIdAsync(someId);
+
+            // then
+            await Assert.ThrowsAsync<PostTypeServiceException>(() =>
+                retrievePostTypeByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostTypeByIdAsync(It.IsAny<PostTypeId>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedPostTypeServiceException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
