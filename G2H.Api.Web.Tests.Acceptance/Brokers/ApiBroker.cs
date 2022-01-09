@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Net.Http;
+using G2H.Api.Web.Services.Foundations.PostTypes;
 using G2H.Api.Web.Services.Foundations.Reactions;
 using G2H.Api.Web.Services.Foundations.Statuses;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -23,6 +24,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Brokers
         private readonly IRESTFulApiFactoryClient apiFactoryClient;
         internal IStatusService StatusService;
         internal IReactionService ReactionService;
+        internal IPostTypeService PostTypeService;
 
         public ApiBroker()
         {
@@ -30,6 +32,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Brokers
 
             this.StatusService = (StatusService)webApplicationFactory.Services.GetService<IStatusService>();
             this.ReactionService = (ReactionService)webApplicationFactory.Services.GetService<IReactionService>();
+            this.PostTypeService = (PostTypeService)webApplicationFactory.Services.GetService<IPostTypeService>();
 
             this.httpClient = this.webApplicationFactory.CreateClient();
             this.apiFactoryClient = new RESTFulApiFactoryClient(this.httpClient);
