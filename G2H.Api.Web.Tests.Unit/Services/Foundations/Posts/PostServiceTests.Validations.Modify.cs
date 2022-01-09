@@ -381,12 +381,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
             // given
             int randomNumber = GetRandomNumber();
             int randomMinutes = randomNumber;
-            DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            Post randomPost = CreateRandomPost(randomDate);
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Post randomPost = CreateRandomModifyPost(randomDateTimeOffset);
             Post invalidPost = randomPost;
-            invalidPost.UpdatedDate = randomDate;
             Post storagePost = randomPost.DeepClone();
-            Guid postId = invalidPost.Id;
             invalidPost.CreatedDate = storagePost.CreatedDate.AddMinutes(randomMinutes);
             var invalidPostException = new InvalidPostException();
 
@@ -398,12 +396,12 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 new PostValidationException(invalidPostException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectPostByIdAsync(postId))
+                broker.SelectPostByIdAsync(invalidPost.Id))
                 .ReturnsAsync(storagePost);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
-                .Returns(randomDate);
+                .Returns(randomDateTimeOffset);
 
             // when
             ValueTask<Post> modifyPostTask =
