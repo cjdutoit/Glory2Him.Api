@@ -95,7 +95,13 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
                     firstId: inputPostType.CreatedByUserId,
                     secondId: storagePostType.CreatedByUserId,
                     secondIdName: nameof(PostType.CreatedByUserId)),
-                Parameter: nameof(PostType.CreatedByUserId)));
+                Parameter: nameof(PostType.CreatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: inputPostType.UpdatedDate,
+                    secondDate: storagePostType.UpdatedDate,
+                    secondDateName: nameof(PostType.UpdatedDate)),
+                Parameter: nameof(PostType.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(PostTypeId id) => new
