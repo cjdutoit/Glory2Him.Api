@@ -19,5 +19,8 @@ namespace G2H.Api.Web.Tests.Acceptance.Brokers
 
         public async ValueTask<List<PostType>> GetAllPostTypesAsync() =>
             await this.apiFactoryClient.GetContentAsync<List<PostType>>($"{PostTypesRelativeUrl}/");
+
+        public async ValueTask<PostType> GetPostTypeByIdAsync(PostTypeId postTypeId) =>
+            await this.apiFactoryClient.GetContentAsync<PostType>($"{PostTypesRelativeUrl}/{postTypeId}");
     }
 }

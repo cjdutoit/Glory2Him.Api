@@ -35,5 +35,20 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
                 actualPostType.Name.Should().Be(expectedPostType.Name);
             }
         }
+
+        [Fact]
+        public async Task ShouldGetPostTypeAsync()
+        {
+            // given
+            await CreatePostTypesAsync();
+            PostType randomPostType = GetRandomPostType();
+            PostType expectedPostType = randomPostType;
+
+            // when
+            PostType actualPostType = await this.apiBroker.GetPostTypeByIdAsync(expectedPostType.Id);
+
+            // then
+            actualPostType.Name.Should().Be(expectedPostType.Name);
+        }
     }
 }
