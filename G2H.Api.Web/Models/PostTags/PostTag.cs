@@ -12,7 +12,6 @@ using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Tags;
-using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.PostTags
 {

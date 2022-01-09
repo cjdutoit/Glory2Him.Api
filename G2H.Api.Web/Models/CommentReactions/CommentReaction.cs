@@ -11,7 +11,6 @@ using System;
 using G2H.Api.Web.Models.Base;
 using G2H.Api.Web.Models.Comments;
 using G2H.Api.Web.Models.Reactions;
-using G2H.Api.Web.Models.Users;
 
 namespace G2H.Api.Web.Models.CommentReactions
 {

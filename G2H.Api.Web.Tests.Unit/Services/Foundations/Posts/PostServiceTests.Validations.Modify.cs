@@ -430,7 +430,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedUserIdNotSameAsCreateduserIdAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedUserIdNotSameAsCreatedUserIdAndLogItAsync()
         {
             // given
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();

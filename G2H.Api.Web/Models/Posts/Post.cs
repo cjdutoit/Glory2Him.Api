@@ -16,7 +16,6 @@ using G2H.Api.Web.Models.PostComments;
 using G2H.Api.Web.Models.PostReactions;
 using G2H.Api.Web.Models.PostTags;
 using G2H.Api.Web.Models.PostTypes;
-using G2H.Api.Web.Models.Users;
 using Newtonsoft.Json;
 
 namespace G2H.Api.Web.Models.Posts
