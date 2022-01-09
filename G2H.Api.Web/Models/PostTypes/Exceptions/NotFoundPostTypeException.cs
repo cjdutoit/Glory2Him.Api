@@ -7,16 +7,14 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using System.Linq;
-using System.Threading.Tasks;
-using G2H.Api.Web.Models.PostTypes;
+using Xeptions;
 
-namespace G2H.Api.Web.Services.Foundations.PostTypes
+namespace G2H.Api.Web.Models.PostTypes.Exceptions
 {
-    public interface IPostTypeService
+    public class NotFoundPostTypeException : Xeption
     {
-        ValueTask<PostType> AddPostTypeAsync(PostType postType);
-        IQueryable<PostType> RetrieveAllPostTypes();
-        ValueTask<PostType> RetrievePostTypeByIdAsync(PostTypeId postTypeId);
+        public NotFoundPostTypeException(PostTypeId postTypeId)
+            : base(message: $"Couldn't find post type with postTypeId: {postTypeId}.")
+        { }
     }
 }

@@ -42,5 +42,18 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
 
         public IQueryable<PostType> RetrieveAllPostTypes() =>
         TryCatch(() => this.storageBroker.SelectAllPostTypes());
+
+        public ValueTask<PostType> RetrievePostTypeByIdAsync(PostTypeId postTypeId) =>
+        TryCatch(async () =>
+        {
+            ValidatePostTypeId(postTypeId);
+
+            PostType maybePostType = await this.storageBroker
+                .SelectPostTypeByIdAsync(postTypeId);
+
+            ValidateStoragePostType(maybePostType, postTypeId);
+
+            return maybePostType;
+        });
     }
 }

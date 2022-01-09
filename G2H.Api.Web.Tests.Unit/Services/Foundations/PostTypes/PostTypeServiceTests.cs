@@ -106,5 +106,13 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
 
             return filler;
         }
+
+        private static PostTypeId GetRandomPostTypeId()
+        {
+            Array values = Enum.GetValues(typeof(PostTypeId));
+            Random random = new Random();
+            PostTypeId randomPostTypeId = (PostTypeId)values.GetValue(random.Next(values.Length));
+            return randomPostTypeId;
+        }
     }
 }

@@ -50,6 +50,17 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             }
         }
 
+        public void ValidatePostTypeId(PostTypeId postTypeId) =>
+            Validate((Rule: IsInvalid(postTypeId), Parameter: nameof(PostType.Id)));
+
+        private static void ValidateStoragePostType(PostType maybePostType, PostTypeId postTypeId)
+        {
+            if (maybePostType is null)
+            {
+                throw new NotFoundPostTypeException(postTypeId);
+            }
+        }
+
         private static dynamic IsInvalid(PostTypeId id) => new
         {
             Condition = id == 0,
