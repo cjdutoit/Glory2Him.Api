@@ -45,6 +45,14 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
         private void ValidatePostTypeOnModify(PostType postType)
         {
             ValidatePostTypeIsNotNull(postType);
+
+            Validate(
+               (Rule: IsInvalid(postType.Id), Parameter: nameof(PostType.Id)),
+               (Rule: IsInvalid(postType.Name), Parameter: nameof(PostType.Name)),
+               (Rule: IsInvalid(postType.CreatedDate), Parameter: nameof(PostType.CreatedDate)),
+               (Rule: IsInvalid(postType.CreatedByUserId), Parameter: nameof(PostType.CreatedByUserId)),
+               (Rule: IsInvalid(postType.UpdatedDate), Parameter: nameof(PostType.UpdatedDate)),
+               (Rule: IsInvalid(postType.UpdatedByUserId), Parameter: nameof(PostType.UpdatedByUserId)));
         }
 
         private static void ValidatePostTypeIsNotNull(PostType postType)
