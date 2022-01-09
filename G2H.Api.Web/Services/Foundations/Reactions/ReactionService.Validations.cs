@@ -91,6 +91,12 @@ namespace G2H.Api.Web.Services.Foundations.Reactions
                     secondDateName: nameof(Reaction.CreatedDate)),
                 Parameter: nameof(Reaction.CreatedDate)),
 
+                (Rule: IsNotSame(
+                    firstId: inputReaction.CreatedByUserId,
+                    secondId: storageReaction.CreatedByUserId,
+                    secondIdName: nameof(Reaction.CreatedByUserId)),
+                Parameter: nameof(Reaction.CreatedByUserId)),
+
                 (Rule: IsSame(
                     firstDate: inputReaction.UpdatedDate,
                     secondDate: storageReaction.UpdatedDate,
