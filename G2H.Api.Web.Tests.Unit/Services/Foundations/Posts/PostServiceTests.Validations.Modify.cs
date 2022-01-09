@@ -276,7 +276,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
         }
 
         [Theory]
-        [MemberData(nameof(InvalidMinuteCases))]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
         public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
         {
             // given
