@@ -275,11 +275,9 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
             int randomNumber = GetRandomNumber();
             int randomMinutes = randomNumber;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-            Reaction randomReaction = CreateRandomReaction(randomDateTimeOffset);
+            Reaction randomReaction = CreateRandomModifyReaction(randomDateTimeOffset);
             Reaction invalidReaction = randomReaction;
-            invalidReaction.UpdatedDate = randomDateTimeOffset;
             Reaction storageReaction = randomReaction.DeepClone();
-            ReactionId reactionId = invalidReaction.Id;
             invalidReaction.CreatedDate = storageReaction.CreatedDate.AddMinutes(randomMinutes);
             var invalidReactionException = new InvalidReactionException();
 
@@ -291,7 +289,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
                 new ReactionValidationException(invalidReactionException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectReactionByIdAsync(reactionId))
+                broker.SelectReactionByIdAsync(invalidReaction.Id))
                 .ReturnsAsync(storageReaction);
 
             this.dateTimeBrokerMock.Setup(broker =>
