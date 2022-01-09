@@ -373,5 +373,59 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            PostType randomPostType = CreateRandomModifyPostType(randomDateTimeOffset);
+            PostType invalidPostType = randomPostType;
+
+            PostType storagePostType = randomPostType.DeepClone();
+            invalidPostType.UpdatedDate = storagePostType.UpdatedDate;
+
+            var invalidPostTypeException = new InvalidPostTypeException();
+
+            invalidPostTypeException.AddData(
+                key: nameof(PostType.UpdatedDate),
+                values: $"Date is the same as {nameof(PostType.UpdatedDate)}");
+
+            var expectedPostTypeValidationException =
+                new PostTypeValidationException(invalidPostTypeException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectPostTypeByIdAsync(invalidPostType.Id))
+                .ReturnsAsync(storagePostType);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<PostType> modifyPostTypeTask =
+                this.postTypeService.ModifyPostTypeAsync(invalidPostType);
+
+            // then
+            await Assert.ThrowsAsync<PostTypeValidationException>(() =>
+                modifyPostTypeTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostTypeValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostTypeByIdAsync(invalidPostType.Id),
+                    Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
