@@ -26,7 +26,7 @@ namespace G2H.Api.Web.Models.Approvals
         public Guid Id { get; set; }
         public StatusId StatusId { get; set; }
         public Status Status { get; set; }
-        public Guid? BusinessKey { get; set; }
+        public Guid BusinessKey { get; set; }
         public int Version { get; set; }
         public bool IsAuditRecord { get; set; }
         public Guid CreatedByUserId { get; set; }
