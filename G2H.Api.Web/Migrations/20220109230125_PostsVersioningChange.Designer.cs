@@ -4,6 +4,7 @@ using G2H.Api.Web.Brokers.Storages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace G2H.Api.Web.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    partial class StorageBrokerModelSnapshot : ModelSnapshot
+    [Migration("20220109230125_PostsVersioningChange")]
+    partial class PostsVersioningChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,7 @@ namespace G2H.Api.Web.Migrations
                     b.Property<Guid?>("ApplicationUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BusinessKey")
+                    b.Property<Guid?>("BusinessKey")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CreatedByUserId")
@@ -286,7 +288,7 @@ namespace G2H.Api.Web.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("BusinessKey")
+                    b.Property<Guid?>("BusinessKey")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")

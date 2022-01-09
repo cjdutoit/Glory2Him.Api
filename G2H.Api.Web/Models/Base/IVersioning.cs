@@ -13,7 +13,7 @@ namespace G2H.Api.Web.Models.Base
 {
     public interface IVersioning
     {
-        Guid? BusinessKey { get; set; }
+        Guid BusinessKey { get; set; }
 
         int Version { get; set; }
 
