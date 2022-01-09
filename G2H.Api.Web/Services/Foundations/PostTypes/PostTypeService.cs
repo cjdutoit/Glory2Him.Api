@@ -56,7 +56,12 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             return maybePostType;
         });
 
-        public async ValueTask<PostType> ModifyPostTypeAsync(PostType postType) =>
-            await this.storageBroker.UpdatePostTypeAsync(postType);
+        public ValueTask<PostType> ModifyPostTypeAsync(PostType postType) =>
+        TryCatch(async () =>
+        {
+            ValidatePostTypeOnModify(postType);
+
+            return await this.storageBroker.UpdatePostTypeAsync(postType);
+        });
     }
 }

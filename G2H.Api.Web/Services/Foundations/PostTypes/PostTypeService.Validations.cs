@@ -42,6 +42,11 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
                 (Rule: IsNotRecent(postType.CreatedDate), Parameter: nameof(PostType.CreatedDate)));
         }
 
+        private void ValidatePostTypeOnModify(PostType postType)
+        {
+            ValidatePostTypeIsNotNull(postType);
+        }
+
         private static void ValidatePostTypeIsNotNull(PostType postType)
         {
             if (postType is null)
