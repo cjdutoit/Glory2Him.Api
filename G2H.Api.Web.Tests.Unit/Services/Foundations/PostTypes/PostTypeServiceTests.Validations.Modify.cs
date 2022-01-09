@@ -275,9 +275,8 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
             int randomNumber = GetRandomNumber();
             int randomMinutes = randomNumber;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-            PostType randomPostType = CreateRandomPostType(randomDateTimeOffset);
+            PostType randomPostType = CreateRandomModifyPostType(randomDateTimeOffset);
             PostType invalidPostType = randomPostType;
-            invalidPostType.UpdatedDate = randomDateTimeOffset;
             PostType storagePostType = randomPostType.DeepClone();
             invalidPostType.CreatedDate = storagePostType.CreatedDate.AddMinutes(randomMinutes);
             var invalidPostTypeException = new InvalidPostTypeException();
@@ -327,14 +326,11 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
         public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedUserIdNotSameAsCreateduserIdAndLogItAsync()
         {
             // given
-            int randomNumber = GetRandomNumber();
-            int randomMinutes = randomNumber;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-            PostType randomPostType = CreateRandomPostType(randomDateTimeOffset);
+            PostType randomPostType = CreateRandomModifyPostType(randomDateTimeOffset);
             PostType invalidPostType = randomPostType;
-            invalidPostType.CreatedByUserId = Guid.NewGuid();
             PostType storagePostType = randomPostType.DeepClone();
-            invalidPostType.CreatedDate = storagePostType.CreatedDate.AddMinutes(randomMinutes);
+            invalidPostType.CreatedByUserId = Guid.NewGuid();
             var invalidPostTypeException = new InvalidPostTypeException();
 
             invalidPostTypeException.AddData(

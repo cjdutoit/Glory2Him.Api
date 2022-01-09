@@ -82,6 +82,22 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             }
         }
 
+        private static void ValidateAgainstStoragePostTypeOnModify(PostType inputPostType, PostType storagePostType)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputPostType.CreatedDate,
+                    secondDate: storagePostType.CreatedDate,
+                    secondDateName: nameof(PostType.CreatedDate)),
+                Parameter: nameof(PostType.CreatedDate)),
+
+                (Rule: IsNotSame(
+                    firstId: inputPostType.CreatedByUserId,
+                    secondId: storagePostType.CreatedByUserId,
+                    secondIdName: nameof(PostType.CreatedByUserId)),
+                Parameter: nameof(PostType.CreatedByUserId)));
+        }
+
         private static dynamic IsInvalid(PostTypeId id) => new
         {
             Condition = id == 0,
