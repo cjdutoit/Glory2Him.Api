@@ -50,6 +50,9 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
             }
         }
 
+        public void ValidatePostTypeId(PostTypeId postTypeId) =>
+            Validate((Rule: IsInvalid(postTypeId), Parameter: nameof(PostType.Id)));
+
         private static dynamic IsInvalid(PostTypeId id) => new
         {
             Condition = id == 0,
