@@ -48,7 +48,12 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
         {
             ValidatePostTypeId(postTypeId);
 
-            return await this.storageBroker.SelectPostTypeByIdAsync(postTypeId);
+            PostType maybePostType = await this.storageBroker
+                .SelectPostTypeByIdAsync(postTypeId);
+
+            ValidateStoragePostType(maybePostType, postTypeId);
+
+            return maybePostType;
         });
     }
 }

@@ -45,6 +45,10 @@ namespace G2H.Api.Web.Services.Foundations.PostTypes
 
                 throw CreateAndLogCriticalDependencyException(failedPostTypeStorageException);
             }
+            catch (NotFoundPostTypeException notFoundPostTypeException)
+            {
+                throw CreateAndLogValidationException(notFoundPostTypeException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsPostTypeException =
