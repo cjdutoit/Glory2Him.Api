@@ -82,6 +82,12 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                     secondDateName: nameof(Status.CreatedDate)),
                 Parameter: nameof(Status.CreatedDate)),
 
+                (Rule: IsNotSame(
+                    firstId: inputStatus.CreatedByUserId,
+                    secondId: storageStatus.CreatedByUserId,
+                    secondIdName: nameof(Status.CreatedByUserId)),
+                Parameter: nameof(Status.CreatedByUserId)),
+
                 (Rule: IsSame(
                     firstDate: inputStatus.UpdatedDate,
                     secondDate: storageStatus.UpdatedDate,

@@ -275,11 +275,9 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
             int randomNumber = GetRandomNumber();
             int randomMinutes = randomNumber;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-            Status randomStatus = CreateRandomStatus(randomDateTimeOffset);
+            Status randomStatus = CreateRandomModifyStatus(randomDateTimeOffset);
             Status invalidStatus = randomStatus;
-            invalidStatus.UpdatedDate = randomDateTimeOffset;
             Status storageStatus = randomStatus.DeepClone();
-            StatusId statusId = invalidStatus.Id;
             invalidStatus.CreatedDate = storageStatus.CreatedDate.AddMinutes(randomMinutes);
             var invalidStatusException = new InvalidStatusException();
 
@@ -291,7 +289,59 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
                 new StatusValidationException(invalidStatusException);
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectStatusByIdAsync(statusId))
+                broker.SelectStatusByIdAsync(invalidStatus.Id))
+                .ReturnsAsync(storageStatus);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Status> modifyStatusTask =
+                this.statusService.ModifyStatusAsync(invalidStatus);
+
+            // then
+            await Assert.ThrowsAsync<StatusValidationException>(() =>
+                modifyStatusTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectStatusByIdAsync(invalidStatus.Id),
+                    Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedStatusValidationException))),
+                       Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedUserIdNotSameAsCreateduserIdAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Status randomStatus = CreateRandomModifyStatus(randomDateTimeOffset);
+            Status invalidStatus = randomStatus;
+            Status storageStatus = randomStatus.DeepClone();
+            invalidStatus.CreatedByUserId = Guid.NewGuid();
+            var invalidStatusException = new InvalidStatusException();
+
+            invalidStatusException.AddData(
+                key: nameof(Status.CreatedByUserId),
+                values: $"Id is not the same as {nameof(Status.CreatedByUserId)}");
+
+            var expectedStatusValidationException =
+                new StatusValidationException(invalidStatusException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectStatusByIdAsync(invalidStatus.Id))
                 .ReturnsAsync(storageStatus);
 
             this.dateTimeBrokerMock.Setup(broker =>
