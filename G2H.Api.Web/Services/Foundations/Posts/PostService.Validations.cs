@@ -25,6 +25,8 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 (Rule: IsInvalid(post.Title), Parameter: nameof(Post.Title)),
                 (Rule: IsInvalid(post.Author), Parameter: nameof(Post.Author)),
                 (Rule: IsInvalid(post.Content), Parameter: nameof(Post.Content)),
+                (Rule: IsInvalid(post.BusinessKey), Parameter: nameof(Post.BusinessKey)),
+                (Rule: IsInvalid(post.Version), Parameter: nameof(Post.Version)),
                 (Rule: IsInvalid(post.CreatedDate), Parameter: nameof(Post.CreatedDate)),
                 (Rule: IsInvalid(post.CreatedByUserId), Parameter: nameof(Post.CreatedByUserId)),
                 (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(Post.UpdatedDate)),
@@ -66,6 +68,8 @@ namespace G2H.Api.Web.Services.Foundations.Posts
                 (Rule: IsInvalid(post.Title), Parameter: nameof(Post.Title)),
                 (Rule: IsInvalid(post.Author), Parameter: nameof(Post.Author)),
                 (Rule: IsInvalid(post.Content), Parameter: nameof(Post.Content)),
+                (Rule: IsInvalid(post.BusinessKey), Parameter: nameof(Post.BusinessKey)),
+                (Rule: IsInvalid(post.Version), Parameter: nameof(Post.Version)),
                 (Rule: IsInvalid(post.CreatedDate), Parameter: nameof(Post.CreatedDate)),
                 (Rule: IsInvalid(post.CreatedByUserId), Parameter: nameof(Post.CreatedByUserId)),
                 (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(Post.UpdatedDate)),
@@ -96,6 +100,12 @@ namespace G2H.Api.Web.Services.Foundations.Posts
         {
             Condition = id == Guid.Empty,
             Message = "Id is required"
+        };
+
+        private static dynamic IsInvalid(int id) => new
+        {
+            Condition = id == default,
+            Message = "Value is required"
         };
 
         private static dynamic IsInvalid(string text) => new
