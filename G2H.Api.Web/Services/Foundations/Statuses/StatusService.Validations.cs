@@ -32,6 +32,12 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                     secondDateName: nameof(Status.CreatedDate)),
                 Parameter: nameof(Status.UpdatedDate)),
 
+                (Rule: IsNotSame(
+                    firstId: status.UpdatedByUserId,
+                    secondId: status.CreatedByUserId,
+                    secondIdName: nameof(Status.CreatedByUserId)),
+                Parameter: nameof(Status.UpdatedByUserId)),
+
                 (Rule: IsNotRecent(status.CreatedDate), Parameter: nameof(Status.CreatedDate)));
         }
 
@@ -75,6 +81,12 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
                     secondDate: storageStatus.CreatedDate,
                     secondDateName: nameof(Status.CreatedDate)),
                 Parameter: nameof(Status.CreatedDate)),
+
+                (Rule: IsNotSame(
+                    firstId: inputStatus.CreatedByUserId,
+                    secondId: storageStatus.CreatedByUserId,
+                    secondIdName: nameof(Status.CreatedByUserId)),
+                Parameter: nameof(Status.CreatedByUserId)),
 
                 (Rule: IsSame(
                     firstDate: inputStatus.UpdatedDate,
@@ -122,6 +134,15 @@ namespace G2H.Api.Web.Services.Foundations.Statuses
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private static dynamic IsNotSame(
+            Guid firstId,
+            Guid secondId,
+            string secondIdName) => new
+            {
+                Condition = firstId != secondId,
+                Message = $"Id is not the same as {secondIdName}"
             };
 
         private static dynamic IsSame(
