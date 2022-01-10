@@ -45,6 +45,10 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
 
                 throw CreateAndLogCriticalDependencyException(failedApprovalStorageException);
             }
+            catch (NotFoundApprovalException notFoundApprovalException)
+            {
+                throw CreateAndLogValidationException(notFoundApprovalException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsApprovalException =
