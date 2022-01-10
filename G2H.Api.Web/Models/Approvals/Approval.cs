@@ -21,14 +21,11 @@ using G2H.Api.Web.Models.Tags;
 
 namespace G2H.Api.Web.Models.Approvals
 {
-    public class Approval : IKey, IStatus, IAudit, IVersioning
+    public class Approval : IKey, IStatus, IAudit
     {
         public Guid Id { get; set; }
         public StatusId StatusId { get; set; }
         public Status Status { get; set; }
-        public Guid BusinessKey { get; set; }
-        public int Version { get; set; }
-        public bool IsAuditRecord { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
