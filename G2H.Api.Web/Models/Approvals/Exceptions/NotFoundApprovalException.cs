@@ -8,16 +8,14 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Linq;
-using System.Threading.Tasks;
-using G2H.Api.Web.Models.Approvals;
+using Xeptions;
 
-namespace G2H.Api.Web.Services.Foundations.Approvals
+namespace G2H.Api.Web.Models.Approvals.Exceptions
 {
-    public interface IApprovalService
+    public class NotFoundApprovalException : Xeption
     {
-        ValueTask<Approval> AddApprovalAsync(Approval approval);
-        IQueryable<Approval> RetrieveAllApprovals();
-        ValueTask<Approval> RetrieveApprovalByIdAsync(Guid approvalId);
+        public NotFoundApprovalException(Guid approvalId)
+            : base(message: $"Couldn't find approval with approvalId: {approvalId}.")
+        { }
     }
 }

@@ -43,11 +43,22 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                 (Rule: IsNotRecent(approval.CreatedDate), Parameter: nameof(Approval.CreatedDate)));
         }
 
+        public void ValidateApprovalId(Guid approvalId) =>
+            Validate((Rule: IsInvalid(approvalId), Parameter: nameof(Approval.Id)));
+
         private static void ValidateApprovalIsNotNull(Approval approval)
         {
             if (approval is null)
             {
                 throw new NullApprovalException();
+            }
+        }
+
+        private static void ValidateStorageApproval(Approval maybeApproval, Guid approvalId)
+        {
+            if (maybeApproval is null)
+            {
+                throw new NotFoundApprovalException(approvalId);
             }
         }
 
