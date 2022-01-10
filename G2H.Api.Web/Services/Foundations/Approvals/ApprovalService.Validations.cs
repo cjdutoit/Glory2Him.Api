@@ -46,6 +46,14 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
         private void ValidateApprovalOnModify(Approval approval)
         {
             ValidateApprovalIsNotNull(approval);
+
+            Validate(
+                (Rule: IsInvalid(approval.Id), Parameter: nameof(Approval.Id)),
+                (Rule: IsInvalid(approval.StatusId), Parameter: nameof(Approval.StatusId)),
+                (Rule: IsInvalid(approval.CreatedDate), Parameter: nameof(Approval.CreatedDate)),
+                (Rule: IsInvalid(approval.CreatedByUserId), Parameter: nameof(Approval.CreatedByUserId)),
+                (Rule: IsInvalid(approval.UpdatedDate), Parameter: nameof(Approval.UpdatedDate)),
+                (Rule: IsInvalid(approval.UpdatedByUserId), Parameter: nameof(Approval.UpdatedByUserId)));
         }
 
         public void ValidateApprovalId(Guid approvalId) =>
