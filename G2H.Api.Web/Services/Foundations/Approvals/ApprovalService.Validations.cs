@@ -38,7 +38,9 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                     firstId: approval.UpdatedByUserId,
                     secondId: approval.CreatedByUserId,
                     secondIdName: nameof(Approval.CreatedByUserId)),
-                Parameter: nameof(Approval.UpdatedByUserId)));
+                Parameter: nameof(Approval.UpdatedByUserId)),
+
+                (Rule: IsNotRecent(approval.CreatedDate), Parameter: nameof(Approval.CreatedDate)));
         }
 
         private static void ValidateApprovalIsNotNull(Approval approval)
@@ -84,6 +86,23 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                 Condition = firstId != secondId,
                 Message = $"Id is not the same as {secondIdName}"
             };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTimeOffset();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
