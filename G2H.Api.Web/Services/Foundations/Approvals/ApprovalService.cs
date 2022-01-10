@@ -44,7 +44,7 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
         public IQueryable<Approval> RetrieveAllApprovals() =>
         TryCatch(() => this.storageBroker.SelectAllApprovals());
 
-        public ValueTask<Approval> RetrieveApprovalByIdAsync(Guid approvalId) =>
-            throw new NotImplementedException();
+        public async ValueTask<Approval> RetrieveApprovalByIdAsync(Guid approvalId) =>
+            await this.storageBroker.SelectApprovalByIdAsync(approvalId);
     }
 }
