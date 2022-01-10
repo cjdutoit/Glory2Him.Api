@@ -144,5 +144,54 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // given
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Approval randomApproval = CreateRandomApproval(randomDateTimeOffset);
+            randomApproval.UpdatedDate = randomDateTimeOffset.AddMinutes(minutes);
+
+            var invalidApprovalException =
+                new InvalidApprovalException();
+
+            invalidApprovalException.AddData(
+                key: nameof(Approval.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedApprovalValidatonException =
+                new ApprovalValidationException(invalidApprovalException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Approval> modifyApprovalTask =
+                this.approvalService.ModifyApprovalAsync(randomApproval);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalValidationException>(() =>
+                modifyApprovalTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedApprovalValidatonException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectApprovalByIdAsync(It.IsAny<Guid>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
