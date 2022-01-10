@@ -53,7 +53,13 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                 (Rule: IsInvalid(approval.CreatedDate), Parameter: nameof(Approval.CreatedDate)),
                 (Rule: IsInvalid(approval.CreatedByUserId), Parameter: nameof(Approval.CreatedByUserId)),
                 (Rule: IsInvalid(approval.UpdatedDate), Parameter: nameof(Approval.UpdatedDate)),
-                (Rule: IsInvalid(approval.UpdatedByUserId), Parameter: nameof(Approval.UpdatedByUserId)));
+                (Rule: IsInvalid(approval.UpdatedByUserId), Parameter: nameof(Approval.UpdatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: approval.UpdatedDate,
+                    secondDate: approval.CreatedDate,
+                    secondDateName: nameof(Approval.CreatedDate)),
+                Parameter: nameof(Approval.UpdatedDate)));
         }
 
         public void ValidateApprovalId(Guid approvalId) =>
@@ -109,6 +115,15 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             {
                 Condition = firstId != secondId,
                 Message = $"Id is not the same as {secondIdName}"
+            };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
             };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
