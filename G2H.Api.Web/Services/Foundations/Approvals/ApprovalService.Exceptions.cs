@@ -87,6 +87,13 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                     new FailedApprovalStorageException(sqlException);
                 throw CreateAndLogCriticalDependencyException(failedApprovalStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedApprovalServiceException =
+                    new FailedApprovalServiceException(exception);
+
+                throw CreateAndLogServiceException(failedApprovalServiceException);
+            }
         }
 
         private ApprovalValidationException CreateAndLogValidationException(
