@@ -9,6 +9,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Force.DeepCloner;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Approvals.Exceptions;
 using Moq;
@@ -255,6 +256,60 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedApprovalValidationException))),
                         Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedDateNotSameAsCreatedDateAndLogItAsync()
+        {
+            // given
+            int randomNumber = GetRandomNumber();
+            int randomMinutes = randomNumber;
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            Approval randomApproval = CreateRandomModifyApproval(randomDateTimeOffset);
+            Approval invalidApproval = randomApproval;
+            Approval storageApproval = randomApproval.DeepClone();
+            invalidApproval.CreatedDate = storageApproval.CreatedDate.AddMinutes(randomMinutes);
+            var invalidApprovalException = new InvalidApprovalException();
+
+            invalidApprovalException.AddData(
+                key: nameof(Approval.CreatedDate),
+                values: $"Date is not the same as {nameof(Approval.CreatedDate)}");
+
+            var expectedApprovalValidationException =
+                new ApprovalValidationException(invalidApprovalException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectApprovalByIdAsync(invalidApproval.Id))
+                .ReturnsAsync(storageApproval);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                .Returns(randomDateTimeOffset);
+
+            // when
+            ValueTask<Approval> modifyApprovalTask =
+                this.approvalService.ModifyApprovalAsync(invalidApproval);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalValidationException>(() =>
+                modifyApprovalTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectApprovalByIdAsync(invalidApproval.Id),
+                    Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedApprovalValidationException))),
+                       Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
