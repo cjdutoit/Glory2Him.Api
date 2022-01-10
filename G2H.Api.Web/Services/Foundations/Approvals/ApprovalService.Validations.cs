@@ -32,7 +32,13 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                     firstDate: approval.UpdatedDate,
                     secondDate: approval.CreatedDate,
                     secondDateName: nameof(Approval.CreatedDate)),
-                Parameter: nameof(Approval.UpdatedDate)));
+                Parameter: nameof(Approval.UpdatedDate)),
+
+                (Rule: IsNotSame(
+                    firstId: approval.UpdatedByUserId,
+                    secondId: approval.CreatedByUserId,
+                    secondIdName: nameof(Approval.CreatedByUserId)),
+                Parameter: nameof(Approval.UpdatedByUserId)));
         }
 
         private static void ValidateApprovalIsNotNull(Approval approval)
@@ -68,6 +74,15 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             {
                 Condition = firstDate != secondDate,
                 Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private static dynamic IsNotSame(
+            Guid firstId,
+            Guid secondId,
+            string secondIdName) => new
+            {
+                Condition = firstId != secondId,
+                Message = $"Id is not the same as {secondIdName}"
             };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)

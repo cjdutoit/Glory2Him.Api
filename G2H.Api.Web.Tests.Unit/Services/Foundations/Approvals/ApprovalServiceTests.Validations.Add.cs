@@ -178,10 +178,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             await Assert.ThrowsAsync<ApprovalValidationException>(() =>
                addApprovalTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once());
-
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedApprovalValidationException))),
