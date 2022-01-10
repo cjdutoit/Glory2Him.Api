@@ -57,7 +57,12 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             return maybeApproval;
         });
 
-        public async ValueTask<Approval> ModifyApprovalAsync(Approval approval) =>
-            await this.storageBroker.UpdateApprovalAsync(approval);
+        public ValueTask<Approval> ModifyApprovalAsync(Approval approval) =>
+        TryCatch(async () =>
+        {
+            ValidateApprovalOnModify(approval);
+
+            return await this.storageBroker.UpdateApprovalAsync(approval);
+        });
     }
 }
