@@ -31,7 +31,7 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Approval> AddApprovalAsync(Approval approval) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<Approval> AddApprovalAsync(Approval approval) =>
+            await this.storageBroker.InsertApprovalAsync(approval);
     }
 }
