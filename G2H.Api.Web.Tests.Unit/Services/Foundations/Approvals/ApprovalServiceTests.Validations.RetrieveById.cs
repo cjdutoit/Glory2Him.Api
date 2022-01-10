@@ -55,5 +55,44 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfApprovalIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid someApprovalId = Guid.NewGuid();
+            Approval noApproval = null;
+
+            var notFoundApprovalException =
+                new NotFoundApprovalException(someApprovalId);
+
+            var expectedApprovalValidationException =
+                new ApprovalValidationException(notFoundApprovalException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectApprovalByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(noApproval);
+
+            //when
+            ValueTask<Approval> retrieveApprovalByIdTask =
+                this.approvalService.RetrieveApprovalByIdAsync(someApprovalId);
+
+            //then
+            await Assert.ThrowsAsync<ApprovalValidationException>(() =>
+               retrieveApprovalByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectApprovalByIdAsync(It.IsAny<Guid>()),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedApprovalValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

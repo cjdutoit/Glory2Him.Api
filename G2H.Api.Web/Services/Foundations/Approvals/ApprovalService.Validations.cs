@@ -54,6 +54,14 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             }
         }
 
+        private static void ValidateStorageApproval(Approval maybeApproval, Guid approvalId)
+        {
+            if (maybeApproval is null)
+            {
+                throw new NotFoundApprovalException(approvalId);
+            }
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == Guid.Empty,
