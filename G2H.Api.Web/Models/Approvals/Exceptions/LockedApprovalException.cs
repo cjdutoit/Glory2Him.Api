@@ -8,17 +8,15 @@
 // --------------------------------------------------------------------------------
 
 using System;
-using System.Linq;
-using System.Threading.Tasks;
-using G2H.Api.Web.Models.Approvals;
+using Xeptions;
 
-namespace G2H.Api.Web.Services.Foundations.Approvals
+namespace G2H.Api.Web.Models.Approvals.Exceptions
 {
-    public interface IApprovalService
+    public class LockedApprovalException : Xeption
     {
-        ValueTask<Approval> AddApprovalAsync(Approval approval);
-        IQueryable<Approval> RetrieveAllApprovals();
-        ValueTask<Approval> RetrieveApprovalByIdAsync(Guid approvalId);
-        ValueTask<Approval> ModifyApprovalAsync(Approval approval);
+        public LockedApprovalException(Exception innerException)
+            : base(message: "Locked approval record exception, please try again later", innerException)
+        {
+        }
     }
 }

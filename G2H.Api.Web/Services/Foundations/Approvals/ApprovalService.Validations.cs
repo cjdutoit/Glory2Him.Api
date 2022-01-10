@@ -43,6 +43,49 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                 (Rule: IsNotRecent(approval.CreatedDate), Parameter: nameof(Approval.CreatedDate)));
         }
 
+        private void ValidateApprovalOnModify(Approval approval)
+        {
+            ValidateApprovalIsNotNull(approval);
+
+            Validate(
+                (Rule: IsInvalid(approval.Id), Parameter: nameof(Approval.Id)),
+                (Rule: IsInvalid(approval.StatusId), Parameter: nameof(Approval.StatusId)),
+                (Rule: IsInvalid(approval.CreatedDate), Parameter: nameof(Approval.CreatedDate)),
+                (Rule: IsInvalid(approval.CreatedByUserId), Parameter: nameof(Approval.CreatedByUserId)),
+                (Rule: IsInvalid(approval.UpdatedDate), Parameter: nameof(Approval.UpdatedDate)),
+                (Rule: IsInvalid(approval.UpdatedByUserId), Parameter: nameof(Approval.UpdatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: approval.UpdatedDate,
+                    secondDate: approval.CreatedDate,
+                    secondDateName: nameof(Approval.CreatedDate)),
+                Parameter: nameof(Approval.UpdatedDate)),
+
+                (Rule: IsNotRecent(approval.UpdatedDate), Parameter: nameof(approval.UpdatedDate)));
+        }
+
+        private static void ValidateAgainstStorageApprovalOnModify(Approval inputApproval, Approval storageApproval)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputApproval.CreatedDate,
+                    secondDate: storageApproval.CreatedDate,
+                    secondDateName: nameof(Approval.CreatedDate)),
+                Parameter: nameof(Approval.CreatedDate)),
+
+                (Rule: IsNotSame(
+                    firstId: inputApproval.CreatedByUserId,
+                    secondId: storageApproval.CreatedByUserId,
+                    secondIdName: nameof(Approval.CreatedByUserId)),
+                Parameter: nameof(Approval.CreatedByUserId)),
+
+                (Rule: IsSame(
+                    firstDate: inputApproval.UpdatedDate,
+                    secondDate: storageApproval.UpdatedDate,
+                    secondDateName: nameof(Approval.UpdatedDate)),
+                Parameter: nameof(Approval.UpdatedDate)));
+        }
+
         public void ValidateApprovalId(Guid approvalId) =>
             Validate((Rule: IsInvalid(approvalId), Parameter: nameof(Approval.Id)));
 
@@ -96,6 +139,15 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             {
                 Condition = firstId != secondId,
                 Message = $"Id is not the same as {secondIdName}"
+            };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
             };
 
         private dynamic IsNotRecent(DateTimeOffset date) => new

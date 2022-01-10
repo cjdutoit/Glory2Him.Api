@@ -63,6 +63,12 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
 
                 throw CreateAndLogDependencyValidationException(invalidApprovalReferenceException);
             }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedApprovalException = new LockedApprovalException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedApprovalException);
+            }
             catch (DbUpdateException databaseUpdateException)
             {
                 var failedApprovalStorageException =
