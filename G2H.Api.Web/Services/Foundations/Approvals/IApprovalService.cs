@@ -19,5 +19,6 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
         ValueTask<Approval> AddApprovalAsync(Approval approval);
         IQueryable<Approval> RetrieveAllApprovals();
         ValueTask<Approval> RetrieveApprovalByIdAsync(Guid approvalId);
+        ValueTask<Approval> ModifyApprovalAsync(Approval approval);
     }
 }

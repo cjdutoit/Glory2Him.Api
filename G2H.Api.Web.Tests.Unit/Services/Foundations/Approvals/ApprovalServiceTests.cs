@@ -92,6 +92,17 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
         private static Approval CreateRandomApproval(DateTimeOffset dateTimeOffset) =>
             CreateApprovalFiller(dateTimeOffset).Create();
 
+        private static Approval CreateRandomModifyApproval(DateTimeOffset dateTimeOffset)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Approval randomApproval = CreateRandomApproval(dateTimeOffset);
+
+            randomApproval.CreatedDate =
+                randomApproval.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomApproval;
+        }
+
         private static Filler<Approval> CreateApprovalFiller(DateTimeOffset dateTimeOffset)
         {
             var userId = Guid.NewGuid();
