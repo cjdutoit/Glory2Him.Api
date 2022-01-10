@@ -41,6 +41,6 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
         });
 
         public IQueryable<Approval> RetrieveAllApprovals() =>
-            throw new System.NotImplementedException();
+            this.storageBroker.SelectAllApprovals();
     }
 }
