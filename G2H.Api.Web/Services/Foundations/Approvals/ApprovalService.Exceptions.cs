@@ -28,6 +28,10 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             {
                 throw CreateAndLogValidationException(nullApprovalException);
             }
+            catch (InvalidApprovalException invalidApprovalException)
+            {
+                throw CreateAndLogValidationException(invalidApprovalException);
+            }
         }
 
         private ApprovalValidationException CreateAndLogValidationException(

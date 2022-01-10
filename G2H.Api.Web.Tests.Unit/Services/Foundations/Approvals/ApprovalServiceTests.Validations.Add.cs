@@ -47,12 +47,8 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public async Task ShouldThrowValidationExceptionOnAddIfApprovalIsInvalidAndLogItAsync(
-            string invalidText)
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfApprovalIsInvalidAndLogItAsync()
         {
             // given
             var invalidApproval = new Approval();
@@ -66,7 +62,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
 
             invalidApprovalException.AddData(
                 key: nameof(Approval.StatusId),
-                values: "Text is required");
+                values: "Id is required");
 
             invalidApprovalException.AddData(
                 key: nameof(Approval.CreatedDate),
@@ -92,12 +88,8 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
                 this.approvalService.AddApprovalAsync(invalidApproval);
 
             // then
-            await Assert.ThrowsAsync<ApprovalValidationException>(() =>
+            var ex = await Assert.ThrowsAsync<ApprovalValidationException>(() =>
                addApprovalTask.AsTask());
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffset(),
-                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
