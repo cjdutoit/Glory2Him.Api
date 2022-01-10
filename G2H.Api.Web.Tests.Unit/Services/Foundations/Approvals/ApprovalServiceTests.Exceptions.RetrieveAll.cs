@@ -54,5 +54,43 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string exceptionMessage = GetRandomMessage();
+            var serviceException = new Exception(exceptionMessage);
+
+            var failedApprovalServiceException =
+                new FailedApprovalServiceException(serviceException);
+
+            var expectedApprovalServiceException =
+                new ApprovalServiceException(failedApprovalServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllApprovals())
+                    .Throws(serviceException);
+
+            // when
+            Action retrieveAllApprovalsAction = () =>
+                this.approvalService.RetrieveAllApprovals();
+
+            // then
+            Assert.Throws<ApprovalServiceException>(
+                retrieveAllApprovalsAction);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllApprovals(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedApprovalServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
