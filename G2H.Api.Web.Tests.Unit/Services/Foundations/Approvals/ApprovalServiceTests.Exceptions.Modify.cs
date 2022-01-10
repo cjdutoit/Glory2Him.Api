@@ -64,5 +64,55 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
+        {
+            // given
+            Approval foreignKeyConflictedApproval = CreateRandomApproval();
+            string randomMessage = GetRandomMessage();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidApprovalReferenceException =
+                new InvalidApprovalReferenceException(foreignKeyConstraintConflictException);
+
+            var approvalDependencyValidationException =
+                new ApprovalDependencyValidationException(invalidApprovalReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // when
+            ValueTask<Approval> modifyApprovalTask =
+                this.approvalService.ModifyApprovalAsync(foreignKeyConflictedApproval);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalDependencyValidationException>(() =>
+                modifyApprovalTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectApprovalByIdAsync(foreignKeyConflictedApproval.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(approvalDependencyValidationException))),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateApprovalAsync(foreignKeyConflictedApproval),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
