@@ -104,5 +104,49 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateDatesIsNotSameAndLogItAsync()
+        {
+            // given
+            int randomNumber = GetRandomNumber();
+            Approval randomApproval = CreateRandomApproval();
+            Approval invalidApproval = randomApproval;
+
+            invalidApproval.UpdatedDate =
+                invalidApproval.CreatedDate.AddDays(randomNumber);
+
+            var invalidApprovalException =
+                new InvalidApprovalException();
+
+            invalidApprovalException.AddData(
+                key: nameof(Approval.UpdatedDate),
+                values: $"Date is not the same as {nameof(Approval.CreatedDate)}");
+
+            var expectedApprovalValidationException =
+                new ApprovalValidationException(invalidApprovalException);
+
+            // when
+            ValueTask<Approval> addApprovalTask =
+                this.approvalService.AddApprovalAsync(invalidApproval);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalValidationException>(() =>
+               addApprovalTask.AsTask());
+
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedApprovalValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertApprovalAsync(It.IsAny<Approval>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

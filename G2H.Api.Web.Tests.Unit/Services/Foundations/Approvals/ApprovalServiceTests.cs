@@ -48,6 +48,12 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
                 && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
         }
 
+        private static Approval CreateRandomApproval() =>
+            CreateApprovalFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
