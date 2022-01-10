@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Brokers.DateTimes;
@@ -42,5 +43,8 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
 
         public IQueryable<Approval> RetrieveAllApprovals() =>
         TryCatch(() => this.storageBroker.SelectAllApprovals());
+
+        public ValueTask<Approval> RetrieveApprovalByIdAsync(Guid approvalId) =>
+            throw new NotImplementedException();
     }
 }
