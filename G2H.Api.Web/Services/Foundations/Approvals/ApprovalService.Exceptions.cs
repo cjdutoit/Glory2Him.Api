@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Approvals.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -40,6 +41,13 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
 
                 throw CreateAndLogCriticalDependencyException(failedApprovalStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsApprovalException =
+                    new AlreadyExistsApprovalException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsApprovalException);
+            }
         }
 
         private ApprovalValidationException CreateAndLogValidationException(
@@ -60,6 +68,17 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             this.loggingBroker.LogCritical(approvalDependencyException);
 
             return approvalDependencyException;
+        }
+
+        private ApprovalDependencyValidationException CreateAndLogDependencyValidationException(
+        Xeption exception)
+        {
+            var approvalDependencyValidationException =
+                new ApprovalDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(approvalDependencyValidationException);
+
+            return approvalDependencyValidationException;
         }
     }
 }
