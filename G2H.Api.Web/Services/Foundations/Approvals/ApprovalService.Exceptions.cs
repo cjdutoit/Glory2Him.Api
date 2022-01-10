@@ -10,6 +10,7 @@
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Approvals.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.Approvals
@@ -32,6 +33,13 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             {
                 throw CreateAndLogValidationException(invalidApprovalException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedApprovalStorageException =
+                    new FailedApprovalStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedApprovalStorageException);
+            }
         }
 
         private ApprovalValidationException CreateAndLogValidationException(
@@ -43,6 +51,15 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             this.loggingBroker.LogError(approvalValidationException);
 
             return approvalValidationException;
+        }
+
+        private ApprovalDependencyException CreateAndLogCriticalDependencyException(
+            Xeption exception)
+        {
+            var approvalDependencyException = new ApprovalDependencyException(exception);
+            this.loggingBroker.LogCritical(approvalDependencyException);
+
+            return approvalDependencyException;
         }
     }
 }
