@@ -57,6 +57,9 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
         private static Approval CreateRandomApproval() =>
             CreateApprovalFiller(dateTimeOffset: GetRandomDateTimeOffset()).Create();
 
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
 
