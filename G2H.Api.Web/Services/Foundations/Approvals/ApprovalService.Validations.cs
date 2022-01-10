@@ -71,7 +71,13 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                     firstDate: inputApproval.CreatedDate,
                     secondDate: storageApproval.CreatedDate,
                     secondDateName: nameof(Approval.CreatedDate)),
-                Parameter: nameof(Approval.CreatedDate)));
+                Parameter: nameof(Approval.CreatedDate)),
+
+                (Rule: IsNotSame(
+                    firstId: inputApproval.CreatedByUserId,
+                    secondId: storageApproval.CreatedByUserId,
+                    secondIdName: nameof(Approval.CreatedByUserId)),
+                Parameter: nameof(Approval.CreatedByUserId)));
         }
 
         public void ValidateApprovalId(Guid approvalId) =>
