@@ -108,5 +108,48 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+        {
+            // given
+            Approval someApproval = CreateRandomApproval();
+            string randomMessage = GetRandomMessage();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidApprovalReferenceException =
+                new InvalidApprovalReferenceException(foreignKeyConstraintConflictException);
+
+            var expectedApprovalValidationException =
+                new ApprovalDependencyValidationException(invalidApprovalReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            // when
+            ValueTask<Approval> addApprovalTask =
+                this.approvalService.AddApprovalAsync(someApproval);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalDependencyValidationException>(() =>
+                addApprovalTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedApprovalValidationException))),
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
