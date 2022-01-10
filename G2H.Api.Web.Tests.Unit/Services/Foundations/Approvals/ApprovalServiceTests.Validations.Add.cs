@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Approvals.Exceptions;
@@ -134,6 +135,52 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             await Assert.ThrowsAsync<ApprovalValidationException>(() =>
                addApprovalTask.AsTask());
 
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedApprovalValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertApprovalAsync(It.IsAny<Approval>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateUserIdsIsNotSameAndLogItAsync()
+        {
+            // given
+            int randomNumber = GetRandomNumber();
+            Approval randomApproval = CreateRandomApproval();
+            Approval invalidApproval = randomApproval;
+
+            invalidApproval.UpdatedByUserId = Guid.NewGuid();
+
+            var invalidApprovalException =
+                new InvalidApprovalException();
+
+            invalidApprovalException.AddData(
+                key: nameof(Approval.UpdatedByUserId),
+                values: $"Id is not the same as {nameof(Approval.CreatedByUserId)}");
+
+            var expectedApprovalValidationException =
+                new ApprovalValidationException(invalidApprovalException);
+
+            // when
+            ValueTask<Approval> addApprovalTask =
+                this.approvalService.AddApprovalAsync(invalidApproval);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalValidationException>(() =>
+               addApprovalTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
