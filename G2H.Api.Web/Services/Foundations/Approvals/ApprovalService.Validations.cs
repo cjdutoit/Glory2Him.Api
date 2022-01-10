@@ -59,7 +59,9 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                     firstDate: approval.UpdatedDate,
                     secondDate: approval.CreatedDate,
                     secondDateName: nameof(Approval.CreatedDate)),
-                Parameter: nameof(Approval.UpdatedDate)));
+                Parameter: nameof(Approval.UpdatedDate)),
+
+                (Rule: IsNotRecent(approval.UpdatedDate), Parameter: nameof(approval.UpdatedDate)));
         }
 
         public void ValidateApprovalId(Guid approvalId) =>
