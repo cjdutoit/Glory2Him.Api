@@ -64,6 +64,16 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                 (Rule: IsNotRecent(approval.UpdatedDate), Parameter: nameof(approval.UpdatedDate)));
         }
 
+        private static void ValidateAgainstStorageApprovalOnModify(Approval inputApproval, Approval storageApproval)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputApproval.CreatedDate,
+                    secondDate: storageApproval.CreatedDate,
+                    secondDateName: nameof(Approval.CreatedDate)),
+                Parameter: nameof(Approval.CreatedDate)));
+        }
+
         public void ValidateApprovalId(Guid approvalId) =>
             Validate((Rule: IsInvalid(approvalId), Parameter: nameof(Approval.Id)));
 

@@ -66,6 +66,7 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                 await this.storageBroker.SelectApprovalByIdAsync(approval.Id);
 
             ValidateStorageApproval(maybeApproval, approval.Id);
+            ValidateAgainstStorageApprovalOnModify(inputApproval: approval, storageApproval: maybeApproval);
 
             return await this.storageBroker.UpdateApprovalAsync(approval);
         });
