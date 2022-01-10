@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Approvals;
@@ -21,6 +22,7 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
     public partial class ApprovalService
     {
         private delegate ValueTask<Approval> ReturningApprovalFunction();
+        private delegate IQueryable<Approval> ReturningApprovalsFunction();
 
         private async ValueTask<Approval> TryCatch(ReturningApprovalFunction returningApprovalFunction)
         {
@@ -70,6 +72,20 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
                     new FailedApprovalServiceException(exception);
 
                 throw CreateAndLogServiceException(failedApprovalServiceException);
+            }
+        }
+
+        private IQueryable<Approval> TryCatch(ReturningApprovalsFunction returningApprovalsFunction)
+        {
+            try
+            {
+                return returningApprovalsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedApprovalStorageException =
+                    new FailedApprovalStorageException(sqlException);
+                throw CreateAndLogCriticalDependencyException(failedApprovalStorageException);
             }
         }
 
