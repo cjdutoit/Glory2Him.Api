@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Approvals;
 
@@ -15,5 +16,6 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
     public interface IApprovalService
     {
         ValueTask<Approval> AddApprovalAsync(Approval approval);
+        IQueryable<Approval> RetrieveAllApprovals();
     }
 }
