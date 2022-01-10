@@ -103,5 +103,44 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someApprovalId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedApprovalServiceException =
+                new FailedApprovalServiceException(serviceException);
+
+            var expectedApprovalServiceException =
+                new ApprovalServiceException(failedApprovalServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectApprovalByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Approval> removeApprovalByIdTask =
+                this.approvalService.RemoveApprovalByIdAsync(someApprovalId);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalServiceException>(() =>
+                removeApprovalByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectApprovalByIdAsync(It.IsAny<Guid>()),
+                        Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedApprovalServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
