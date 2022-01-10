@@ -7,11 +7,13 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Approvals.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace G2H.Api.Web.Services.Foundations.Approvals
@@ -55,6 +57,20 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
 
                 throw CreateAndLogDependencyValidationException(invalidApprovalReferenceException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedApprovalStorageException =
+                    new FailedApprovalStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependecyException(failedApprovalStorageException);
+            }
+            catch (Exception exception)
+            {
+                var failedApprovalServiceException =
+                    new FailedApprovalServiceException(exception);
+
+                throw CreateAndLogServiceException(failedApprovalServiceException);
+            }
         }
 
         private ApprovalValidationException CreateAndLogValidationException(
@@ -86,6 +102,24 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             this.loggingBroker.LogError(approvalDependencyValidationException);
 
             return approvalDependencyValidationException;
+        }
+
+        private ApprovalDependencyException CreateAndLogDependecyException(
+            Xeption exception)
+        {
+            var approvalDependencyException = new ApprovalDependencyException(exception);
+            this.loggingBroker.LogError(approvalDependencyException);
+
+            return approvalDependencyException;
+        }
+
+        private ApprovalServiceException CreateAndLogServiceException(
+            Xeption exception)
+        {
+            var approvalServiceException = new ApprovalServiceException(exception);
+            this.loggingBroker.LogError(approvalServiceException);
+
+            return approvalServiceException;
         }
     }
 }
