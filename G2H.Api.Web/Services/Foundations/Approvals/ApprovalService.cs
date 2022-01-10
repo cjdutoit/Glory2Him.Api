@@ -79,6 +79,8 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
             Approval maybeApproval = await this.storageBroker
                 .SelectApprovalByIdAsync(approvalId);
 
+            ValidateStorageApproval(maybeApproval, approvalId);
+
             return await this.storageBroker.DeleteApprovalAsync(maybeApproval);
         });
     }
