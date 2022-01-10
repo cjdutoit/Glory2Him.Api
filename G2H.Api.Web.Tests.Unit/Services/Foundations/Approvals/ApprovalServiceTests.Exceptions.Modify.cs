@@ -8,9 +8,11 @@
 // --------------------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Approvals.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -108,6 +110,53 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateApprovalAsync(foreignKeyConflictedApproval),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnModifyIfDatabaseUpdateExceptionOccursAndLogItAsync()
+        {
+            // given
+            Approval randomApproval = CreateRandomApproval();
+            var databaseUpdateException = new DbUpdateException();
+
+            var failedApprovalException =
+                new FailedApprovalStorageException(databaseUpdateException);
+
+            var expectedApprovalDependencyException =
+                new ApprovalDependencyException(failedApprovalException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(databaseUpdateException);
+
+            // when
+            ValueTask<Approval> modifyApprovalTask =
+                this.approvalService.ModifyApprovalAsync(randomApproval);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalDependencyException>(() =>
+                modifyApprovalTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectApprovalByIdAsync(randomApproval.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedApprovalDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateApprovalAsync(randomApproval),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
