@@ -32,6 +32,14 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             Approval updatedApproval = inputApproval;
             Approval expectedApproval = updatedApproval.DeepClone();
 
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTimeOffset);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectApprovalByIdAsync(inputApproval.Id))
+                    .ReturnsAsync(storageApproval);
+
             this.storageBrokerMock.Setup(broker =>
                 broker.UpdateApprovalAsync(inputApproval))
                     .ReturnsAsync(updatedApproval);
@@ -42,6 +50,14 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
 
             // then
             actualApproval.Should().BeEquivalentTo(expectedApproval);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectApprovalByIdAsync(inputApproval.Id),
+                    Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateApprovalAsync(inputApproval),
