@@ -48,6 +48,13 @@ namespace G2H.Api.Web.Services.Foundations.Approvals
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsApprovalException);
             }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidApprovalReferenceException =
+                    new InvalidApprovalReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidApprovalReferenceException);
+            }
         }
 
         private ApprovalValidationException CreateAndLogValidationException(
