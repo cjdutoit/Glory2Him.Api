@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Approvals;
@@ -69,6 +70,34 @@ namespace G2H.Api.Web.Controllers
                     this.approvalService.RetrieveAllApprovals();
 
                 return Ok(retrievedApprovals);
+            }
+            catch (ApprovalDependencyException approvalDependencyException)
+            {
+                return InternalServerError(approvalDependencyException);
+            }
+            catch (ApprovalServiceException approvalServiceException)
+            {
+                return InternalServerError(approvalServiceException);
+            }
+        }
+
+        [HttpGet("{approvalId}")]
+        public async ValueTask<ActionResult<Approval>> GetApprovalByIdAsync(Guid approvalId)
+        {
+            try
+            {
+                Approval approval = await this.approvalService.RetrieveApprovalByIdAsync(approvalId);
+
+                return Ok(approval);
+            }
+            catch (ApprovalValidationException approvalValidationException)
+                when (approvalValidationException.InnerException is NotFoundApprovalException)
+            {
+                return NotFound(approvalValidationException.InnerException);
+            }
+            catch (ApprovalValidationException approvalValidationException)
+            {
+                return BadRequest(approvalValidationException.InnerException);
             }
             catch (ApprovalDependencyException approvalDependencyException)
             {
