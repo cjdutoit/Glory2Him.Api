@@ -147,5 +147,43 @@ namespace G2H.Api.Web.Controllers
                 return InternalServerError(approvalServiceException);
             }
         }
+
+        [HttpDelete("{approvalId}")]
+        public async ValueTask<ActionResult<Approval>> DeleteApprovalByIdAsync(Guid approvalId)
+        {
+            try
+            {
+                Approval deletedApproval =
+                    await this.approvalService.RemoveApprovalByIdAsync(approvalId);
+
+                return Ok(deletedApproval);
+            }
+            catch (ApprovalValidationException approvalValidationException)
+                when (approvalValidationException.InnerException is NotFoundApprovalException)
+            {
+                return NotFound(approvalValidationException.InnerException);
+            }
+            catch (ApprovalValidationException approvalValidationException)
+            {
+                return BadRequest(approvalValidationException.InnerException);
+            }
+            catch (ApprovalDependencyValidationException approvalDependencyValidationException)
+                when (approvalDependencyValidationException.InnerException is LockedApprovalException)
+            {
+                return Locked(approvalDependencyValidationException.InnerException);
+            }
+            catch (ApprovalDependencyValidationException approvalDependencyValidationException)
+            {
+                return BadRequest(approvalDependencyValidationException);
+            }
+            catch (ApprovalDependencyException approvalDependencyException)
+            {
+                return InternalServerError(approvalDependencyException);
+            }
+            catch (ApprovalServiceException approvalServiceException)
+            {
+                return InternalServerError(approvalServiceException);
+            }
+        }
     }
 }
