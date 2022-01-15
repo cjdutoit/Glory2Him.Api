@@ -10,6 +10,7 @@
 using G2H.Api.Web.Brokers.DateTimes;
 using G2H.Api.Web.Brokers.Loggings;
 using G2H.Api.Web.Brokers.Storages;
+using G2H.Api.Web.Services.Foundations.Approvals;
 using G2H.Api.Web.Services.Foundations.Posts;
 using G2H.Api.Web.Services.Foundations.PostTypes;
 using G2H.Api.Web.Services.Foundations.Reactions;
@@ -80,6 +81,7 @@ namespace G2H.Api.Web
 
         private static void AddServices(IServiceCollection services)
         {
+            services.AddTransient<IApprovalService, ApprovalService>();
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<IPostTypeService, PostTypeService>();
             services.AddTransient<IReactionService, ReactionService>();
