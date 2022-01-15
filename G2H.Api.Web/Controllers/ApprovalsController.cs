@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Approvals;
 using G2H.Api.Web.Models.Approvals.Exceptions;
@@ -48,6 +49,26 @@ namespace G2H.Api.Web.Controllers
                when (approvalDependencyValidationException.InnerException is AlreadyExistsApprovalException)
             {
                 return Conflict(approvalDependencyValidationException.InnerException);
+            }
+            catch (ApprovalDependencyException approvalDependencyException)
+            {
+                return InternalServerError(approvalDependencyException);
+            }
+            catch (ApprovalServiceException approvalServiceException)
+            {
+                return InternalServerError(approvalServiceException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Approval>> GetAllApprovals()
+        {
+            try
+            {
+                IQueryable<Approval> retrievedApprovals =
+                    this.approvalService.RetrieveAllApprovals();
+
+                return Ok(retrievedApprovals);
             }
             catch (ApprovalDependencyException approvalDependencyException)
             {
