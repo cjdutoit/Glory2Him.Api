@@ -108,5 +108,44 @@ namespace G2H.Api.Web.Controllers
                 return InternalServerError(approvalServiceException);
             }
         }
+
+        [HttpPut]
+        public async ValueTask<ActionResult<Approval>> PutApprovalAsync(Approval approval)
+        {
+            try
+            {
+                Approval modifiedApproval =
+                    await this.approvalService.ModifyApprovalAsync(approval);
+
+                return Ok(modifiedApproval);
+            }
+            catch (ApprovalValidationException approvalValidationException)
+                when (approvalValidationException.InnerException is NotFoundApprovalException)
+            {
+                return NotFound(approvalValidationException.InnerException);
+            }
+            catch (ApprovalValidationException approvalValidationException)
+            {
+                return BadRequest(approvalValidationException.InnerException);
+            }
+            catch (ApprovalDependencyValidationException approvalValidationException)
+                when (approvalValidationException.InnerException is InvalidApprovalReferenceException)
+            {
+                return FailedDependency(approvalValidationException.InnerException);
+            }
+            catch (ApprovalDependencyValidationException approvalDependencyValidationException)
+               when (approvalDependencyValidationException.InnerException is AlreadyExistsApprovalException)
+            {
+                return Conflict(approvalDependencyValidationException.InnerException);
+            }
+            catch (ApprovalDependencyException approvalDependencyException)
+            {
+                return InternalServerError(approvalDependencyException);
+            }
+            catch (ApprovalServiceException approvalServiceException)
+            {
+                return InternalServerError(approvalServiceException);
+            }
+        }
     }
 }
