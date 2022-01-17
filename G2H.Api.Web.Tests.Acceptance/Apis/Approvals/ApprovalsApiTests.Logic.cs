@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using G2H.Api.Web.Tests.Acceptance.Models.Approvals;
+using RESTFulSense.Exceptions;
 using Xunit;
 
 namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
@@ -86,6 +87,28 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
             // then
             actualApproval.Should().BeEquivalentTo(modifiedApproval);
             await this.apiBroker.DeleteApprovalByIdAsync(actualApproval.Id);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteApprovalAsync()
+        {
+            // given
+            Approval randomApproval = await PostRandomApprovalAsync();
+            Approval inputApproval = randomApproval;
+            Approval expectedApproval = inputApproval;
+
+            // when
+            Approval deletedApproval =
+                await this.apiBroker.DeleteApprovalByIdAsync(inputApproval.Id);
+
+            ValueTask<Approval> getApprovalbyIdTask =
+                this.apiBroker.GetApprovalByIdAsync(inputApproval.Id);
+
+            // then
+            deletedApproval.Should().BeEquivalentTo(expectedApproval);
+
+            await Assert.ThrowsAsync<HttpResponseNotFoundException>(() =>
+                getApprovalbyIdTask.AsTask());
         }
     }
 }
