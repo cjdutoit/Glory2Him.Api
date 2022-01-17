@@ -7,6 +7,8 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using G2H.Api.Web.Tests.Acceptance.Models.Approvals;
@@ -33,6 +35,26 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
             // then
             actualApproval.Should().BeEquivalentTo(expectedApproval);
             await this.apiBroker.DeleteApprovalByIdAsync(actualApproval.Id);
+        }
+
+        [Fact]
+        public async Task ShouldGetAllApprovalsAsync()
+        {
+            // given
+            List<Approval> randomApprovals = await CreateRandomApprovalsAsync();
+
+            List<Approval> expectedApprovals = randomApprovals;
+
+            // when
+            List<Approval> actualApprovals = await this.apiBroker.GetAllApprovalsAsync();
+
+            // then
+            foreach (Approval expectedApproval in expectedApprovals)
+            {
+                Approval actualApproval = actualApprovals.Single(approval => approval.Id == expectedApproval.Id);
+                actualApproval.Should().BeEquivalentTo(expectedApproval);
+                await this.apiBroker.DeleteApprovalByIdAsync(actualApproval.Id);
+            }
         }
     }
 }

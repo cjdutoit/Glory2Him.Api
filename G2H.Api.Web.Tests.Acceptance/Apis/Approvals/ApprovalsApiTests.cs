@@ -8,6 +8,8 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using G2H.Api.Web.Tests.Acceptance.Brokers;
 using G2H.Api.Web.Tests.Acceptance.Models.Approvals;
 using Tynamix.ObjectFiller;
@@ -22,6 +24,29 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
 
         public ApprovalsApiTests(ApiBroker apiBroker) =>
             this.apiBroker = apiBroker;
+
+        private async ValueTask<Approval> PostRandomApprovalAsync()
+        {
+            Approval randomApproval = CreateRandomApproval();
+            await this.apiBroker.PostApprovalAsync(randomApproval);
+
+            return randomApproval;
+        }
+
+        private async ValueTask<List<Approval>> CreateRandomApprovalsAsync()
+        {
+            int randomNumber = GetRandomNumber();
+            var randomApprovals = new List<Approval>();
+
+            for (int i = 0; i < randomNumber; i++)
+            {
+                randomApprovals.Add(await PostRandomApprovalAsync());
+            }
+            return randomApprovals;
+        }
+
+        private int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
 
         private static Approval CreateRandomApproval() =>
             CreateRandomApprovalFiller().Create();
