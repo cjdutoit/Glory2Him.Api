@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
 using G2H.Api.Web.Models.Posts.Exceptions;
@@ -48,6 +49,26 @@ namespace G2H.Api.Web.Controllers
                when (postDependencyValidationException.InnerException is AlreadyExistsPostException)
             {
                 return Conflict(postDependencyValidationException.InnerException);
+            }
+            catch (PostDependencyException postDependencyException)
+            {
+                return InternalServerError(postDependencyException);
+            }
+            catch (PostServiceException postServiceException)
+            {
+                return InternalServerError(postServiceException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Post>> GetAllPosts()
+        {
+            try
+            {
+                IQueryable<Post> retrievedPosts =
+                    this.postService.RetrieveAllPosts();
+
+                return Ok(retrievedPosts);
             }
             catch (PostDependencyException postDependencyException)
             {
