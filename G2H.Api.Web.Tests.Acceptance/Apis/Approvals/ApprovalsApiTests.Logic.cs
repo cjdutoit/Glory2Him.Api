@@ -71,5 +71,21 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
             actualApproval.Should().BeEquivalentTo(expectedApproval);
             await this.apiBroker.DeleteApprovalByIdAsync(actualApproval.Id);
         }
+
+        [Fact]
+        public async Task ShouldPutApprovalAsync()
+        {
+            // given
+            Approval randomApproval = await PostRandomApprovalAsync();
+            Approval modifiedApproval = UpdateApprovalWithRandomValues(randomApproval);
+
+            // when
+            await this.apiBroker.PutApprovalAsync(modifiedApproval);
+            Approval actualApproval = await this.apiBroker.GetApprovalByIdAsync(randomApproval.Id);
+
+            // then
+            actualApproval.Should().BeEquivalentTo(modifiedApproval);
+            await this.apiBroker.DeleteApprovalByIdAsync(actualApproval.Id);
+        }
     }
 }
