@@ -48,6 +48,26 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
         private int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
 
+        private static DateTimeOffset GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static Approval UpdateApprovalWithRandomValues(Approval inputApproval)
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+
+            var filler = new Filler<Approval>();
+
+            filler.Setup()
+                .OnProperty(approval => approval.Id).Use(inputApproval.Id)
+                .OnProperty(approval => approval.CreatedDate).Use(inputApproval.CreatedDate)
+                .OnProperty(approval => approval.CreatedByUserId).Use(inputApproval.CreatedByUserId)
+                .OnProperty(approval => approval.UpdatedDate).Use(now)
+                .OnType<DateTimeOffset>().Use(GetRandomDateTime())
+                .OnProperty(approval => approval.Status).IgnoreIt();
+
+            return filler.Create();
+        }
+
         private static Approval CreateRandomApproval() =>
             CreateRandomApprovalFiller().Create();
 
