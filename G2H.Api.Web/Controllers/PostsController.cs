@@ -7,6 +7,7 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Models.Posts;
@@ -69,6 +70,34 @@ namespace G2H.Api.Web.Controllers
                     this.postService.RetrieveAllPosts();
 
                 return Ok(retrievedPosts);
+            }
+            catch (PostDependencyException postDependencyException)
+            {
+                return InternalServerError(postDependencyException);
+            }
+            catch (PostServiceException postServiceException)
+            {
+                return InternalServerError(postServiceException);
+            }
+        }
+
+        [HttpGet("{postId}")]
+        public async ValueTask<ActionResult<Post>> GetPostByIdAsync(Guid postId)
+        {
+            try
+            {
+                Post post = await this.postService.RetrievePostByIdAsync(postId);
+
+                return Ok(post);
+            }
+            catch (PostValidationException postValidationException)
+                when (postValidationException.InnerException is NotFoundPostException)
+            {
+                return NotFound(postValidationException.InnerException);
+            }
+            catch (PostValidationException postValidationException)
+            {
+                return BadRequest(postValidationException.InnerException);
             }
             catch (PostDependencyException postDependencyException)
             {
