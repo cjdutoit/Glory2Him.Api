@@ -97,7 +97,6 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
             Array values = Enum.GetValues(typeof(Models.Reactions.ReactionId));
             Random random = new Random();
             Models.Reactions.ReactionId randomReactionId = (Models.Reactions.ReactionId)values.GetValue(random.Next(values.Length));
-
             var filler = new Filler<Models.Reactions.Reaction>();
 
             filler.Setup()
