@@ -36,7 +36,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
             {
                 if (!apiBroker.ReactionService.RetrieveAllReactions().Any(status => status.Id == item.Id))
                 {
-                    await apiBroker.ReactionService.AddReactionAsync(item);
+                    await this.apiBroker.ReactionService.AddReactionAsync(item);
                 }
             }
 
