@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using G2H.Api.Web.Tests.Acceptance.Brokers;
+using G2H.Api.Web.Tests.Acceptance.Models.PostTypes;
 using Microsoft.OpenApi.Extensions;
 using Tynamix.ObjectFiller;
 using Xunit;
@@ -26,7 +27,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
         public PostTypesApiTests(ApiBroker apiBroker) =>
             this.apiBroker = apiBroker;
 
-        private async ValueTask<List<Models.PostTypes.PostType>> CreatePostTypesAsync()
+        private async ValueTask<List<PostType>> CreatePostTypesAsync()
         {
             var userId = Guid.NewGuid();
             List<Web.Models.PostTypes.PostType> postTypes = GetStoragePostTypes(userId);
@@ -44,9 +45,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
 
         private static List<Web.Models.PostTypes.PostType> GetStoragePostTypes(Guid userId)
         {
-            List<Web.Models.PostTypes.PostType> postTypes =
-                new List<Web.Models.PostTypes.PostType>();
-
+            var postTypes = new List<Web.Models.PostTypes.PostType>();
             foreach (Web.Models.PostTypes.PostTypeId statusId
                 in Enum.GetValues(typeof(Web.Models.PostTypes.PostTypeId)))
             {
@@ -69,8 +68,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
 
         private static List<Models.PostTypes.PostType> GetClientPostTypes(Guid userId)
         {
-            List<Models.PostTypes.PostType> postTypes = new List<Models.PostTypes.PostType>();
-
+            var postTypes = new List<Models.PostTypes.PostType>();
             foreach (Models.PostTypes.PostTypeId statusId in Enum.GetValues(typeof(Models.PostTypes.PostTypeId)))
             {
                 var dateTimeOffset = DateTimeOffset.UtcNow;
