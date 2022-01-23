@@ -94,7 +94,6 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
             Array values = Enum.GetValues(typeof(Models.PostTypes.PostTypeId));
             Random random = new Random();
             Models.PostTypes.PostTypeId randomPostTypeId = (Models.PostTypes.PostTypeId)values.GetValue(random.Next(values.Length));
-
             var filler = new Filler<Models.PostTypes.PostType>();
 
             filler.Setup()
