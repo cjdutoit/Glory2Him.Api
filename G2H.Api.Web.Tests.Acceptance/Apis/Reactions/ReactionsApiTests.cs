@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using G2H.Api.Web.Tests.Acceptance.Models.Reactions;
 using G2H.Api.Web.Tests.Acceptance.Brokers;
 using Microsoft.OpenApi.Extensions;
 using Tynamix.ObjectFiller;
@@ -26,7 +27,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
         public ReactionsApiTests(ApiBroker apiBroker) =>
             this.apiBroker = apiBroker;
 
-        private async ValueTask<List<Models.Reactions.Reaction>> CreateReactionsAsync()
+        private async ValueTask<List<Reaction>> CreateReactionsAsync()
         {
             Guid userId = Guid.NewGuid();
             List<Web.Models.Reactions.Reaction> reactions = GetStorageReactions(userId);
@@ -44,7 +45,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
 
         private static List<Web.Models.Reactions.Reaction> GetStorageReactions(Guid userId)
         {
-            List<Web.Models.Reactions.Reaction> reactions =
+           var reactions =
                 new List<Web.Models.Reactions.Reaction>();
 
             foreach (Web.Models.Reactions.ReactionId statusId
