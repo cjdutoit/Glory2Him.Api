@@ -29,7 +29,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
 
         private async ValueTask<List<PostType>> CreatePostTypesAsync()
         {
-            var userId = Guid.NewGuid();
+            Guid userId = Guid.NewGuid();
             List<Web.Models.PostTypes.PostType> postTypes = GetStoragePostTypes(userId);
 
             foreach (var item in postTypes)
@@ -49,7 +49,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
             foreach (Web.Models.PostTypes.PostTypeId statusId
                 in Enum.GetValues(typeof(Web.Models.PostTypes.PostTypeId)))
             {
-                var dateTimeOffset = DateTimeOffset.UtcNow;
+                DateTimeOffset dateTimeOffset = DateTimeOffset.UtcNow;
                 var filler = new Filler<Web.Models.PostTypes.PostType>();
 
                 filler.Setup()
@@ -71,7 +71,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
             var postTypes = new List<Models.PostTypes.PostType>();
             foreach (Models.PostTypes.PostTypeId statusId in Enum.GetValues(typeof(Models.PostTypes.PostTypeId)))
             {
-                var dateTimeOffset = DateTimeOffset.UtcNow;
+                DateTimeOffset dateTimeOffset = DateTimeOffset.UtcNow;
                 var filler = new Filler<Models.PostTypes.PostType>();
 
                 filler.Setup()
@@ -89,8 +89,8 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.PostTypes
 
         private static Models.PostTypes.PostType GetRandomPostType()
         {
-            var userId = Guid.NewGuid();
-            var dateTimeOffset = DateTimeOffset.UtcNow;
+            Guid userId = Guid.NewGuid();
+            DateTimeOffset dateTimeOffset = DateTimeOffset.UtcNow;
             Array values = Enum.GetValues(typeof(Models.PostTypes.PostTypeId));
             Random random = new Random();
             Models.PostTypes.PostTypeId randomPostTypeId = (Models.PostTypes.PostTypeId)values.GetValue(random.Next(values.Length));
