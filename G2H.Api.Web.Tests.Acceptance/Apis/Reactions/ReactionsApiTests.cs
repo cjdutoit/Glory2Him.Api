@@ -28,7 +28,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
 
         private async ValueTask<List<Models.Reactions.Reaction>> CreateReactionsAsync()
         {
-            var userId = Guid.NewGuid();
+            Guid userId = Guid.NewGuid();
             List<Web.Models.Reactions.Reaction> reactions = GetStorageReactions(userId);
 
             foreach (var item in reactions)
@@ -50,7 +50,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
             foreach (Web.Models.Reactions.ReactionId statusId
                 in Enum.GetValues(typeof(Web.Models.Reactions.ReactionId)))
             {
-                var dateTimeOffset = DateTimeOffset.UtcNow;
+                DateTimeOffset dateTimeOffset = DateTimeOffset.UtcNow;
                 var filler = new Filler<Web.Models.Reactions.Reaction>();
 
                 filler.Setup()
@@ -92,8 +92,8 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
 
         private static Models.Reactions.Reaction GetRandomReaction()
         {
-            var userId = Guid.NewGuid();
-            var dateTimeOffset = DateTimeOffset.UtcNow;
+            Guid userId = Guid.NewGuid();
+            DateTimeOffset dateTimeOffset = DateTimeOffset.UtcNow;
             Array values = Enum.GetValues(typeof(Models.Reactions.ReactionId));
             Random random = new Random();
             Models.Reactions.ReactionId randomReactionId = (Models.Reactions.ReactionId)values.GetValue(random.Next(values.Length));
