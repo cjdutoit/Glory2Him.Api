@@ -30,7 +30,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
         private async ValueTask<List<Reaction>> CreateReactionsAsync()
         {
             Guid userId = Guid.NewGuid();
-            List<Web.Models.Reactions.Reaction> reactions = GetStorageReactions(userId);
+            var reactions = GetStorageReactions(userId);
 
             foreach (var item in reactions)
             {
@@ -45,8 +45,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
 
         private static List<Web.Models.Reactions.Reaction> GetStorageReactions(Guid userId)
         {
-           var reactions =
-                new List<Web.Models.Reactions.Reaction>();
+           var reactions = new List<Web.Models.Reactions.Reaction>();
 
             foreach (Web.Models.Reactions.ReactionId statusId
                 in Enum.GetValues(typeof(Web.Models.Reactions.ReactionId)))
