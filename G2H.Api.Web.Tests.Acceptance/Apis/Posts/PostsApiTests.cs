@@ -10,6 +10,7 @@
 using System;
 using System.Threading.Tasks;
 using G2H.Api.Web.Tests.Acceptance.Brokers;
+using G2H.Api.Web.Tests.Acceptance.Models.Approvals;
 using G2H.Api.Web.Tests.Acceptance.Models.Posts;
 using Tynamix.ObjectFiller;
 using Xunit;
@@ -24,16 +25,42 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
         public PostsApiTests(ApiBroker apiBroker) =>
             this.apiBroker = apiBroker;
 
-        private static ValueTask<Post> CreateRandomPost()
+        private async ValueTask<Approval> PostRandomApprovalAsync()
+        {
+            Approval randomApproval = CreateRandomApproval();
+            await this.apiBroker.PostApprovalAsync(randomApproval);
+
+            return randomApproval;
+        }
+
+        private static Approval CreateRandomApproval() =>
+            CreateRandomApprovalFiller().Create();
+
+        private static Filler<Approval> CreateRandomApprovalFiller()
+        {
+            Guid userId = Guid.NewGuid();
+            DateTime now = DateTime.UtcNow;
+            var filler = new Filler<Approval>();
+
+            filler.Setup()
+                .OnProperty(approval => approval.Status).IgnoreIt()
+                .OnProperty(approval => approval.CreatedDate).Use(now)
+                .OnProperty(approval => approval.CreatedByUserId).Use(userId)
+                .OnProperty(approval => approval.UpdatedDate).Use(now)
+                .OnProperty(approval => approval.UpdatedByUserId).Use(userId);
+
+            return filler;
+        }
+
+        private async ValueTask<Post> CreateRandomPost()
         {
             Approval approval = await PostRandomApprovalAsync();
-
-
             Guid userId = Guid.NewGuid();
             DateTime now = DateTime.UtcNow;
             var filler = new Filler<Post>();
 
             filler.Setup()
+                .OnProperty(post => post.ApprovalId).Use(approval.Id)
                 .OnProperty(post => post.CreatedByUserId).Use(userId)
                 .OnProperty(post => post.UpdatedByUserId).Use(userId)
                 .OnProperty(post => post.CreatedDate).Use(now)
