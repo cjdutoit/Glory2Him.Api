@@ -115,7 +115,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
         public async void ShouldThrowValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
         {
             // given
-            Approval foreignKeyConflictedApproval = CreateRandomApproval();
+            Approval someApproval = CreateRandomApproval();
             string randomMessage = GetRandomMessage();
             string exceptionMessage = randomMessage;
 
@@ -134,7 +134,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
 
             // when
             ValueTask<Approval> addApprovalTask =
-                this.approvalService.AddApprovalAsync(foreignKeyConflictedApproval);
+                this.approvalService.AddApprovalAsync(someApproval);
 
             // then
             await Assert.ThrowsAsync<ApprovalDependencyValidationException>(() =>
@@ -150,7 +150,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
                         Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.InsertApprovalAsync(foreignKeyConflictedApproval),
+                broker.InsertApprovalAsync(someApproval),
                     Times.Never());
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
