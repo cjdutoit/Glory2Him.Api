@@ -21,6 +21,54 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
     public partial class ApprovalServiceTests
     {
         [Fact]
+        public async Task ShouldThrowCriticalDependencyExceptionOnRemoveIfSqlErrorOccursAndLogItAsync()
+        {
+            // given
+            Approval randomApproval = CreateRandomApproval();
+            SqlException sqlException = GetSqlException();
+
+            var failedApprovalStorageException =
+                new FailedApprovalStorageException(sqlException);
+
+            var expectedApprovalDependencyException =
+                new ApprovalDependencyException(failedApprovalStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectApprovalByIdAsync(randomApproval.Id))
+                    .Throws(sqlException);
+
+            // when
+            ValueTask<Approval> addApprovalTask =
+                this.approvalService.RemoveApprovalByIdAsync(randomApproval.Id);
+
+            // then
+            await Assert.ThrowsAsync<ApprovalDependencyException>(() =>
+               addApprovalTask.AsTask());
+
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectApprovalByIdAsync(randomApproval.Id),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedApprovalDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteApprovalAsync(It.IsAny<Approval>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task ShouldThrowDependencyValidationOnRemoveIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
         {
             // given
