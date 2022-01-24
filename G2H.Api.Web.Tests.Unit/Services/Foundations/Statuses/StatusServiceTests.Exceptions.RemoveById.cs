@@ -66,7 +66,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyExceptionOnDeleteWhenSqlExceptionOccursAndLogItAsync()
+        public async Task ShouldThrowDependencyExceptionOnRemoveWhenSqlExceptionOccursAndLogItAsync()
         {
             // given
             StatusId someStatusId = GetRandomStatusId();
