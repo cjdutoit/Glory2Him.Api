@@ -125,11 +125,11 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             Approval randomApproval = CreateRandomApproval();
             var databaseUpdateException = new DbUpdateException();
 
-            var failedApprovalException =
+            var failedApprovalStorageException =
                 new FailedApprovalStorageException(databaseUpdateException);
 
             var expectedApprovalDependencyException =
-                new ApprovalDependencyException(failedApprovalException);
+                new ApprovalDependencyException(failedApprovalStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -219,11 +219,11 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
             Approval randomApproval = CreateRandomApproval();
             var serviceException = new Exception();
 
-            var failedApprovalException =
+            var failedApprovalServiceException =
                 new FailedApprovalServiceException(serviceException);
 
             var expectedApprovalServiceException =
-                new ApprovalServiceException(failedApprovalException);
+                new ApprovalServiceException(failedApprovalServiceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
