@@ -149,6 +149,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
                     expectedApprovalValidationException))),
                         Times.Once);
 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertApprovalAsync(someApproval),
+                    Times.Never());
+
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

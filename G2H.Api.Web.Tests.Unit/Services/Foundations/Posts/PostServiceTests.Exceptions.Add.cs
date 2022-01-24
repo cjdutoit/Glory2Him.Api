@@ -149,6 +149,10 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                     expectedPostValidationException))),
                         Times.Once);
 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertPostAsync(somePost),
+                    Times.Never);
+
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();

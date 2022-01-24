@@ -72,7 +72,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
         public async void ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
         {
             // given
-            Approval foreignKeyConflictedApproval = CreateRandomApproval();
+            Approval someApproval = CreateRandomApproval();
             string randomMessage = GetRandomMessage();
             string exceptionMessage = randomMessage;
 
@@ -91,7 +91,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
 
             // when
             ValueTask<Approval> modifyApprovalTask =
-                this.approvalService.ModifyApprovalAsync(foreignKeyConflictedApproval);
+                this.approvalService.ModifyApprovalAsync(someApproval);
 
             // then
             await Assert.ThrowsAsync<ApprovalDependencyValidationException>(() =>
@@ -102,7 +102,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectApprovalByIdAsync(foreignKeyConflictedApproval.Id),
+                broker.SelectApprovalByIdAsync(someApproval.Id),
                     Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -110,7 +110,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdateApprovalAsync(foreignKeyConflictedApproval),
+                broker.UpdateApprovalAsync(someApproval),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

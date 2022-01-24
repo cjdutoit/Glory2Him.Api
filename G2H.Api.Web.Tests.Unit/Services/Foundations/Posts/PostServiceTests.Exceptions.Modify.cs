@@ -72,7 +72,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
         public async void ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
         {
             // given
-            Post foreignKeyConflictedPost = CreateRandomPost();
+            Post somePost = CreateRandomPost();
             string randomMessage = GetRandomMessage();
             string exceptionMessage = randomMessage;
 
@@ -91,7 +91,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
 
             // when
             ValueTask<Post> modifyPostTask =
-                this.postService.ModifyPostAsync(foreignKeyConflictedPost);
+                this.postService.ModifyPostAsync(somePost);
 
             // then
             await Assert.ThrowsAsync<PostDependencyValidationException>(() =>
@@ -102,7 +102,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectPostByIdAsync(foreignKeyConflictedPost.Id),
+                broker.SelectPostByIdAsync(somePost.Id),
                     Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -110,7 +110,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdatePostAsync(foreignKeyConflictedPost),
+                broker.UpdatePostAsync(somePost),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
