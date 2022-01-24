@@ -157,7 +157,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.PostTypes
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             // given
             PostType somePostType = CreateRandomPostType();

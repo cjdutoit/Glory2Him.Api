@@ -153,7 +153,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnRemoveIfServiceErrorOccursAndLogItAsync()
         {
             // given
             Guid someApprovalId = Guid.NewGuid();

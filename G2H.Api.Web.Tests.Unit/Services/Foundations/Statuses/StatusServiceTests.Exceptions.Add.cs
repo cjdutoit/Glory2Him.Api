@@ -157,7 +157,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Statuses
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             // given
             Status someStatus = CreateRandomStatus();

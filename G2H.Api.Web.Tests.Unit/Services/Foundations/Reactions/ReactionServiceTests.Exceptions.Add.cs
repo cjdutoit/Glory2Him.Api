@@ -157,7 +157,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Reactions
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             // given
             Reaction someReaction = CreateRandomReaction();

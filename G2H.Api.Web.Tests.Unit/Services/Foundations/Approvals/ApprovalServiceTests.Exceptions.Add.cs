@@ -204,7 +204,7 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Approvals
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             // given
             Approval someApproval = CreateRandomApproval();
