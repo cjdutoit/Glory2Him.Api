@@ -56,5 +56,20 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
                 await this.apiBroker.DeleteApprovalByIdAsync(actualPost.ApprovalId);
             }
         }
+
+        [Fact]
+        public async Task ShouldGetPostAsync()
+        {
+            // given
+            Post randomPost = await PostRandomPostAsync();
+            Post expectedPost = randomPost;
+
+            // when
+            Post actualPost = await this.apiBroker.GetPostByIdAsync(randomPost.Id);
+
+            // then
+            actualPost.Should().BeEquivalentTo(expectedPost);
+            await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
+        }
     }
 }
