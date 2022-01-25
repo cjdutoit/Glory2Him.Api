@@ -7,6 +7,8 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using G2H.Api.Web.Tests.Acceptance.Models.Posts;
@@ -33,6 +35,26 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
             await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
+        }
+
+        [Fact]
+        public async Task ShouldGetAllPostsAsync()
+        {
+            // given
+            List<Post> randomPosts = await CreateRandomPostsAsync();
+            List<Post> expectedPosts = randomPosts;
+
+            // when
+            List<Post> actualPosts = await this.apiBroker.GetAllPostsAsync();
+
+            // then
+            foreach (Post expectedPost in expectedPosts)
+            {
+                Post actualPost = actualPosts.Single(post => post.Id == expectedPost.Id);
+                actualPost.Should().BeEquivalentTo(expectedPost);
+                await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
+                await this.apiBroker.DeleteApprovalByIdAsync(actualPost.ApprovalId);
+            }
         }
     }
 }
