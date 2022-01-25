@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using G2H.Api.Web.Tests.Acceptance.Models.Posts;
+using RESTFulSense.Exceptions;
 using Xunit;
 
 namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
@@ -89,6 +90,28 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
             actualPost.Should().BeEquivalentTo(modifiedPost);
             await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
             await this.apiBroker.DeleteApprovalByIdAsync(actualPost.ApprovalId);
+        }
+
+        [Fact]
+        public async Task ShouldDeletePostAsync()
+        {
+            // given
+            Post randomPost = await PostRandomPostAsync();
+            Post inputPost = randomPost;
+            Post expectedPost = inputPost;
+
+            // when
+            Post deletedPost =
+                await this.apiBroker.DeletePostByIdAsync(inputPost.Id);
+
+            ValueTask<Post> getPostbyIdTask =
+                this.apiBroker.GetPostByIdAsync(inputPost.Id);
+
+            // then
+            deletedPost.Should().BeEquivalentTo(expectedPost);
+
+            await Assert.ThrowsAsync<HttpResponseNotFoundException>(() =>
+                getPostbyIdTask.AsTask());
         }
     }
 }
