@@ -35,6 +35,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
             await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
+            await this.apiBroker.DeleteApprovalByIdAsync(actualPost.ApprovalId);
         }
 
         [Fact]
@@ -70,6 +71,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
             await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
+            await this.apiBroker.DeleteApprovalByIdAsync(actualPost.ApprovalId);
         }
     }
 }
