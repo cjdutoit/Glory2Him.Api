@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using G2H.Api.Web.Tests.Acceptance.Brokers;
 using G2H.Api.Web.Tests.Acceptance.Models.Approvals;
@@ -24,6 +25,29 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
 
         public PostsApiTests(ApiBroker apiBroker) =>
             this.apiBroker = apiBroker;
+
+        private async ValueTask<Post> PostRandomPostAsync()
+        {
+            Post randomPost = await CreateRandomPost();
+            await this.apiBroker.PostPostAsync(randomPost);
+
+            return randomPost;
+        }
+
+        private async ValueTask<List<Post>> CreateRandomPostsAsync()
+        {
+            int randomNumber = GetRandomNumber();
+            var randomPosts = new List<Post>();
+
+            for (int i = 0; i < randomNumber; i++)
+            {
+                randomPosts.Add(await PostRandomPostAsync());
+            }
+            return randomPosts;
+        }
+
+        private int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
 
         private async ValueTask<Approval> PostRandomApprovalAsync()
         {
