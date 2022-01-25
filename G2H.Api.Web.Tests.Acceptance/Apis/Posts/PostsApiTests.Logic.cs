@@ -35,6 +35,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
             await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
+            await this.apiBroker.DeleteApprovalByIdAsync(actualPost.ApprovalId);
         }
 
         [Fact]
@@ -70,6 +71,24 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
             await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
+            await this.apiBroker.DeleteApprovalByIdAsync(actualPost.ApprovalId);
+        }
+
+        [Fact]
+        public async Task ShouldPutPostAsync()
+        {
+            // given
+            Post randomPost = await PostRandomPostAsync();
+            Post modifiedPost = UpdatePostWithRandomValues(randomPost);
+
+            // when
+            await this.apiBroker.PutPostAsync(modifiedPost);
+            Post actualPost = await this.apiBroker.GetPostByIdAsync(randomPost.Id);
+
+            // then
+            actualPost.Should().BeEquivalentTo(modifiedPost);
+            await this.apiBroker.DeletePostByIdAsync(actualPost.Id);
+            await this.apiBroker.DeleteApprovalByIdAsync(actualPost.ApprovalId);
         }
     }
 }

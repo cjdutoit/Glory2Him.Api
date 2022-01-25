@@ -46,6 +46,28 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Posts
             return randomPosts;
         }
 
+        private static Post UpdatePostWithRandomValues(Post inputPost)
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+
+            var filler = new Filler<Post>();
+
+            filler.Setup()
+                .OnProperty(post => post.Id).Use(inputPost.Id)
+                .OnProperty(post => post.ApprovalId).Use(inputPost.ApprovalId)
+                .OnProperty(post => post.CreatedDate).Use(inputPost.CreatedDate)
+                .OnProperty(post => post.CreatedByUserId).Use(inputPost.CreatedByUserId)
+                .OnProperty(post => post.UpdatedDate).Use(now)
+                .OnProperty(post => post.PostType).IgnoreIt()
+                .OnProperty(post => post.Approval).IgnoreIt()
+                .OnType<DateTimeOffset>().Use(GetRandomDateTime());
+
+            return filler.Create();
+        }
+
+        private static DateTimeOffset GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
         private int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
 
