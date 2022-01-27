@@ -43,7 +43,6 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
         {
             // given
             List<Approval> randomApprovals = await CreateRandomApprovalsAsync();
-
             List<Approval> expectedApprovals = randomApprovals;
 
             // when
