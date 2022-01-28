@@ -33,7 +33,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
             return randomApproval;
         }
 
-        private async ValueTask<List<Approval>> CreateRandomApprovalsAsync()
+        private async ValueTask<List<Approval>> PostRandomApprovalsAsync()
         {
             int randomNumber = GetRandomNumber();
             var randomApprovals = new List<Approval>();

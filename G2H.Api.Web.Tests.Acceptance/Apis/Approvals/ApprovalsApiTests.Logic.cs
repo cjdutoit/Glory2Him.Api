@@ -42,7 +42,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
         public async Task ShouldGetAllApprovalsAsync()
         {
             // given
-            List<Approval> randomApprovals = await CreateRandomApprovalsAsync();
+            List<Approval> randomApprovals = await PostRandomApprovalsAsync();
             List<Approval> expectedApprovals = randomApprovals;
 
             // when
