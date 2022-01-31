@@ -33,7 +33,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
             return randomApproval;
         }
 
-        private async ValueTask<List<Approval>> CreateRandomApprovalsAsync()
+        private async ValueTask<List<Approval>> PostRandomApprovalsAsync()
         {
             int randomNumber = GetRandomNumber();
             var randomApprovals = new List<Approval>();
@@ -42,6 +42,7 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
             {
                 randomApprovals.Add(await PostRandomApprovalAsync());
             }
+
             return randomApprovals;
         }
 
@@ -54,7 +55,6 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Approvals
         private static Approval UpdateApprovalWithRandomValues(Approval inputApproval)
         {
             DateTimeOffset now = DateTimeOffset.UtcNow;
-
             var filler = new Filler<Approval>();
 
             filler.Setup()
