@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using G2H.Api.Web.Tests.Acceptance.Models.Reactions;
 using G2H.Api.Web.Tests.Acceptance.Brokers;
 using Microsoft.OpenApi.Extensions;
 using Tynamix.ObjectFiller;
@@ -26,16 +27,16 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
         public ReactionsApiTests(ApiBroker apiBroker) =>
             this.apiBroker = apiBroker;
 
-        private async ValueTask<List<Models.Reactions.Reaction>> CreateReactionsAsync()
+        private async ValueTask<List<Reaction>> CreateReactionsAsync()
         {
-            var userId = Guid.NewGuid();
-            List<Web.Models.Reactions.Reaction> reactions = GetStorageReactions(userId);
+            Guid userId = Guid.NewGuid();
+            var reactions = GetStorageReactions(userId);
 
             foreach (var item in reactions)
             {
                 if (!apiBroker.ReactionService.RetrieveAllReactions().Any(status => status.Id == item.Id))
                 {
-                    await apiBroker.ReactionService.AddReactionAsync(item);
+                    await this.apiBroker.ReactionService.AddReactionAsync(item);
                 }
             }
 
@@ -44,13 +45,12 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
 
         private static List<Web.Models.Reactions.Reaction> GetStorageReactions(Guid userId)
         {
-            List<Web.Models.Reactions.Reaction> reactions =
-                new List<Web.Models.Reactions.Reaction>();
+           var reactions = new List<Web.Models.Reactions.Reaction>();
 
             foreach (Web.Models.Reactions.ReactionId statusId
                 in Enum.GetValues(typeof(Web.Models.Reactions.ReactionId)))
             {
-                var dateTimeOffset = DateTimeOffset.UtcNow;
+                DateTimeOffset dateTimeOffset = DateTimeOffset.UtcNow;
                 var filler = new Filler<Web.Models.Reactions.Reaction>();
 
                 filler.Setup()
@@ -92,12 +92,11 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
 
         private static Models.Reactions.Reaction GetRandomReaction()
         {
-            var userId = Guid.NewGuid();
-            var dateTimeOffset = DateTimeOffset.UtcNow;
+            Guid userId = Guid.NewGuid();
+            DateTimeOffset dateTimeOffset = DateTimeOffset.UtcNow;
             Array values = Enum.GetValues(typeof(Models.Reactions.ReactionId));
             Random random = new Random();
             Models.Reactions.ReactionId randomReactionId = (Models.Reactions.ReactionId)values.GetValue(random.Next(values.Length));
-
             var filler = new Filler<Models.Reactions.Reaction>();
 
             filler.Setup()
