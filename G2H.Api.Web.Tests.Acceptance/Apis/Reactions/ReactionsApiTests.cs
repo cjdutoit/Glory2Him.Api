@@ -11,8 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using G2H.Api.Web.Tests.Acceptance.Models.Reactions;
 using G2H.Api.Web.Tests.Acceptance.Brokers;
+using G2H.Api.Web.Tests.Acceptance.Models.Reactions;
 using Microsoft.OpenApi.Extensions;
 using Tynamix.ObjectFiller;
 using Xunit;
@@ -45,8 +45,8 @@ namespace G2H.Api.Web.Tests.Acceptance.Apis.Reactions
 
         private static List<Web.Models.Reactions.Reaction> GetStorageReactions(Guid userId)
         {
-           var reactions =
-                new List<Web.Models.Reactions.Reaction>();
+            var reactions =
+                 new List<Web.Models.Reactions.Reaction>();
 
             foreach (Web.Models.Reactions.ReactionId statusId
                 in Enum.GetValues(typeof(Web.Models.Reactions.ReactionId)))
