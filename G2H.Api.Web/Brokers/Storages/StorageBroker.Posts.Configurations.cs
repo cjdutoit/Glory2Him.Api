@@ -7,19 +7,28 @@
 // https://mark.bible/mark-16-15 
 // --------------------------------------------------------------------------------
 
-using G2H.Api.Web.Models.Comments;
+using G2H.Api.Web.Models.Posts;
 using Microsoft.EntityFrameworkCore;
 
 namespace G2H.Api.Web.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        private static void AddCommentReferences(ModelBuilder modelBuilder)
+        private static void AddPostReferences(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Comment>()
-                .HasOne(comment => comment.Approval)
-                .WithMany(approval => approval.Comments)
-                .HasForeignKey(comment => comment.ApprovalId)
+            modelBuilder.Entity<Post>()
+                .ToTable(post => post.IsTemporal());
+
+            modelBuilder.Entity<Post>()
+                .HasOne(post => post.PostType)
+                .WithMany(postType => postType.Posts)
+                .HasForeignKey(post => post.PostTypeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Post>()
+                .HasOne(post => post.Approval)
+                .WithMany(approval => approval.Posts)
+                .HasForeignKey(post => post.ApprovalId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }
