@@ -84,14 +84,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 values: "Text is required");
 
             invalidPostException.AddData(
-                key: nameof(Post.BusinessKey),
-                values: "Id is required");
-
-            invalidPostException.AddData(
-                key: nameof(Post.Version),
-                values: "Value is required");
-
-            invalidPostException.AddData(
                 key: nameof(Post.CreatedDate),
                 values: "Date is required");
 

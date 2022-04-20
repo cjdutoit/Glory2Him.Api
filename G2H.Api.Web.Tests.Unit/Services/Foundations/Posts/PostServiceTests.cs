@@ -123,8 +123,6 @@ namespace G2H.Api.Web.Tests.Unit.Services.Foundations.Posts
                 .OnType<Approval>().IgnoreIt()
                 .OnType<ApplicationUser>().IgnoreIt()
                 .OnProperty(post => post.Id).Use(id)
-                .OnProperty(post => post.BusinessKey).Use(id)
-                .OnProperty(post => post.Version).Use(GetRandomNumber())
                 .OnProperty(post => post.CreatedByUserId).Use(userId)
                 .OnProperty(post => post.UpdatedByUserId).Use(userId)
                 .OnProperty(post => post.PostReactions).IgnoreIt()

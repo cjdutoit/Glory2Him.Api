@@ -14,7 +14,7 @@ using G2H.Api.Web.Models.PostTypes;
 
 namespace G2H.Api.Web.Tests.Acceptance.Models.Posts
 {
-    public class Post : IKey, IApproval, IAudit, IVersioning
+    public class Post : IKey, IApproval, IAudit
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -26,9 +26,6 @@ namespace G2H.Api.Web.Tests.Acceptance.Models.Posts
         public bool IsCommentsVisible { get; set; }
         public Guid ApprovalId { get; set; }
         public Approval Approval { get; set; }
-        public Guid BusinessKey { get; set; }
-        public int Version { get; set; }
-        public bool IsAuditRecord { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public Guid UpdatedByUserId { get; set; }
