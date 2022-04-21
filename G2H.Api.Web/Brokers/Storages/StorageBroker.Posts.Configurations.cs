@@ -14,7 +14,7 @@ namespace G2H.Api.Web.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        private static void AddPostReferences(ModelBuilder modelBuilder)
+        private static void AddPostConfigurations(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Post>()
                 .ToTable(post => post.IsTemporal());

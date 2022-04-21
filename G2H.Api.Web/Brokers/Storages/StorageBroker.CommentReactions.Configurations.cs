@@ -14,7 +14,7 @@ namespace G2H.Api.Web.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        private static void AddCommentReactionReferences(ModelBuilder modelBuilder)
+        private static void AddCommentReactionConfigurations(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CommentReaction>()
                 .HasKey(commentReaction =>

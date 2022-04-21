@@ -29,21 +29,21 @@ namespace G2H.Api.Web.Brokers.Storages
         {
             base.OnModelCreating(modelBuilder);
 
-            AddApprovalReferences(modelBuilder);
-            AddApprovalUserReferences(modelBuilder);
-            AddAttachmentReferences(modelBuilder);
-            AddCommentCommentReferences(modelBuilder);
-            AddCommentReactionReferences(modelBuilder);
-            AddCommentReferences(modelBuilder);
-            AddPostAttachmentReferences(modelBuilder);
-            AddPostCommentReferences(modelBuilder);
-            AddPostReactionReferences(modelBuilder);
-            AddPostReferences(modelBuilder);
-            AddPostTagReferences(modelBuilder);
-            AddPostTypeReferences(modelBuilder);
-            AddReactionReferences(modelBuilder);
-            AddStatusReferences(modelBuilder);
-            AddTagReferences(modelBuilder);
+            AddApprovalConfigurations(modelBuilder);
+            AddApprovalUserConfigurations(modelBuilder);
+            AddAttachmentConfigurations(modelBuilder);
+            AddCommentCommentConfigurations(modelBuilder);
+            AddCommentReactionConfigurations(modelBuilder);
+            AddCommentConfigurations(modelBuilder);
+            AddPostAttachmentConfigurations(modelBuilder);
+            AddPostCommentConfigurations(modelBuilder);
+            AddPostReactionConfigurations(modelBuilder);
+            AddPostConfigurations(modelBuilder);
+            AddPostTagConfigurations(modelBuilder);
+            AddPostTypeConfigurations(modelBuilder);
+            AddReactionConfigurations(modelBuilder);
+            AddStatusConfigurations(modelBuilder);
+            AddTagConfigurations(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

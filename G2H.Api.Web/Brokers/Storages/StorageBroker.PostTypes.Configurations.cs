@@ -13,7 +13,7 @@ namespace G2H.Api.Web.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        private static void AddPostTypeReferences(ModelBuilder modelBuilder)
+        private static void AddPostTypeConfigurations(ModelBuilder modelBuilder)
         {
         }
     }

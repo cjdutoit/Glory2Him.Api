@@ -14,7 +14,7 @@ namespace G2H.Api.Web.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        private static void AddAttachmentReferences(ModelBuilder modelBuilder)
+        private static void AddAttachmentConfigurations(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Attachment>()
                 .HasOne(attachment => attachment.Approval)
