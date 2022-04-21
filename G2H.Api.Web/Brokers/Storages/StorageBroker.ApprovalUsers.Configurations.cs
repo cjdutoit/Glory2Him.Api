@@ -14,7 +14,7 @@ namespace G2H.Api.Web.Brokers.Storages
 {
     public partial class StorageBroker
     {
-        private static void AddApprovalUserReferences(ModelBuilder modelBuilder)
+        private static void AddApprovalUserConfigurations(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ApprovalUser>()
                 .HasOne(approvalUser => approvalUser.Approval)
