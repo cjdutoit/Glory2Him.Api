@@ -11,3 +11,6 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "CONFIG"
+    labels:
+      - "nuget"
+      - "dependencies"
